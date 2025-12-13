@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>littleHYPE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              hype: {
+                black: '#000000',
+                white: '#FFFFFF',
+                gray: '#F0F0F0',
+                paper: '#FFFFFF',
+                // Pop Colors for Interaction
+                pink: '#FF0090',
+                cyan: '#00E5FF',
+                lime: '#AAFF00',
+                orange: '#FF5500',
+                purple: '#9D00FF',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Poppins', 'sans-serif'],
+            },
+            animation: {
+              'wiggle': 'wiggle 0.5s ease-in-out infinite',
+              'pop': 'pop 0.2s ease-out',
+              'float': 'float 4s ease-in-out infinite',
+              'draw': 'draw 2s linear forwards',
+              'walk-across': 'walk-across 12s linear infinite',
+              'goofy-dance': 'goofy-dance 1.2s ease-in-out infinite',
+              'fight-1': 'fight-1 12s linear infinite',
+              'fight-2': 'fight-2 12s linear infinite',
+              'flail': 'flail 0.2s ease-in-out infinite',
+              'pow-effect': 'pow-effect 12s ease-in-out infinite',
+            },
+            boxShadow: {
+              'hard': '4px 4px 0px 0px #000000',
+              'hard-lg': '8px 8px 0px 0px #000000',
+              'hard-sm': '2px 2px 0px 0px #000000',
+              'hard-hover': '6px 6px 0px 0px #000000',
+              'hard-reverse': '-4px 4px 0px 0px #000000',
+            },
+            borderWidth: {
+              '3': '3px',
+            },
+            keyframes: {
+              wiggle: {
+                '0%, 100%': { transform: 'rotate(-1deg)' },
+                '50%': { transform: 'rotate(1deg)' },
+              },
+              flail: {
+                '0%, 100%': { transform: 'rotate(-10deg)' },
+                '50%': { transform: 'rotate(30deg)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-5px)' },
+              },
+              pop: {
+                '0%': { transform: 'scale(0.98)' },
+                '50%': { transform: 'scale(1.02)' },
+                '100%': { transform: 'scale(1)' },
+              },
+              draw: {
+                '0%': { strokeDashoffset: '1000' },
+                '100%': { strokeDashoffset: '0' },
+              },
+              'walk-across': {
+                '0%': { transform: 'translateX(-10vw)' },
+                '100%': { transform: 'translateX(100vw)' },
+              },
+              'goofy-dance': {
+                '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                '25%': { transform: 'translateY(-20px) rotate(-15deg) skewX(10deg)' },
+                '50%': { transform: 'translateY(5px) rotate(10deg) scaleY(0.9)' },
+                '75%': { transform: 'translateY(-15px) rotate(-5deg) skewX(-5deg)' },
+              },
+              'fight-1': {
+                '0%': { left: '-10%', transform: 'scaleX(1) translateX(0)' },
+                '15%': { left: '42%', transform: 'scaleX(1) translateX(0)' },
+                // Fight Sequence
+                '18%': { transform: 'scaleX(1) translateX(20px)' }, // Jab
+                '20%': { transform: 'scaleX(1) translateX(0)' },
+                '22%': { transform: 'scaleX(1) translateY(-30px) rotate(20deg)' }, // Jump Kick
+                '25%': { transform: 'scaleX(1) translateY(0) rotate(0)' },
+                '28%': { transform: 'scaleX(1) translateX(-10px)' }, // Dodge
+                '32%': { transform: 'scaleX(1) translateX(40px)' }, // Big Punch
+                '35%': { transform: 'scaleX(1) rotate(-360deg)' }, // Spin
+                '38%': { transform: 'scaleX(1) translateX(0)' },
+                '40%': { transform: 'scaleX(1) translateY(10px)' }, // Duck
+                '45%': { transform: 'scaleX(1) translateY(-40px) scale(1.2)' }, // Super Jump
+                '50%': { transform: 'scaleX(1) translateY(0) scale(1)' },
+                '55%': { transform: 'scaleX(1) translateX(10px) rotate(10deg)' }, // Taunt
+                '65%': { left: '42%', transform: 'scaleX(1)' },
+                // Chase Exit
+                '70%': { left: '42%', transform: 'scaleX(1)' },
+                '100%': { left: '110%', transform: 'scaleX(1)' }
+              },
+              'fight-2': {
+                '0%': { right: '-10%', transform: 'scaleX(-1) translateX(0)' }, // Face Left
+                '15%': { right: '42%', transform: 'scaleX(-1) translateX(0)' },
+                // Fight Sequence (Reacting)
+                '18%': { transform: 'scaleX(-1) translateX(-10px)' }, // Recoil
+                '20%': { transform: 'scaleX(-1) translateX(10px)' }, // Push
+                '22%': { transform: 'scaleX(-1) translateY(10px)' }, // Duck kick
+                '25%': { transform: 'scaleX(-1) translateY(0)' },
+                '28%': { transform: 'scaleX(-1) translateX(30px)' }, // Counter kick
+                '32%': { transform: 'scaleX(-1) translateX(-30px) rotate(-20deg)' }, // Hit hard
+                '35%': { transform: 'scaleX(-1) translateX(0)' },
+                '38%': { transform: 'scaleX(-1) translateY(-20px) rotate(360deg)' }, // Air spin
+                '45%': { transform: 'scaleX(-1) translateX(-10px)' },
+                '55%': { transform: 'scaleX(-1) translateX(0)' },
+                '65%': { right: '42%', transform: 'scaleX(-1)' },
+                // Run Away Exit
+                '68%': { right: '42%', transform: 'scaleX(-1)' },
+                '70%': { right: '42%', transform: 'scaleX(1)' }, // Turn Right
+                '100%': { right: '-20%', transform: 'scaleX(1)' } // Run off right
+              },
+              'pow-effect': {
+                '0%, 20%': { opacity: '0', transform: 'scale(0.5)' },
+                '22%': { opacity: '1', transform: 'scale(1.5) rotate(-15deg)' },
+                '28%': { opacity: '0', transform: 'scale(0.5)' },
+                '30%': { opacity: '0', transform: 'scale(0.5)' },
+                '32%': { opacity: '1', transform: 'scale(1.8) rotate(15deg)' },
+                '38%': { opacity: '0', transform: 'scale(0.5)' },
+                '100%': { opacity: '0', transform: 'scale(0.5)' }
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #FFFFFF;
+        color: #000000;
+        overflow-x: hidden;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      
+      /* Stickman Doodle Utilities */
+      .doodle-border {
+        border: 3px solid black;
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      }
+      .doodle-underline {
+         background-image: url("data:image/svg+xml,%3Csvg width='200' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 5 Q 50 10 98 5 T 198 5' stroke='black' stroke-width='3' fill='none' /%3E");
+         background-repeat: no-repeat;
+         background-position: bottom;
+         background-size: 100% 10px;
+         padding-bottom: 8px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.10.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
