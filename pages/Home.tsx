@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play, Smile, Video, Mail, Heart } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
@@ -9,6 +9,7 @@ import { NewsGenerator } from '../components/NewsGenerator';
 import { PRODUCTS, FAQS } from '../constants';
 
 export const Home: React.FC = () => {
+  const [isFighting, setIsFighting] = useState(true);
 
   const cardHoverStyles = [
     'hover:border-hype-pink hover:shadow-[6px_6px_0px_0px_#FF0090]',
@@ -16,6 +17,16 @@ export const Home: React.FC = () => {
     'hover:border-hype-lime hover:shadow-[6px_6px_0px_0px_#AAFF00]',
     'hover:border-hype-orange hover:shadow-[6px_6px_0px_0px_#FF5500]'
   ];
+
+  const handleBreakUpFight = () => {
+    if (isFighting) {
+        setIsFighting(false);
+        // Resume fighting after 3 seconds
+        setTimeout(() => {
+            setIsFighting(true);
+        }, 3000);
+    }
+  };
 
   return (
     <div className="bg-white min-h-screen overflow-x-hidden font-sans text-hype-black">
@@ -37,52 +48,149 @@ export const Home: React.FC = () => {
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
         </div>
 
-        {/* Dancing Stickman Fight Scene - Bottom Aligned */}
-        {/* Changed h-32 to h-full to prevent clipping of text effects and ensure overlay on top of buttons */}
-        <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
+        {/* Dancing Stickman Fight Scene - Interactive */}
+        <div 
+            className="absolute inset-0 z-20 overflow-hidden cursor-pointer group"
+            onClick={handleBreakUpFight}
+        >
+             {/* Interaction Hint */}
+             <div className="absolute bottom-48 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white border-3 border-black px-4 py-2 text-xs font-black uppercase tracking-widest shadow-hard transform rotate-2 pointer-events-none z-30">
+                Click to break it up!
+             </div>
+
             {/* Fighter 1 (Left) */}
-            <div className="absolute bottom-0 w-24 h-24 animate-fight-1 origin-bottom">
+            <div className={`absolute bottom-0 w-24 h-24 origin-bottom transition-all duration-300 ${isFighting ? 'animate-fight-1' : 'left-[calc(50%-5rem)] transform scale-x-100'}`}>
                 <svg viewBox="0 0 100 100" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Head */}
                     <circle cx="50" cy="20" r="14" />
+                    {!isFighting && (
+                        /* X Eyes for Stunned State */
+                        <g stroke="white" strokeWidth="3">
+                             <path d="M44 16 L48 20 M48 16 L44 20" />
+                             <path d="M52 16 L56 20 M56 16 L52 20" />
+                        </g>
+                    )}
+                    
+                    {/* Body */}
                     <path d="M50 34 L50 65" />
-                    {/* Arms - Flailing */}
-                    <path d="M50 45 L20 35" className="animate-flail origin-center" />
-                    <path d="M50 45 L80 35" className="animate-flail origin-center" style={{animationDelay: '0.1s'}} />
+                    
+                    {/* Arms */}
+                    {isFighting ? (
+                        <>
+                            <path d="M50 45 L20 35" className="animate-flail origin-center" />
+                            <path d="M50 45 L80 35" className="animate-flail origin-center" style={{animationDelay: '0.1s'}} />
+                        </>
+                    ) : (
+                         /* Droopy Arms */
+                        <>
+                            <path d="M50 45 L30 60" />
+                            <path d="M50 45 L70 60" />
+                        </>
+                    )}
+                    
                     {/* Legs */}
-                    <path d="M50 65 L25 90" className="animate-flail origin-top" />
-                    <path d="M50 65 L75 90" />
+                    {isFighting ? (
+                        <>
+                            <path d="M50 65 L25 90" className="animate-flail origin-top" />
+                            <path d="M50 65 L75 90" />
+                        </>
+                    ) : (
+                        /* Standing Still */
+                        <>
+                            <path d="M50 65 L35 90" />
+                            <path d="M50 65 L65 90" />
+                        </>
+                    )}
                 </svg>
+                {/* Dizzy Stars */}
+                {!isFighting && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 animate-spin-slow">
+                        <span className="absolute left-0 top-0 text-yellow-400 text-lg">★</span>
+                        <span className="absolute right-0 bottom-0 text-yellow-400 text-lg">★</span>
+                    </div>
+                )}
             </div>
 
             {/* Fighter 2 (Right) */}
-            <div className="absolute bottom-0 w-24 h-24 animate-fight-2 origin-bottom">
+            <div className={`absolute bottom-0 w-24 h-24 origin-bottom transition-all duration-300 ${isFighting ? 'animate-fight-2' : 'right-[calc(50%-5rem)] transform -scale-x-100'}`}>
                 <svg viewBox="0 0 100 100" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                     {/* Head */}
                     <circle cx="50" cy="20" r="14" />
+                    {!isFighting && (
+                        /* X Eyes for Stunned State */
+                        <g stroke="white" strokeWidth="3">
+                             <path d="M44 16 L48 20 M48 16 L44 20" />
+                             <path d="M52 16 L56 20 M56 16 L52 20" />
+                        </g>
+                    )}
+
                     {/* Bandana for Fighter 2 */}
                     <path d="M35 15 L65 15" strokeWidth="6" stroke="red" />
                     <path d="M65 15 L85 25" strokeWidth="3" stroke="red" />
                     
+                    {/* Body */}
                     <path d="M50 34 L50 65" />
+                    
                     {/* Arms */}
-                    <path d="M50 45 L20 35" className="animate-flail origin-center" style={{animationDelay: '0.05s'}} />
-                    <path d="M50 45 L80 35" className="animate-flail origin-center" style={{animationDelay: '0.15s'}} />
+                    {isFighting ? (
+                        <>
+                            <path d="M50 45 L20 35" className="animate-flail origin-center" style={{animationDelay: '0.05s'}} />
+                            <path d="M50 45 L80 35" className="animate-flail origin-center" style={{animationDelay: '0.15s'}} />
+                        </>
+                    ) : (
+                         /* Hands on hips (kinda) */
+                        <>
+                            <path d="M50 45 L35 55 L40 60" />
+                            <path d="M50 45 L65 55 L60 60" />
+                        </>
+                    )}
+
                     {/* Legs */}
-                    <path d="M50 65 L25 90" />
-                    <path d="M50 65 L75 90" className="animate-flail origin-top" />
+                    {isFighting ? (
+                         <>
+                            <path d="M50 65 L25 90" />
+                            <path d="M50 65 L75 90" className="animate-flail origin-top" />
+                        </>
+                    ) : (
+                        /* Kneeling/Sitting in defeat */
+                         <>
+                            <path d="M50 65 L30 85 L50 85" />
+                            <path d="M50 65 L60 90" />
+                        </>
+                    )}
                 </svg>
+                 {/* Dizzy Stars */}
+                 {!isFighting && (
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-16 h-8 animate-spin-slow" style={{animationDirection: 'reverse'}}>
+                        <span className="absolute top-0 left-0 text-hype-cyan text-xl">★</span>
+                        <span className="absolute bottom-0 right-0 text-hype-pink text-xl">★</span>
+                    </div>
+                )}
             </div>
             
-            {/* Comic FX - 'POW' appearing mid fight */}
-            <div className="absolute left-1/2 bottom-32 -translate-x-1/2 text-5xl font-black text-hype-cyan italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]">
-                POW!
-            </div>
-            <div className="absolute left-1/2 bottom-48 -translate-x-1/2 text-5xl font-black text-hype-pink italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]" style={{animationDelay: '3.8s'}}>
-                SMACK!
-            </div>
+            {/* Comic FX - Only show when fighting */}
+            {isFighting && (
+                <>
+                    <div className="absolute left-1/2 bottom-32 -translate-x-1/2 text-5xl font-black text-hype-cyan italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]">
+                        POW!
+                    </div>
+                    <div className="absolute left-1/2 bottom-48 -translate-x-1/2 text-5xl font-black text-hype-pink italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]" style={{animationDelay: '3.8s'}}>
+                        SMACK!
+                    </div>
+                </>
+            )}
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-            <h1 className="font-heading text-6xl md:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter uppercase mix-blend-overlay hover:mix-blend-normal transition-all duration-500 cursor-default hover:text-hype-cyan">
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pointer-events-none">
+             {/* Add pointer-events-auto to interactive elements inside the non-interactive container */}
+             <div className="bg-white/10 backdrop-blur-md border-2 border-white/30 inline-block px-6 py-2 rounded-full mb-8 hover:bg-hype-pink hover:border-hype-pink transition-colors duration-300 pointer-events-auto">
+                 <span className="text-white font-bold uppercase tracking-widest text-sm flex items-center gap-2">
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                    Est. 2024
+                 </span>
+             </div>
+
+            <h1 className="font-heading text-6xl md:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter uppercase mix-blend-overlay hover:mix-blend-normal transition-all duration-500 cursor-default hover:text-hype-cyan pointer-events-auto">
                 Make Life <br/>
                 <span className="text-white relative inline-block group">
                     Weirdly
@@ -93,11 +201,11 @@ export const Home: React.FC = () => {
                 <br/> Good.
             </h1>
             
-            <p className="text-xl md:text-2xl text-white font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-xl md:text-2xl text-white font-medium max-w-2xl mx-auto mb-10 leading-relaxed pointer-events-auto">
                 Aggressively positive goods for people who refuse to be boring.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pointer-events-auto">
                 <Link to="/products">
                     <Button variant="secondary" size="lg" className="border-3 border-white hover:border-hype-pink hover:shadow-[6px_6px_0px_0px_#FF0090] uppercase tracking-widest text-lg">
                         Shop Now
