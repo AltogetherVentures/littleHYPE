@@ -38,7 +38,8 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Dancing Stickman Fight Scene - Bottom Aligned */}
-        <div className="absolute bottom-0 w-full h-32 z-20 pointer-events-none overflow-hidden">
+        {/* Changed h-32 to h-full to prevent clipping of text effects and ensure overlay on top of buttons */}
+        <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
             {/* Fighter 1 (Left) */}
             <div className="absolute bottom-0 w-24 h-24 animate-fight-1 origin-bottom">
                 <svg viewBox="0 0 100 100" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
@@ -72,22 +73,15 @@ export const Home: React.FC = () => {
             </div>
             
             {/* Comic FX - 'POW' appearing mid fight */}
-            <div className="absolute left-1/2 bottom-20 -translate-x-1/2 text-5xl font-black text-hype-cyan italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]">
+            <div className="absolute left-1/2 bottom-32 -translate-x-1/2 text-5xl font-black text-hype-cyan italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]">
                 POW!
             </div>
-            <div className="absolute left-1/2 bottom-32 -translate-x-1/2 text-5xl font-black text-hype-pink italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]" style={{animationDelay: '3.8s'}}>
+            <div className="absolute left-1/2 bottom-48 -translate-x-1/2 text-5xl font-black text-hype-pink italic animate-pow-effect drop-shadow-[4px_4px_0_rgba(0,0,0,1)]" style={{animationDelay: '3.8s'}}>
                 SMACK!
             </div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-             <div className="bg-white/10 backdrop-blur-md border-2 border-white/30 inline-block px-6 py-2 rounded-full mb-8 hover:bg-hype-pink hover:border-hype-pink transition-colors duration-300">
-                 <span className="text-white font-bold uppercase tracking-widest text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                    Est. 2024
-                 </span>
-             </div>
-
             <h1 className="font-heading text-6xl md:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter uppercase mix-blend-overlay hover:mix-blend-normal transition-all duration-500 cursor-default hover:text-hype-cyan">
                 Make Life <br/>
                 <span className="text-white relative inline-block group">
