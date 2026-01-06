@@ -46,17 +46,15 @@ export const ChatBot = () => {
   useEffect(() => {
     const initChat = async () => {
         try {
-            const apiKey = typeof process !== 'undefined' && process.env ? process.env.API_KEY : undefined;
-            if (apiKey) {
-                const ai = new GoogleGenAI({ apiKey });
-                const session = ai.chats.create({
+            // Always use process.env.API_KEY directly when initializing GoogleGenAI
+            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const session = ai.chats.create({
                 model: 'gemini-3-pro-preview',
                 config: {
                     systemInstruction: SYSTEM_INSTRUCTION,
                 },
-                });
-                setChatSession(session);
-            }
+            });
+            setChatSession(session);
         } catch (e) {
             console.error("Failed to init chat", e);
         }

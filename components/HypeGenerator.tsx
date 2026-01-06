@@ -13,15 +13,12 @@ export const HypeGenerator: React.FC = () => {
     setError('');
     
     try {
-      const apiKey = process.env.API_KEY;
-      if (!apiKey) {
-        throw new Error("API Key not found");
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
+      // Corrected initialization using process.env.API_KEY directly per SDK rules
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
+      // Using gemini-3-flash-preview for basic text tasks like joke generation
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: "Write a short, hilarious, and relatable one-liner joke aimed at millennials. Topics: expensive iced coffee, back pain, cancelling plans, 90s nostalgia, student loans, or keeping plants alive. Tone: self-deprecating, dry, and witty. Keep it under 25 words. Use 1-2 emojis.",
       });
 

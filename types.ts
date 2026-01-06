@@ -14,7 +14,7 @@ export interface Product {
 export interface Benefit {
   title: string;
   description: string;
-  iconName: 'zap' | 'battery' | 'smile' | 'heart' | 'cloud' | 'ghost' | 'box' | 'sparkles' | 'lock' | 'palette' | 'sun';
+  iconName: 'zap' | 'battery' | 'smile' | 'heart' | 'cloud' | 'ghost' | 'box' | 'sparkles' | 'lock' | 'palette' | 'sun' | 'star' | 'mic' | 'gift';
   color: 'primary' | 'teal' | 'coral' | 'purple' | 'pink';
 }
 

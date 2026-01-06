@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Brain, Zap, Sparkles } from 'lucide-react';
+import { ArrowRight, Brain, Zap, Sparkles, Mail } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { Button } from '../components/Button';
+import { NewsletterForm } from '../components/NewsletterForm';
 import { TIKTOK_VIDEOS } from '../constants';
 
 export const Story: React.FC = () => {
@@ -144,6 +146,26 @@ export const Story: React.FC = () => {
         </section>
 
       </main>
+
+      {/* Newsletter Section */}
+      <section className="py-32 bg-hype-black text-white text-center px-4">
+         <div className="max-w-3xl mx-auto">
+            <Mail size={64} className="mx-auto mb-8 text-white hover:text-hype-pink transition-colors animate-float" strokeWidth={1.5} />
+            <h2 className="font-heading text-5xl md:text-7xl font-black mb-8 uppercase tracking-tighter hover:text-hype-pink transition-colors">
+                The Giggle-Letter
+            </h2>
+            <p className="text-xl text-gray-400 mb-12 font-medium">
+                No spam. Just stick figures and serotonin.
+            </p>
+            
+            <NewsletterForm />
+            
+            <p className="mt-8 text-sm text-gray-500 font-bold uppercase tracking-widest">
+              Join 15,000+ legends getting weekly hype.
+            </p>
+         </div>
+      </section>
+
       <Footer />
     </div>
   );

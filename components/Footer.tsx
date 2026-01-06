@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { Instagram, Twitter, Mail, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-hype-black text-white pt-20 pb-10 mt-12 relative overflow-hidden">
+    <footer className="bg-hype-black text-white pt-20 pb-10 mt-0 relative overflow-hidden">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-b border-white/20 pb-12">
@@ -40,7 +41,8 @@ export const Footer: React.FC = () => {
             <ul className="space-y-4">
               <li><Link to="/story" className="text-gray-400 hover:text-white transition-colors font-bold">Our Story</Link></li>
               <li><Link to="/brand" className="text-gray-400 hover:text-white transition-colors font-bold">Brand Assets</Link></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors font-bold">Contact</a></li>
+              <li><Link to="/terms" className="text-gray-400 hover:text-white transition-colors font-bold">Terms of Use</Link></li>
+              <li><Link to="/privacy" className="text-gray-400 hover:text-white transition-colors font-bold">Privacy Policy</Link></li>
             </ul>
           </div>
 

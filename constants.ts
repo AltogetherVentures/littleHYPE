@@ -1,6 +1,31 @@
+
 import { Product, Testimonial, FaqItem, ProductPageContent } from './types';
 
 export const PRODUCTS: Product[] = [
+  {
+    id: 'moments',
+    name: 'Moments',
+    price: '$15.00',
+    tagline: 'Turn your friends into legends.',
+    description: 'Transform your favorite people into the main character. Pick a genre, upload a photo, and let our AI turn your inside jokes into a 3-act cinematic masterpiece.',
+    features: ['Cinematic Narration', '3-Panel Storyboard', 'Custom Art Styles', 'Shareable Link'],
+    imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2525&auto=format&fit=crop',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-projector-playing-a-movie-in-a-cinema-39870-large.mp4',
+    type: 'digital',
+    themeColor: 'teal'
+  },
+  {
+    id: 'space-log',
+    name: 'Space_log',
+    price: '$4.99',
+    tagline: 'Submit your daily dispatch.',
+    description: 'A retro-futuristic logging tool for reporting your emotional anomalies. Stop reflecting, start reporting.',
+    features: ['Encrypted Entry', 'Anomaly Detection', 'Mission Protocols', 'Dark Mode Only'],
+    imageUrl: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=80&w=2670&auto=format&fit=crop',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-holographic-interface-94-large.mp4',
+    type: 'digital',
+    themeColor: 'charcoal'
+  },
   {
     id: 'hype-calendar',
     name: 'The Daily Hype Calendar',
@@ -30,8 +55,8 @@ export const PRODUCTS: Product[] = [
     name: 'Scream Into The Void App',
     price: 'Free',
     tagline: 'Let it all out. We won\'t tell.',
-    description: 'Sometimes you just need to scream. Our app visualizes your voice as abstract art that vanishes after 10 seconds. Therapeutic, private, and weirdly beautiful.',
-    features: ['Microphone reacting visuals', 'Privacy focused', 'Dark mode only', 'Zero tracking'],
+    description: 'Sometimes you just need to scream. Our app visualizes your stress as abstract art that vanishes after 10 seconds. Therapeutic, private, and weirdly beautiful.',
+    features: ['Energy reacting visuals', 'Privacy focused', 'Dark mode only', 'Zero tracking'],
     imageUrl: 'https://picsum.photos/id/1015/600/600',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-video-of-a-colorful-liquid-2287-large.mp4',
     type: 'digital',
@@ -52,6 +77,57 @@ export const PRODUCTS: Product[] = [
 ];
 
 export const PRODUCT_CONTENTS: Record<string, ProductPageContent> = {
+    'moments': {
+        benefits: [
+            { title: "Main Character Energy", description: "Finally, the cinematic recognition they deserve.", iconName: "star", color: "purple" },
+            { title: "Narrated Gold", description: "Professional voiceover styles that sell the drama.", iconName: "mic", color: "teal" },
+            { title: "Instant Gift", description: "No shipping times. Create, render, and send in minutes.", iconName: "gift", color: "pink" }
+        ],
+        howItWorks: {
+            heading: "From Anecdote to Art",
+            subheading: "The Director's Cut of your friendship.",
+            steps: [
+                { title: "Pick the Vibe", description: "Select a genre. Noir? RomCom? Wes Anderson-ish?", color: "teal" },
+                { title: "Tell the Tale", description: "Securely type that one time they did that thing.", color: "purple" },
+                { title: "Premiere", description: "We generate the visuals and narration. You take the credit.", color: "pink" }
+            ],
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-projector-playing-a-movie-in-a-cinema-39870-large.mp4"
+        },
+        vibeCheck: {
+            audiences: [
+                { text: "Best Friends", iconName: "heart" },
+                { text: "Movie Buffs", iconName: "film" },
+                { text: "Storytellers", iconName: "mic" },
+                { text: "Sentimental Types", iconName: "sparkles" }
+            ],
+            idCard: { title: "DIRECTOR", tag: "VISIONARY", vibe: "Cinematic", status: "Filming", purity: "4K" }
+        },
+        guarantee: "If they don't cry or laugh until they cry, we'll rewrite the script.",
+        faqs: [
+            { id: '1', question: "How long does it take?", answer: "About 5 minutes to create, 2 minutes to render." },
+            { id: '2', question: "Can I use embarrassing photos?", answer: "We encourage it. It builds character." },
+            { id: '3', question: "Is it a real video file?", answer: "Yes! You get a shareable link and a download option." }
+        ]
+    },
+    'space-log': {
+        benefits: [
+            { title: "Report", description: "Log your data.", iconName: "lock", color: "primary" },
+            { title: "Analyze", description: "Find anomalies.", iconName: "zap", color: "teal" },
+            { title: "Correct", description: "Fix the timeline.", iconName: "sparkles", color: "coral" }
+        ],
+        howItWorks: {
+            heading: "Protocol",
+            subheading: "Follow procedures.",
+            steps: [],
+            videoUrl: ""
+        },
+        vibeCheck: {
+            audiences: [],
+            idCard: { title: "AGENT", tag: "CLASSIFIED", vibe: "Unknown", status: "Active", purity: "0%" }
+        },
+        guarantee: "Data integrity guaranteed.",
+        faqs: []
+    },
     'hype-calendar': {
         benefits: [
             { title: "Morning Jolt", description: "Wakes you up faster than espresso. Or at least makes you hate the alarm clock slightly less.", iconName: "sun", color: "primary" },
@@ -119,7 +195,7 @@ export const PRODUCT_CONTENTS: Record<string, ProductPageContent> = {
     'void-screaming': {
         benefits: [
             { title: "Cheaper Than Therapy", description: "We are not doctors, but screaming into a pillow is scientifically proven to help.* (*Not proven).", iconName: "smile", color: "primary" },
-            { title: "Zero Data Stored", description: "Your screams vanish into the digital ether. No logs, no tracking, just release.", iconName: "lock", color: "coral" },
+            { title: "Zero Data Stored", description: "Your dispatches vanish into the digital ether. No logs, no tracking, just release.", iconName: "lock", color: "coral" },
             { title: "Angst to Art", description: "Watch your frustration turn into beautiful, swirling abstract colors.", iconName: "palette", color: "purple" }
         ],
         howItWorks: {
@@ -127,7 +203,7 @@ export const PRODUCT_CONTENTS: Record<string, ProductPageContent> = {
             subheading: "Like yoga, but louder.",
             steps: [
                 { title: "Open The Void", description: "Find a quiet place (or a loud one, we don't judge).", color: "primary" },
-                { title: "Let It Out", description: "Scream. Vent. Whisper your secrets. The visuals react to you.", color: "coral" },
+                { title: "Let It Out", description: "Vent. Whisper your secrets. The visuals react to your typing.", color: "coral" },
                 { title: "Watch It Fade", description: "See your noise dissolve into nothingness. Feel lighter.", color: "purple" }
             ],
             videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-colorful-liquid-paint-swirling-in-abstract-shapes-42686-large.mp4"
@@ -141,10 +217,10 @@ export const PRODUCT_CONTENTS: Record<string, ProductPageContent> = {
             ],
             idCard: { title: "CERTIFIED", tag: "CHAOTIC", vibe: "Spicy", status: "Venting", purity: "100%" }
         },
-        guarantee: "If you don't feel lighter after 3 screams, you can scream at our customer support (please don't).",
+        guarantee: "If you don't feel lighter after 3 releases, you can vent to our customer support (please don't).",
         faqs: [
-            { id: '1', question: "Does anyone hear the scream?", answer: "Just the NSA agent assigned to your phone. (Kidding! It is processed locally)." },
-            { id: '2', question: "Can I scream happy things?", answer: "Sure, but the void prefers angst. It tastes better." },
+            { id: '1', question: "Does anyone see the dispatch?", answer: "Just the NSA agent assigned to your phone. (Kidding! It is processed locally)." },
+            { id: '2', question: "Can I release happy things?", answer: "Sure, but the void prefers angst. It tastes better." },
             { id: '3', question: "Is this actual therapy?", answer: "Legally? No. Spiritually? We think so." }
         ]
     },

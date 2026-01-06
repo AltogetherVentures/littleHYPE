@@ -15,15 +15,12 @@ export const NewsGenerator: React.FC = () => {
     setSource(null);
     
     try {
-      const apiKey = process.env.API_KEY;
-      if (!apiKey) {
-        throw new Error("API Key not found");
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
+      // Standardized initialization with process.env.API_KEY as per Google GenAI SDK best practices
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
+      // Using gemini-3-flash-preview for basic text and search tasks
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: "Find one recent (from the last month) funny, quirky, or weird positive news story. Summarize it in one short, punchy, humorous sentence (under 25 words).",
         config: {
           tools: [{ googleSearch: {} }],

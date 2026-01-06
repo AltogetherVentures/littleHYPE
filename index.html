@@ -1,9 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>littleHYPE</title>
+    <title>littleHYPE | Aggressively Positive Goods</title>
+    
+    <!-- SEO Fix: Canonical Tag -->
+    <link rel="canonical" href="https://littlehype.com/" />
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A fun, quirky, and emotionally warm brand selling digital and physical products designed to spark joy through aggressively positive vibes." />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="littleHYPE | Make Life Weirdly Good." />
+    <meta property="og:description" content="Aggressively positive goods for people who refuse to be boring." />
+    <meta property="og:url" content="https://littlehype.com/" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -15,130 +30,72 @@
                 white: '#FFFFFF',
                 gray: '#F0F0F0',
                 paper: '#FFFFFF',
-                // Pop Colors for Interaction
                 pink: '#FF0090',
                 cyan: '#00E5FF',
                 lime: '#AAFF00',
                 orange: '#FF5500',
                 purple: '#9D00FF',
+              },
+              chrono: {
+                black: '#000000',
+                green: '#39FF14',
+                cyan: '#00FFFF',
+                red: '#FF3333',
+                dark: '#0a0a0a',
+              },
+              riso: {
+                cream: '#FFF9E6',
+                red: '#FF4C4C',
+                blue: '#4C4CFF',
+                yellow: '#FFD24C',
+                black: '#2D2926',
+                teal: '#008080',
               }
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
               heading: ['Poppins', 'sans-serif'],
+              mono: ['Courier Prime', 'Courier New', 'monospace'],
+              serif: ['Playfair Display', 'serif'],
+              hand: ['"Gochi Hand"', 'cursive'],
             },
             animation: {
               'wiggle': 'wiggle 0.5s ease-in-out infinite',
               'pop': 'pop 0.2s ease-out',
               'float': 'float 4s ease-in-out infinite',
               'draw': 'draw 2s linear forwards',
-              'walk-across': 'walk-across 12s linear infinite',
-              'goofy-dance': 'goofy-dance 1.2s ease-in-out infinite',
-              'fight-1': 'fight-1 12s steps(60) infinite',
-              'fight-2': 'fight-2 12s steps(60) infinite',
-              'flail': 'flail 0.2s steps(4) infinite',
-              'pow-effect': 'pow-effect 12s steps(24) infinite',
               'spin-slow': 'spin 3s linear infinite',
+              'glitch': 'glitch 1s linear infinite',
+              'scanline': 'scanline 8s linear infinite',
+              'ink-vibrate': 'ink-vibrate 0.3s ease-in-out infinite',
             },
             boxShadow: {
               'hard': '4px 4px 0px 0px #000000',
-              'hard-lg': '8px 8px 0px 0px #000000',
-              'hard-sm': '2px 2px 0px 0px #000000',
-              'hard-hover': '6px 6px 0px 0px #000000',
-              'hard-reverse': '-4px 4px 0px 0px #000000',
+              'riso-red': '4px 4px 0px 0px #FF4C4C',
+              'riso-blue': '-4px 4px 0px 0px #4C4CFF',
+              'riso-yellow': '0px 6px 0px 0px #FFD24C',
             },
             borderWidth: {
               '3': '3px',
+              '6': '6px',
             },
             keyframes: {
               wiggle: {
                 '0%, 100%': { transform: 'rotate(-1deg)' },
                 '50%': { transform: 'rotate(1deg)' },
               },
-              flail: {
-                '0%, 100%': { transform: 'rotate(-10deg)' },
-                '50%': { transform: 'rotate(30deg)' },
-              },
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-5px)' },
-              },
-              pop: {
-                '0%': { transform: 'scale(0.98)' },
-                '50%': { transform: 'scale(1.02)' },
-                '100%': { transform: 'scale(1)' },
-              },
-              draw: {
-                '0%': { strokeDashoffset: '1000' },
-                '100%': { strokeDashoffset: '0' },
-              },
-              'walk-across': {
-                '0%': { transform: 'translateX(-10vw)' },
-                '100%': { transform: 'translateX(100vw)' },
-              },
-              'goofy-dance': {
-                '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-                '25%': { transform: 'translateY(-20px) rotate(-15deg) skewX(10deg)' },
-                '50%': { transform: 'translateY(5px) rotate(10deg) scaleY(0.9)' },
-                '75%': { transform: 'translateY(-15px) rotate(-5deg) skewX(-5deg)' },
-              },
-              'fight-1': {
-                '0%': { left: '-10%', transform: 'scaleX(1) translateX(0)' },
-                // Use calc(50% - 5rem) to keep them close together in center regardless of screen width
-                '15%': { left: 'calc(50% - 5rem)', transform: 'scaleX(1) translateX(0)' },
-                // Fight Sequence
-                '18%': { transform: 'scaleX(1) translateX(20px)' }, // Jab
-                '20%': { transform: 'scaleX(1) translateX(0)' },
-                '22%': { transform: 'scaleX(1) translateY(-30px) rotate(20deg)' }, // Jump Kick
-                '25%': { transform: 'scaleX(1) translateY(0) rotate(0)' },
-                '28%': { transform: 'scaleX(1) translateX(-10px)' }, // Dodge
-                '32%': { transform: 'scaleX(1) translateX(40px)' }, // Big Punch
-                '35%': { transform: 'scaleX(1) rotate(-360deg)' }, // Spin
-                '38%': { transform: 'scaleX(1) translateX(0)' },
-                '40%': { transform: 'scaleX(1) translateY(10px)' }, // Duck
-                '45%': { transform: 'scaleX(1) translateY(-40px) scale(1.2)' }, // Super Jump
-                '50%': { transform: 'scaleX(1) translateY(0) scale(1)' },
-                '55%': { transform: 'scaleX(1) translateX(10px) rotate(10deg)' }, // Taunt
-                '65%': { left: 'calc(50% - 5rem)', transform: 'scaleX(1)' },
-                // Chase Exit
-                '70%': { left: 'calc(50% - 5rem)', transform: 'scaleX(1)' },
-                '100%': { left: '110%', transform: 'scaleX(1)' }
-              },
-              'fight-2': {
-                '0%': { right: '-10%', transform: 'scaleX(-1) translateX(0)' }, // Face Left
-                '15%': { right: 'calc(50% - 5rem)', transform: 'scaleX(-1) translateX(0)' },
-                // Fight Sequence (Reacting)
-                '18%': { transform: 'scaleX(-1) translateX(-10px)' }, // Recoil
-                '20%': { transform: 'scaleX(-1) translateX(10px)' }, // Push
-                '22%': { transform: 'scaleX(-1) translateY(10px)' }, // Duck kick
-                '25%': { transform: 'scaleX(-1) translateY(0)' },
-                '28%': { transform: 'scaleX(-1) translateX(30px)' }, // Counter kick
-                '32%': { transform: 'scaleX(-1) translateX(-30px) rotate(-20deg)' }, // Hit hard
-                '35%': { transform: 'scaleX(-1) translateX(0)' },
-                '38%': { transform: 'scaleX(-1) translateY(-20px) rotate(360deg)' }, // Air spin
-                '45%': { transform: 'scaleX(-1) translateX(-10px)' },
-                '55%': { transform: 'scaleX(-1) translateX(0)' },
-                '65%': { right: 'calc(50% - 5rem)', transform: 'scaleX(-1)' },
-                // Run Away Exit
-                '68%': { right: 'calc(50% - 5rem)', transform: 'scaleX(-1)' },
-                '70%': { right: 'calc(50% - 5rem)', transform: 'scaleX(1)' }, // Turn Right
-                '100%': { right: '-20%', transform: 'scaleX(1)' } // Run off right
-              },
-              'pow-effect': {
-                '0%, 20%': { opacity: '0', transform: 'scale(0.5)' },
-                '22%': { opacity: '1', transform: 'scale(1.5) rotate(-15deg)' },
-                '28%': { opacity: '0', transform: 'scale(0.5)' },
-                '30%': { opacity: '0', transform: 'scale(0.5)' },
-                '32%': { opacity: '1', transform: 'scale(1.8) rotate(15deg)' },
-                '38%': { opacity: '0', transform: 'scale(0.5)' },
-                '100%': { opacity: '0', transform: 'scale(0.5)' }
+              'ink-vibrate': {
+                '0%, 100%': { transform: 'translate(0, 0)' },
+                '25%': { transform: 'translate(1px, -1px)' },
+                '50%': { transform: 'translate(-1px, 1px)' },
+                '75%': { transform: 'translate(1px, 1px)' },
               }
             }
           },
         },
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@900&family=Courier+Prime:wght@400;700&family=Playfair+Display:ital,wght@0,900;1,900&family=Gochi+Hand&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -146,45 +103,27 @@
         color: #000000;
         overflow-x: hidden;
       }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif;
-      }
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-      .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
-      
-      /* Stickman Doodle Utilities */
-      .doodle-border {
-        border: 3px solid black;
-        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-      }
-      .doodle-underline {
-         background-image: url("data:image/svg+xml,%3Csvg width='200' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 5 Q 50 10 98 5 T 198 5' stroke='black' stroke-width='3' fill='none' /%3E");
-         background-repeat: no-repeat;
-         background-position: bottom;
-         background-size: 100% 10px;
-         padding-bottom: 8px;
+      .riso-grain {
+        background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png");
+        pointer-events: none;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.10.1",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "vite": "https://esm.sh/vite@^7.2.7",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
-</head>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+        "vite": "https://esm.sh/vite@^7.3.0",
+        "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+      }
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>

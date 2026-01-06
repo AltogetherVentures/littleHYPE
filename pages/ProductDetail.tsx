@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Star, ShieldCheck, Zap, BatteryCharging, Smile, Play, Pause, Gift, RefreshCcw, ArrowDown, Crown, User, Sparkles, Heart, Cloud, Ghost, Box, Lock, Palette, Sun } from 'lucide-react';
-import { PRODUCTS, TESTIMONIALS, FAQS, PRODUCT_CONTENTS } from '../constants';
+import { ArrowLeft, Check, Star, Zap, BatteryCharging, Smile, Play, Pause, Gift, Crown, User, Sparkles, Heart, Cloud, Ghost, Box, Lock, Palette, Sun, Mic, Film } from 'lucide-react';
+import { PRODUCTS, PRODUCT_CONTENTS } from '../constants';
 import { Button } from '../components/Button';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
@@ -21,6 +22,9 @@ const IconMap: Record<string, React.ElementType> = {
     gift: Gift,
     user: User,
     sun: Sun,
+    mic: Mic,
+    film: Film,
+    star: Star,
 };
 
 export const ProductDetail: React.FC = () => {
@@ -33,17 +37,14 @@ export const ProductDetail: React.FC = () => {
   // Fallback content logic
   const content = PRODUCT_CONTENTS[id || ''] || PRODUCT_CONTENTS['hype-calendar'];
   
-  const relatedProducts = PRODUCTS.filter(p => p.id !== id).slice(0, 3);
-
   useEffect(() => {
-      window.scrollTo(0, 0);
       if (product) {
           document.title = `${product.name} | littleHYPE`;
       }
       return () => {
           document.title = 'littleHYPE';
       }
-  }, [id, product]);
+  }, [product]);
 
   const togglePlay = (e: React.MouseEvent) => {
     e.preventDefault();

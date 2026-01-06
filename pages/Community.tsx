@@ -1,11 +1,12 @@
+
 import React from 'react';
-import { Mail, Smile, Hammer, DollarSign, Heart, ArrowRight, Star, Shield, Zap } from 'lucide-react';
+import { Hammer, ArrowRight, Star, Shield, Zap, ExternalLink, Heart, Mail } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { Button } from '../components/Button';
+import { NewsletterForm } from '../components/NewsletterForm';
 
 export const Community: React.FC = () => {
-
   return (
     <div className="bg-hype-bg min-h-screen font-sans overflow-x-hidden">
       <Navbar />
@@ -36,23 +37,13 @@ export const Community: React.FC = () => {
 
             <p className="text-xl md:text-2xl text-gray-500 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
                 Join the <strong>Giggle-Letter</strong>. It’s the weekly antidote to doomscrolling. 
-                Get good news, weird finds, and help us build the next big thing (and get paid for it).
+                Get good news, weird finds, and help us build the next big thing.
             </p>
 
-            {/* Signup Form */}
-            <div className="max-w-xl mx-auto relative group text-center">
-                 <div className="absolute -inset-1 bg-gradient-to-r from-hype-primary to-hype-coral rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                 <a 
-                    href="https://docs.google.com/forms" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="relative inline-block"
-                 >
-                    <Button variant="primary" size="lg" className="rounded-full px-12 py-4 shadow-xl hover:shadow-2xl text-xl w-full sm:w-auto">
-                        Sign Up (Google Form)
-                    </Button>
-                 </a>
-                 <p className="mt-4 text-sm text-gray-400 font-bold flex items-center justify-center gap-2">
+            <div className="max-w-xl mx-auto">
+                <NewsletterForm />
+                
+                 <p className="mt-6 text-sm text-gray-400 font-bold flex items-center justify-center gap-2">
                     <Shield size={14} className="text-hype-teal" /> No spam. Only ham.
                  </p>
             </div>
@@ -60,25 +51,18 @@ export const Community: React.FC = () => {
 
         {/* 2. Three Pillars */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-            
-            {/* Pillar 1 */}
             <div className="bg-white p-10 rounded-[2.5rem] shadow-soft hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:-translate-y-2">
                 <h3 className="font-heading text-2xl font-black text-hype-charcoal mb-4">Anti-Doomscroll</h3>
                 <p className="text-gray-500 font-medium leading-relaxed">
                     Tired of bad news? We curate the weirdest, most wholesome stories from around the globe. It’s like a warm bath for your brain.
                 </p>
             </div>
-
-            {/* Pillar 2 */}
-            <div className="bg-hype-charcoal p-10 rounded-[2.5rem] shadow-soft hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 relative overflow-hidden">
-                
+            <div className="bg-hype-charcoal p-10 rounded-[2.5rem] shadow-soft hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 relative overflow-hidden bg-black">
                 <h3 className="font-heading text-2xl font-black text-white mb-4">You Build It</h3>
                 <p className="text-gray-400 font-medium leading-relaxed">
                     We don't guess what you want. We ask. Vote on new product drops, choose colors, and help design the next viral hit.
                 </p>
             </div>
-
-            {/* Pillar 3 */}
             <div className="bg-white p-10 rounded-[2.5rem] shadow-soft hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:-translate-y-2">
                 <h3 className="font-heading text-2xl font-black text-hype-charcoal mb-4">Get Paid</h3>
                 <p className="text-gray-500 font-medium leading-relaxed">
@@ -87,10 +71,9 @@ export const Community: React.FC = () => {
             </div>
         </section>
 
-        {/* 3. Community Stats / Social Proof */}
+        {/* 3. Community Stats */}
         <section className="bg-hype-primary/10 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden mb-24">
              <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px]"></div>
-             
              <div className="relative z-10">
                  <div className="flex justify-center mb-8">
                      <div className="flex -space-x-4">
@@ -104,12 +87,10 @@ export const Community: React.FC = () => {
                         </div>
                      </div>
                  </div>
-                 
                  <h2 className="font-heading text-3xl md:text-5xl font-black text-hype-charcoal mb-6">
                     "The only email I actually open."
                  </h2>
                  <p className="text-xl font-bold text-hype-teal mb-8">— Sarah, Professional Procrastinator</p>
-                 
                  <div className="flex flex-wrap justify-center gap-4">
                     <div className="bg-white px-6 py-3 rounded-full shadow-sm text-sm font-bold text-gray-500 flex items-center">
                         <Star size={16} className="text-hype-primary fill-current mr-2" />
@@ -159,6 +140,26 @@ export const Community: React.FC = () => {
         </section>
 
       </main>
+
+      {/* Newsletter Section */}
+      <section className="py-32 bg-hype-black text-white text-center px-4">
+         <div className="max-w-3xl mx-auto">
+            <Mail size={64} className="mx-auto mb-8 text-white hover:text-hype-pink transition-colors animate-float" strokeWidth={1.5} />
+            <h2 className="font-heading text-5xl md:text-7xl font-black mb-8 uppercase tracking-tighter hover:text-hype-pink transition-colors">
+                The Giggle-Letter
+            </h2>
+            <p className="text-xl text-gray-400 mb-12 font-medium">
+                No spam. Just stick figures and serotonin.
+            </p>
+            
+            <NewsletterForm />
+            
+            <p className="mt-8 text-sm text-gray-500 font-bold uppercase tracking-widest">
+              Join 15,000+ legends getting weekly hype.
+            </p>
+         </div>
+      </section>
+
       <Footer />
     </div>
   );
