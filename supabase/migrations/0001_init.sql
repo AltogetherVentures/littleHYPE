@@ -74,8 +74,9 @@ create index theme_changes_user_idx on theme_changes (user_id);
 -- Privileges
 -- ---------------------------------------------------------------------------
 
--- Supabase grants new tables to its Data API roles by default. We never use the
--- Data API, so take those grants away rather than lean on RLS alone.
+-- Supabase grants new tables AND functions to its Data API roles by default. We
+-- never use the Data API, so take those grants away rather than lean on RLS
+-- alone: both what exists now and what later migrations will create.
 do $$
 declare r text;
 begin
@@ -83,10 +84,20 @@ begin
     if exists (select 1 from pg_roles where rolname = r) then
       execute format('revoke all on all tables in schema public from %I', r);
       execute format('revoke all on all functions in schema public from %I', r);
+      execute format('alter default privileges in schema public revoke all on tables from %I', r);
+      execute format('alter default privileges in schema public revoke all on functions from %I', r);
+      execute format('alter default privileges in schema public revoke all on sequences from %I', r);
     end if;
   end loop;
 end
 $$;
+
+-- CONVENTION for every function a migration adds: Postgres lets PUBLIC execute
+-- new functions by default, and that reaches Supabase's Data API roles. So each
+-- function must `revoke all on function ... from public;` and then grant execute
+-- to app_user explicitly. (A schema-level default cannot subtract PUBLIC's
+-- built-in grant, so this is enforced by test/integration/user-isolation.test.ts,
+-- which inspects every function in the schema after all migrations are applied.)
 
 grant usage on schema public to app_user;
 grant select on profiles, purchases, user_themes, theme_changes to app_user;
@@ -208,3 +219,18 @@ revoke all on function set_onboarding_theme(text) from public;
 revoke all on function admin_set_theme(text, text) from public;
 grant execute on function set_onboarding_theme(text) to app_user;
 grant execute on function admin_set_theme(text, text) to app_user;
+
+-- PUBLIC is not the same as Supabase's anon/authenticated roles, which hold
+-- their own direct grants on anything created above. Revoke explicitly, now
+-- that the functions exist (the default-privilege revoke above should already
+-- have prevented the grant; this is the belt to that pair of braces).
+do $$
+declare r text;
+begin
+  foreach r in array array['anon', 'authenticated'] loop
+    if exists (select 1 from pg_roles where rolname = r) then
+      execute format('revoke all on function set_onboarding_theme(text), admin_set_theme(text, text) from %I', r);
+    end if;
+  end loop;
+end
+$$;

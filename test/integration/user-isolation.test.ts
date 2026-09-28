@@ -66,6 +66,30 @@ describe("row-level security (PV-1)", () => {
     await expect(asUser(a, (tx) => tx`delete from profiles where user_id = ${a}`)).rejects.toThrow(/permission denied/);
   });
 
+  it("the Data API roles cannot run the theme functions either", async () => {
+    for (const role of ["anon", "authenticated"]) {
+      for (const fn of ["set_onboarding_theme(text)", "admin_set_theme(text, text)"]) {
+        const [row] = await sup`select has_function_privilege(${role}, ${fn}, 'execute') as ok`;
+        expect(row!.ok, `${role} on ${fn}`).toBe(false);
+      }
+    }
+  });
+
+  it("no function in the public schema is executable by the Data API roles or PUBLIC (covers every migration, present and future)", async () => {
+    const functions = await sup<{ signature: string; anon: boolean; authenticated: boolean; public: boolean }[]>`
+      select p.oid::regprocedure::text as signature,
+             has_function_privilege('anon', p.oid, 'execute')          as anon,
+             has_function_privilege('authenticated', p.oid, 'execute') as authenticated,
+             has_function_privilege('public', p.oid, 'execute')        as public
+        from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public'
+         and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')`;
+    expect(functions.length).toBeGreaterThan(0);
+    const exposed = functions.filter((f) => f.anon || f.authenticated || f.public).map((f) => f.signature);
+    expect(exposed).toEqual([]);
+  });
+
   it("the Data API roles have no access to any user table", async () => {
     for (const role of ["anon", "authenticated"]) {
       for (const table of ["profiles", "purchases", "user_themes", "theme_changes"]) {
