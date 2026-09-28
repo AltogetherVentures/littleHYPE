@@ -1,0 +1,17 @@
+{
+  "nav.today": "Mission control",
+  "nav.journal": "Log",
+  "nav.habits": "Objectives",
+  "nav.achievements": "Mission patches",
+  "nav.settings": "Systems",
+  "today.title": "Mission control",
+  "today.greeting": "All systems nominal, Captain.",
+  "today.habits.heading": "Mission objectives",
+  "today.habits.empty": "No objectives set. Add your first to begin the mission.",
+  "today.prompt.heading": "Incoming transmission",
+  "today.prompt.empty": "Awaiting your first transmission.",
+  "soon.body": "This module is still in the hangar.",
+  "theme.name": "Space Log",
+  "theme.tagline": "Captain your own mission. Every day logged moves the ship further.",
+  "theme.preview": "Log recorded. Orbit stable."
+}

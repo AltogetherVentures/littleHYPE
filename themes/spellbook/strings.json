@@ -1,0 +1,17 @@
+{
+  "nav.today": "The study",
+  "nav.journal": "Scrolls",
+  "nav.habits": "Rituals",
+  "nav.achievements": "Spells learned",
+  "nav.settings": "Sanctum",
+  "today.title": "The study",
+  "today.greeting": "Welcome back to the study, apprentice.",
+  "today.habits.heading": "Today's rituals",
+  "today.habits.empty": "No rituals yet. Inscribe your first to begin your practice.",
+  "today.prompt.heading": "Today's riddle",
+  "today.prompt.empty": "Your first riddle is still being inked.",
+  "soon.body": "This chapter is still being written.",
+  "theme.name": "SpellBook",
+  "theme.tagline": "An ancient academy of your own. Grow more powerful with every day of practice.",
+  "theme.preview": "Your ritual holds strong, apprentice. Seven days of practice."
+}

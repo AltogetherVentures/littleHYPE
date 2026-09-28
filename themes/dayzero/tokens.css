@@ -1,0 +1,14 @@
+/* Day Zero: concrete and charcoal, warning orange, faded olive, grain. */
+[data-theme="dayzero"] {
+  --color-bg: #1b1d1c;
+  --color-surface: #282a29;
+  --color-text: #ebe8df;
+  --color-muted: #b4b1a4;
+  --color-accent: #ff7a1a;
+  --color-accent-contrast: #170f05;
+  --color-border: #4c4f49;
+  --radius: 2px;
+  --font-heading: "Bebas Neue", Impact, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --shadow: 0 2px 0 rgb(0 0 0 / 40%);
+}

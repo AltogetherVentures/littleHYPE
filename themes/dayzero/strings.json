@@ -1,0 +1,17 @@
+{
+  "nav.today": "Safe house",
+  "nav.journal": "Survival log",
+  "nav.habits": "Survival tasks",
+  "nav.achievements": "Survival badges",
+  "nav.settings": "Supplies",
+  "today.title": "Safe house",
+  "today.greeting": "Still breathing. Good.",
+  "today.habits.heading": "Survival tasks",
+  "today.habits.empty": "No tasks yet. Add your first supply run.",
+  "today.prompt.heading": "Radio question",
+  "today.prompt.empty": "Static on the line. First question incoming.",
+  "soon.body": "This room hasn't been cleared yet.",
+  "theme.name": "Day Zero",
+  "theme.tagline": "The world ended and you're still here. Every habit kept is another day survived.",
+  "theme.preview": "Day 47. Still breathing. Supplies secured."
+}

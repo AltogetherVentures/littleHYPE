@@ -1,0 +1,17 @@
+{
+  "nav.today": "Today's page",
+  "nav.journal": "Pages",
+  "nav.habits": "Habits",
+  "nav.achievements": "Stickers",
+  "nav.settings": "Settings",
+  "today.title": "Today's page",
+  "today.greeting": "Good to see you. Let's fill today's page.",
+  "today.habits.heading": "Today's habits",
+  "today.habits.empty": "No habits yet. Jot down the first one you'd like to keep.",
+  "today.prompt.heading": "Today's prompt",
+  "today.prompt.empty": "Your first prompt is being written in the margin.",
+  "soon.body": "This page hasn't been written yet.",
+  "theme.name": "NoteBook",
+  "theme.tagline": "A favourite notebook and a good pen. A small daily ritual, just for you.",
+  "theme.preview": "Nice one. That's three days in a row."
+}

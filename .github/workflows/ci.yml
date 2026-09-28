@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+
+  # Unit tests, including the theme guard rails: no theme names in application
+  # code (NF-6), every theme's tokens/strings present, WCAG contrast (NF-4),
+  # billing/privacy copy never themed (TH-13).
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  # Proves user A cannot read or write user B's data, and that profiles.theme
+  # cannot be written by the app role - against a disposable Postgres with the
+  # real migrations applied, never against Supabase. See
+  # test/integration/user-isolation.test.ts and supabase/migrations/0001_init.sql.
+  database-gate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Both URLs are set for every step: the isolation tests need the superuser
+      # to seed and inspect, and fail loudly (rather than skip) without them.
+      PG_SUPERUSER_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      PG_APP_URL: postgresql://app_user:ci_only_password@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations and set a CI-only app_user password
+        run: bash scripts/setup-test-db.sh
+      - name: User isolation, theme lock and API integration tests
+        run: npm run test:integration
+
+  # Off until the Cloudflare and Supabase setup in docs/setup.md is done. Then
+  # create the `staging` environment with CLOUDFLARE_API_TOKEN and
+  # CLOUDFLARE_ACCOUNT_ID secrets, set the repository variable
+  # STAGING_DEPLOY_ENABLED=true, and merges to main deploy staging.
+  # Production is always manual: npm run deploy:production.
+  # Migrations are NOT deployed by this job: apply them by hand to both projects.
+  deploy-staging:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.STAGING_DEPLOY_ENABLED == 'true'
+    needs: [typecheck, test, database-gate]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: bash scripts/check-deploy-config.sh staging
+      - run: npm run build:web
+      - name: Deploy to Cloudflare Workers (staging)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env staging

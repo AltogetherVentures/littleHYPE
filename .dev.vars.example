@@ -1,0 +1,10 @@
+# Copy to .dev.vars for `npm run dev` (wrangler dev). Never commit .dev.vars.
+# Secrets from the *staging* Clerk application (docs/setup.md, Part 3).
+CLERK_SECRET_KEY=sk_test_...
+CLERK_JWT_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+
+# Not here (pass on the command line; see docs/setup.md, "Local development"):
+#   --var PUBLIC_BASE_URL:http://localhost:5173        origin the browser uses
+#   --var CLERK_PUBLISHABLE_KEY:pk_test_...
+# and, as a process environment variable, the local Postgres that replaces Hyperdrive:
+#   CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://app_user:...@localhost:5432/postgres

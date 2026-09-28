@@ -1,0 +1,14 @@
+/* NoteBook: warm cream paper, ink blue, pencil grey, a single red accent. */
+[data-theme="notebook"] {
+  --color-bg: #f6f0e1;
+  --color-surface: #fffaf0;
+  --color-text: #1d2946;
+  --color-muted: #545a6b;
+  --color-accent: #b3261e;
+  --color-accent-contrast: #ffffff;
+  --color-border: #d6cbb0;
+  --radius: 6px;
+  --font-heading: "Caveat", "Segoe Script", cursive;
+  --font-body: "Lora", Georgia, serif;
+  --shadow: 0 1px 0 rgb(29 41 70 / 10%);
+}
