@@ -23,9 +23,22 @@ ENVIRONMENT = "staging"
 CLERK_PUBLISHABLE_KEY = "pk_test_cGxlYXNlZC1wYXJha2VldC0yNDU0LmNsZXJrLmFjY291bnRzLmRldiQ"
 # The origin browsers load the app from, e.g. https://littlehype-staging.<your-subdomain>.workers.dev
 PUBLIC_BASE_URL = "https://littlehype-staging.alan-eoin-oneill.workers.dev"
-# Secrets - never put these here. Set with:
+# Clerk's JWT *public* key (PEM), used to verify session tokens without calling
+# Clerk. It is a public key, so it is safe to commit; the production instance has
+# a different one.
+CLERK_JWT_KEY = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IM+0+vG+vNGKwmydiJz
+vYbyGlxmlKHu9mvlIuzh+78G107R5lXq7wqI3S16o68l/NToUJlte9vAPqjVJGRW
+WhEG9ljd7zuTrHNZDT0Z/nitUEQe+S6YAbx+e+lNHT9WbsKWCa+c5ANsXj2BkgYQ
+j0fBGj2u8NhlhOM95zHq2h7yWfyCcfK7vLJcN7/V1chV97Sq41I0rB6DbDGHkVnn
+Yb/NPSyzSqcql6NAZQAbSGwlCZgDNFYZ50cdbpBRXkUJZli1OBPHZWPDput9jIl4
+zbcE1Lw9SH1/XSMlalaYSIE8FHYIFe9MppEwRRyxKGmmpNU3yHLTaa6PUcLoW4ZO
+SwIDAQAB
+-----END PUBLIC KEY-----
+'''
+# The one real secret - never put it here. Set with:
 #   wrangler secret put CLERK_SECRET_KEY --env staging
-#   wrangler secret put CLERK_JWT_KEY --env staging     (PEM public key; see docs/setup.md)
 
 [[env.staging.hyperdrive]]
 binding = "HYPERDRIVE"
@@ -56,8 +69,8 @@ ENVIRONMENT = "production"
 # Clerk *production* instance (pk_live_...): separate keys, users and JWT key from staging.
 CLERK_PUBLISHABLE_KEY = "REPLACE_WITH_PRODUCTION_CLERK_PUBLISHABLE_KEY"
 PUBLIC_BASE_URL = "REPLACE_WITH_PRODUCTION_URL"
+CLERK_JWT_KEY = "REPLACE_WITH_PRODUCTION_CLERK_JWT_PUBLIC_KEY"
 #   wrangler secret put CLERK_SECRET_KEY --env production
-#   wrangler secret put CLERK_JWT_KEY --env production
 
 [[env.production.hyperdrive]]
 binding = "HYPERDRIVE"

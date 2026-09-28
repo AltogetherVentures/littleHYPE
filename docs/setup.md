@@ -39,7 +39,7 @@ Things marked **[secret]** are never pasted into chat, committed to git, or put 
 3. **API keys**:
    - Copy the **Publishable key** (`pk_test_...`). It is not secret. Put it in `wrangler.toml` as `CLERK_PUBLISHABLE_KEY` under `[env.staging.vars]`.
    - Copy the **Secret key** (`sk_test_...`) **[secret]**.
-   - Click **Show JWT public key**, copy the **PEM public key**. It is not sensitive, but it is set as a secret to keep one process for all values.
+   - Copy the **JWKS Public Key** (the PEM block). It is a public key, not sensitive: it goes in `wrangler.toml` as `CLERK_JWT_KEY` under `[env.staging.vars]`.
 4. **Sessions, Customize session token**: set the claims to
    ```json
    { "metadata": "{{user.public_metadata}}" }
@@ -50,13 +50,11 @@ Things marked **[secret]** are never pasted into chat, committed to git, or put 
 ## 4. Cloudflare Worker (secrets and config)
 
 1. Decide the staging URL. Cloudflare gives you `https://littlehype-staging.<your-workers-subdomain>.workers.dev` (your subdomain is under Cloudflare, Workers & Pages). Put it in `wrangler.toml` as `PUBLIC_BASE_URL` under `[env.staging.vars]`. It must match the address you open in the browser exactly, with no trailing slash.
-2. Set the two secrets. Each command prompts for the value:
+2. Set the one secret. The command prompts for the value; paste it once at that prompt, never into the shell itself:
    ```bash
    npx wrangler secret put CLERK_SECRET_KEY --env staging
-   npx wrangler secret put CLERK_JWT_KEY --env staging
    ```
-   For the JWT key, paste the PEM including the `-----BEGIN/END PUBLIC KEY-----` lines.
-   (If wrangler says the Worker doesn't exist yet, do step 5.1 first and come back.)
+   If wrangler offers to create the Worker, answer `y`.
 
 ## 5. First deploy of staging
 
