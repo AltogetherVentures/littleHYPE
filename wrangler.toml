@@ -20,9 +20,9 @@ name = "littlehype-staging"
 [env.staging.vars]
 ENVIRONMENT = "staging"
 # Publishable keys are not secrets. Clerk *development* instance (pk_test_...).
-CLERK_PUBLISHABLE_KEY = "REPLACE_WITH_STAGING_CLERK_PUBLISHABLE_KEY"
+CLERK_PUBLISHABLE_KEY = "pk_test_cGxlYXNlZC1wYXJha2VldC0yNDU0LmNsZXJrLmFjY291bnRzLmRldiQ"
 # The origin browsers load the app from, e.g. https://littlehype-staging.<your-subdomain>.workers.dev
-PUBLIC_BASE_URL = "REPLACE_WITH_STAGING_URL"
+PUBLIC_BASE_URL = "https://littlehype-staging.alan-eoin-oneill.workers.dev"
 # Secrets - never put these here. Set with:
 #   wrangler secret put CLERK_SECRET_KEY --env staging
 #   wrangler secret put CLERK_JWT_KEY --env staging     (PEM public key; see docs/setup.md)
@@ -33,7 +33,7 @@ binding = "HYPERDRIVE"
 # app_user rather than through Supabase's pooler: Hyperdrive does its own edge
 # pooling. Nothing in git records which database this id targets, so verify with
 #   wrangler hyperdrive get <id>
-id = "REPLACE_WITH_STAGING_HYPERDRIVE_ID"
+id = "573831598ea444a18c0f2a2540bb950f"
 # Lets `wrangler dev` use a local Postgres instead of Hyperdrive (docs/setup.md).
 # Set WRANGLER_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE in .dev.vars.
 
