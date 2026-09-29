@@ -1,0 +1,232 @@
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { HabitRow } from "../components/HabitRow";
+import { artFor } from "../lib/art";
+import { flairFor } from "../lib/flair";
+import { ShareDialog } from "../components/ShareDialog";
+import { promptText, titleText } from "../lib/content";
+import { useTitle } from "../lib/sharing";
+import { usePrompt, useSkipPrompt } from "../lib/prompt";
+import { useSetLog, useToday } from "../lib/habits";
+import type { Me } from "../lib/me";
+import { useT } from "../lib/strings";
+
+/**
+ * The screen opened every day: today's habits with one-tap check-in (TD-1), the prompt
+ * (TD-2, added with the journal), and the nearest milestone (TD-3). Days follow the user's
+ * own timezone (TD-4). Theme wording and artwork come from the theme folder.
+ */
+export function Today({ me }: { me: Me }) {
+  const t = useT();
+  const flair = useMemo(() => flairFor(me.createdAt, me.timezone), [me.createdAt, me.timezone]);
+  const hero = artFor(me.theme, "hero");
+  const habitsArt = artFor(me.theme, "habits");
+  const promptArt = artFor(me.theme, "prompt");
+  const { data, isPending, isError, refetch } = useToday();
+  const setLog = useSetLog();
+  const prompt = usePrompt();
+  const skip = useSkipPrompt();
+  const title = useTitle();
+  const [sharing, setSharing] = useState(false);
+
+  const habits = data?.habits ?? [];
+  const due = habits.filter((h) => h.today.due);
+  const rest = habits.filter((h) => !h.today.due);
+  const doneCount = due.filter((h) => h.today.logged === "done").length;
+  const allDone = due.length > 0 && due.every((h) => h.today.logged !== null);
+  const milestone = data?.milestone;
+  // The headline counts days, so a weekly habit (whose streak is in weeks) only leads when
+  // there is no daily one.
+  const daily = habits.filter((h) => h.streak.unit === "days");
+  const headlineStreak = Math.max(0, ...(daily.length > 0 ? daily : habits).map((h) => h.streak.currentDays));
+
+  return (
+    <div className="today">
+      <section className="hero" aria-labelledby="today-title" data-compact={data?.writtenToday ?? false}>
+        <div className="hero-text">
+          <p className="hero-eyebrow">{t("today.eyebrow", flair)}</p>
+          <h1 id="today-title" className="hero-title">
+            {t("today.title")}
+          </h1>
+          <p className="hero-greeting">{t("today.greeting")}</p>
+          <div className="hero-actions">
+            <Link className="button" to={`/${me.theme}/journal/new`}>
+              {data?.writtenToday ? t("today.cta.again") : t("today.cta")}
+            </Link>
+            <span className="hero-sub" data-written={data?.writtenToday ?? false}>
+              {data?.writtenToday ? t("today.written") : t("today.cta.sub")}
+            </span>
+          </div>
+        </div>
+        {hero && <img className="hero-art" src={hero} alt="" />}
+      </section>
+
+      <div className="today-grid">
+        <section className="panel panel-habits" aria-labelledby="habits-heading">
+          <header className="panel-head">
+            <h2 id="habits-heading" className="panel-title">
+              {t("today.habits.heading")}
+            </h2>
+            <Link className="link-button" to={`/${me.theme}/habits`}>
+              {t("today.habits.manage")}
+            </Link>
+          </header>
+          {due.length > 0 && (
+            <div className="habit-progress-row">
+              <div className="habit-progress" role="progressbar" aria-valuemin={0} aria-valuemax={due.length} aria-valuenow={doneCount} aria-label={t("today.habits.heading")}>
+                <span style={{ width: `${Math.round((doneCount / due.length) * 100)}%` }} />
+              </div>
+              <span className="habit-count" data-complete={doneCount === due.length}>
+                {t("today.habits.count", { done: String(doneCount), total: String(due.length) })}
+              </span>
+            </div>
+          )}
+
+          {isPending && <p className="panel-status">{t("common.loading")}</p>}
+          {isError && (
+            <p className="panel-status" role="alert">
+              {t("common.error")}{" "}
+              <button className="link-button" onClick={() => void refetch()}>
+                {t("common.retry")}
+              </button>
+            </p>
+          )}
+
+          {data && habits.length === 0 && (
+            <div className="panel-body">
+              {habitsArt && <img className="panel-art" src={habitsArt} alt="" />}
+              <div>
+                <p>{t("today.habits.empty")}</p>
+                <Link className="button" to={`/${me.theme}/habits`}>
+                  {t("habits.add")}
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {due.length > 0 && (
+            <ul className="habit-list">
+              {due.map((h) => (
+                <HabitRow key={h.id} habit={h} onSet={(status) => setLog.mutate({ habitId: h.id, date: data!.date, status })} />
+              ))}
+            </ul>
+          )}
+          {allDone && <p className="all-clear">{t("today.allclear")}</p>}
+          {setLog.isError && (
+            <p role="alert" className="error">
+              {t("habit.error.generic")}
+            </p>
+          )}
+
+          {rest.length > 0 && (
+            <details className="not-due">
+              <summary>
+                {t("today.notdue.heading")} ({rest.length})
+              </summary>
+              <ul className="habit-list">
+                {rest.map((h) => (
+                  <HabitRow key={h.id} habit={h} onSet={(status) => setLog.mutate({ habitId: h.id, date: data!.date, status })} />
+                ))}
+              </ul>
+            </details>
+          )}
+        </section>
+
+        <section className="panel panel-prompt" aria-labelledby="prompt-heading">
+          <header className="panel-head">
+            <h2 id="prompt-heading" className="panel-title">
+              {t("today.prompt.heading")}
+            </h2>
+          </header>
+          <div className="panel-body">
+            {promptArt && <img className="panel-art" src={promptArt} alt="" />}
+            <div className="prompt-main">
+              {prompt.isPending && <p className="panel-status">{t("common.loading")}</p>}
+              {prompt.isError && (
+                <p role="alert">
+                  {t("common.error")}{" "}
+                  <button className="link-button" onClick={() => void prompt.refetch()}>
+                    {t("common.retry")}
+                  </button>
+                </p>
+              )}
+              {prompt.data && (
+                <>
+                  <p className="prompt-text">{promptText(me.theme, prompt.data.promptKey)}</p>
+                  {prompt.data.answeredBy ? (
+                    <p className="prompt-actions">
+                      <span className="prompt-answered">{t("today.prompt.answered")}</span>{" "}
+                      <Link className="link-button" to={`/${me.theme}/journal/${prompt.data.answeredBy}`}>
+                        {t("today.prompt.view")}
+                      </Link>
+                    </p>
+                  ) : (
+                    <div className="prompt-actions">
+                      <Link className="button" to={`/${me.theme}/journal/new?prompt=${prompt.data.promptKey}`}>
+                        {t("today.prompt.answer")}
+                      </Link>
+                      {prompt.data.skipsLeft > 0 ? (
+                        <button type="button" className="link-button" disabled={skip.isPending} onClick={() => skip.mutate()}>
+                          {t("today.prompt.skip")} ({prompt.data.skipsLeft === 1 ? t("today.prompt.skips.one") : t("today.prompt.skips", { n: String(prompt.data.skipsLeft) })})
+                        </button>
+                      ) : (
+                        <span className="prompt-noskips">{t("today.prompt.noskips")}</span>
+                      )}
+                    </div>
+                  )}
+                  {skip.isError && <p role="alert">{t("common.error")}</p>}
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <aside className="rail">
+          <section className="panel panel-streak" aria-labelledby="streak-heading">
+            <header className="panel-head">
+              <h2 id="streak-heading" className="panel-title">
+                {t("today.streak.heading")}
+              </h2>
+            </header>
+            <p className="streak-value">
+              <span className="streak-num">{headlineStreak}</span>
+              <span className="streak-unit">{t("today.streak.unit")}</span>
+            </p>
+            <p className="streak-empty">
+              {milestone ? (
+                <>
+                  <Link className="streak-habit" to={`/${me.theme}/habits/${milestone.habitId}`}>
+                    {milestone.habitName}
+                  </Link>
+                  {": "}
+                  {t(milestone.remaining === 1 ? "today.milestone.one" : "today.milestone", { remaining: String(milestone.remaining), milestone: String(milestone.milestone) })}
+                </>
+              ) : (
+                t("today.streak.empty")
+              )}
+            </p>
+          </section>
+          <section className="panel panel-title-card" aria-labelledby="title-heading">
+            <header className="panel-head">
+              <h2 id="title-heading" className="panel-title">
+                {t("today.title.heading")}
+              </h2>
+            </header>
+            {title.data?.title ? (
+              <>
+                <p className="title-text">{titleText(me.theme, title.data.title.key, title.data.title.streakDays)}</p>
+                <button type="button" className="link-button" onClick={() => setSharing(true)}>
+                  {t("today.title.share")}
+                </button>
+              </>
+            ) : (
+              <p className="streak-empty">{t("today.title.empty")}</p>
+            )}
+          </section>
+          <p className="today-note">{t("today.note")}</p>
+        </aside>
+      </div>
+      {sharing && <ShareDialog type="title" onClose={() => setSharing(false)} />}
+    </div>
+  );
+}

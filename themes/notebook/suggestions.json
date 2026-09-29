@@ -1,0 +1,34 @@
+{
+  "hydration": {
+    "name": "A glass of water",
+    "description": "Keep a glass by your notebook and sip as you go."
+  },
+  "exercise": {
+    "name": "A short walk",
+    "description": "Ten minutes of fresh air, with no pressure to go far."
+  },
+  "sleep": {
+    "name": "Wind down for bed",
+    "description": "Put the pen down and head to bed at a kind, steady time."
+  },
+  "reading": {
+    "name": "A few pages of a book",
+    "description": "Read a little each evening, just for the pleasure of it."
+  },
+  "mindfulness": {
+    "name": "Five quiet minutes",
+    "description": "Sit with a cup of tea and simply notice how you feel."
+  },
+  "screentime": {
+    "name": "Phone down after supper",
+    "description": "Set it face-down for the evening and see what fills the space."
+  },
+  "diet": {
+    "name": "One good thing on the plate",
+    "description": "Add something fresh to a meal. Small, tasty, easy."
+  },
+  "other": {
+    "name": "A daily tick",
+    "description": "One small thing to tick off each day, just for you."
+  }
+}

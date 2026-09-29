@@ -1,0 +1,10 @@
+{
+  "name": "Crumpled Page",
+  "variants": [
+    "This page got crumpled after {length} lovely days of {category}. Smooth it out and start a fresh one?",
+    "{length} days of {category}, and now a coffee ring right across the page. It happens to the best notebooks.",
+    "Note in the margin: {category} took a day off after {length} days. Notebooks understand.",
+    "Your {category} page slipped behind the sofa after {length} days. Found it again, a little creased and still yours."
+  ],
+  "restart": "Turn to a fresh page whenever you're ready."
+}

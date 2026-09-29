@@ -1,0 +1,72 @@
+{
+  "first_entry": {
+    "name": "First Light",
+    "description": "Save your first log entry.",
+    "unlock": "Log recorded. Your mission has officially begun."
+  },
+  "first_checkin": {
+    "name": "Cleared for Launch",
+    "description": "Complete a mission objective for the first time.",
+    "unlock": "Objective complete. All systems go."
+  },
+  "streak_3": {
+    "name": "Stable Orbit",
+    "description": "Hold an orbit streak on any objective for 3 days.",
+    "unlock": "Three days in orbit. Trajectory stable."
+  },
+  "streak_7": {
+    "name": "Weekly Orbiter",
+    "description": "Hold an orbit streak on any objective for 7 days.",
+    "unlock": "Seven days in orbit. Systems nominal, Captain."
+  },
+  "streak_14": {
+    "name": "Lunar Flyby",
+    "description": "Hold an orbit streak on any objective for 14 days.",
+    "unlock": "Fourteen days out. Lunar flyby confirmed."
+  },
+  "streak_30": {
+    "name": "Deep Space Voyager",
+    "description": "Hold an orbit streak on any objective for 30 days.",
+    "unlock": "Thirty days in the dark and holding steady. Voyager status granted."
+  },
+  "streak_60": {
+    "name": "Beyond the Belt",
+    "description": "Hold an orbit streak on any objective for 60 days.",
+    "unlock": "Sixty days out. The asteroid belt is far behind you, Captain."
+  },
+  "streak_100": {
+    "name": "Interstellar Navigator",
+    "description": "Hold an orbit streak on any objective for 100 days.",
+    "unlock": "One hundred days. You are beyond the charts now, Captain."
+  },
+  "entries_7": {
+    "name": "Log Keeper",
+    "description": "Record a log entry on 7 different days.",
+    "unlock": "Seven days logged. The ship's record grows."
+  },
+  "entries_30": {
+    "name": "Chief Chronicler",
+    "description": "Record a log entry on 30 different days.",
+    "unlock": "Thirty days on record. Mission control is impressed."
+  },
+  "entries_100": {
+    "name": "Fleet Archivist",
+    "description": "Record a log entry on 100 different days.",
+    "unlock": "One hundred logs on file. Your voyage is beautifully documented."
+  },
+  "prompts_10": {
+    "name": "Signal Decoded",
+    "description": "Answer 10 transmissions.",
+    "unlock": "Ten transmissions answered. Receiving you loud and clear."
+  },
+  "prompts_50": {
+    "name": "Comms Commander",
+    "description": "Answer 50 transmissions.",
+    "unlock": "Fifty transmissions answered. The channel is wide open."
+  },
+  "habits_3": {
+    "name": "Triple Orbit",
+    "description": "Hold a 7-day orbit streak on three mission objectives at once.",
+    "unlock": "Three orbits, one captain. Flawless formation."
+  }
+}
