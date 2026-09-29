@@ -53,7 +53,7 @@ export function ThemePicker({ busy, error, onChoose }: Props) {
           {error}
         </p>
       )}
-      <button className="button" disabled={!selected || busy} onClick={() => selected && onChoose(selected)}>
+      <button className="button button-hint" disabled={!selected || busy} onClick={() => selected && onChoose(selected)}>
         {busy ? t("picker.choosing") : selected ? t("picker.choose", { name: translate(selected, "theme.name") }) : t("picker.pick")}
       </button>
     </section>

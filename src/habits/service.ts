@@ -4,6 +4,7 @@ import type { HabitCategory } from "../../shared/categories";
 import {
   analyseHabit,
   completionGrid,
+  currentWeek,
   nearestMilestone,
   todayStatus,
   type GridCell,
@@ -30,6 +31,8 @@ export interface HabitView {
   pendingSchedule: { effectiveFrom: string; schedule: Schedule } | null;
   streak: Pick<HabitAnalysis, "current" | "longest" | "unit" | "currentDays" | "longestDays">;
   today: TodayStatus;
+  /** This Monday-to-Sunday week, for the strip under the habit's name. */
+  week: GridCell[];
 }
 
 interface HabitRow {
@@ -98,6 +101,7 @@ function toView(row: HabitRow, versions: ScheduleVersion[], logs: HabitLog[], to
     pendingSchedule: pending,
     streak: { current: analysis.current, longest: analysis.longest, unit: analysis.unit, currentDays: analysis.currentDays, longestDays: analysis.longestDays },
     today: todayStatus(input),
+    week: currentWeek(input),
   };
 }
 
@@ -244,13 +248,15 @@ export interface TodayPayload {
   date: string;
   habits: HabitView[];
   writtenToday: boolean;
-  milestone: { milestone: number; remaining: number } | null;
+  milestone: { milestone: number; remaining: number; habitId: string; habitName: string } | null;
 }
 
 /** Everything the Today screen needs about habits (TD-1, TD-3), for the user's local today (TD-4). */
 export async function todayPayload(tx: postgres.TransactionSql, userId: string, today: string): Promise<TodayPayload> {
   const habits = (await listHabits(tx, userId, today)).filter((h) => !h.archivedAt);
-  return { date: today, habits, milestone: nearestMilestone(habits.map((h) => h.streak.currentDays)), writtenToday: await writtenOn(tx, userId, today) };
+  const nearest = nearestMilestone(habits.map((h) => h.streak.currentDays));
+  const milestone = nearest ? { milestone: nearest.milestone, remaining: nearest.remaining, habitId: habits[nearest.index]!.id, habitName: habits[nearest.index]!.name } : null;
+  return { date: today, habits, milestone, writtenToday: await writtenOn(tx, userId, today) };
 }
 
 export interface HabitAnalysisRow {

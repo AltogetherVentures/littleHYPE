@@ -32,6 +32,7 @@ export function Today({ me }: { me: Me }) {
   const habits = data?.habits ?? [];
   const due = habits.filter((h) => h.today.due);
   const rest = habits.filter((h) => !h.today.due);
+  const doneCount = due.filter((h) => h.today.logged === "done").length;
   const allDone = due.length > 0 && due.every((h) => h.today.logged !== null);
   const milestone = data?.milestone;
   // The headline counts days, so a weekly habit (whose streak is in weeks) only leads when
@@ -41,7 +42,7 @@ export function Today({ me }: { me: Me }) {
 
   return (
     <div className="today">
-      <section className="hero" aria-labelledby="today-title">
+      <section className="hero" aria-labelledby="today-title" data-compact={data?.writtenToday ?? false}>
         <div className="hero-text">
           <p className="hero-eyebrow">{t("today.eyebrow", flair)}</p>
           <h1 id="today-title" className="hero-title">
@@ -70,6 +71,16 @@ export function Today({ me }: { me: Me }) {
               {t("today.habits.manage")}
             </Link>
           </header>
+          {due.length > 0 && (
+            <div className="habit-progress-row">
+              <div className="habit-progress" role="progressbar" aria-valuemin={0} aria-valuemax={due.length} aria-valuenow={doneCount} aria-label={t("today.habits.heading")}>
+                <span style={{ width: `${Math.round((doneCount / due.length) * 100)}%` }} />
+              </div>
+              <span className="habit-count" data-complete={doneCount === due.length}>
+                {t("today.habits.count", { done: String(doneCount), total: String(due.length) })}
+              </span>
+            </div>
+          )}
 
           {isPending && <p className="panel-status">{t("common.loading")}</p>}
           {isError && (
@@ -182,9 +193,17 @@ export function Today({ me }: { me: Me }) {
               <span className="streak-unit">{t("today.streak.unit")}</span>
             </p>
             <p className="streak-empty">
-              {milestone
-                ? t(milestone.remaining === 1 ? "today.milestone.one" : "today.milestone", { remaining: String(milestone.remaining), milestone: String(milestone.milestone) })
-                : t("today.streak.empty")}
+              {milestone ? (
+                <>
+                  <Link className="streak-habit" to={`/${me.theme}/habits/${milestone.habitId}`}>
+                    {milestone.habitName}
+                  </Link>
+                  {": "}
+                  {t(milestone.remaining === 1 ? "today.milestone.one" : "today.milestone", { remaining: String(milestone.remaining), milestone: String(milestone.milestone) })}
+                </>
+              ) : (
+                t("today.streak.empty")
+              )}
             </p>
           </section>
           <section className="panel panel-title-card" aria-labelledby="title-heading">

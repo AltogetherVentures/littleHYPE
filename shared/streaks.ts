@@ -252,16 +252,32 @@ export function todayStatus(input: HabitInput): TodayStatus {
 
 export const STREAK_MILESTONES = [3, 7, 14, 30, 60, 100] as const;
 
-/** The nearest milestone across a set of current streaks, e.g. "2 days to your 7-day streak" (TD-3). */
-export function nearestMilestone(streakDays: number[]): { milestone: number; remaining: number } | null {
-  let best: { milestone: number; remaining: number } | null = null;
-  for (const streak of streakDays) {
+export interface Milestone {
+  milestone: number;
+  remaining: number;
+  /** Position in the list passed in, so the caller can say which habit is nearly there. */
+  index: number;
+}
+
+/**
+ * The nearest milestone across a set of current streaks, e.g. "2 days to your 7-day
+ * streak" (TD-3). Ties go to the longer streak, so the message is about the habit the
+ * person is most invested in.
+ */
+export function nearestMilestone(streakDays: number[]): Milestone | null {
+  let best: Milestone | null = null;
+  streakDays.forEach((streak, index) => {
     const next = STREAK_MILESTONES.find((m) => m > streak);
-    if (next === undefined) continue;
+    if (next === undefined) return;
     const remaining = next - streak;
-    if (best === null || remaining < best.remaining) best = { milestone: next, remaining };
-  }
+    if (best === null || remaining < best.remaining || (remaining === best.remaining && streak > streakDays[best.index]!)) best = { milestone: next, remaining, index };
+  });
   return best;
+}
+
+/** The current Monday-to-Sunday week of a habit, for the small strip under its name. */
+export function currentWeek(input: HabitInput): GridCell[] {
+  return completionGrid(input, 1)[0]!;
 }
 
 export { addDays };

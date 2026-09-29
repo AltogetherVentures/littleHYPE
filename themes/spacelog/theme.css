@@ -18,8 +18,8 @@
 .hdr-space { position: sticky; top: 0; z-index: 40; background: rgba(8, 15, 36, 0.84); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(95, 227, 232, 0.22); }
 .hdr-space-inner { display: flex; align-items: center; gap: 1.1rem; max-width: 72rem; margin: 0 auto; padding: 0.7rem 16px; }
 .hdr-space-brand { display: flex; align-items: center; gap: 0.6rem; white-space: nowrap; font-family: var(--font-heading); font-weight: 500; font-size: 1.05rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent); }
-.hdr-space-nav { flex: 1; flex-wrap: nowrap; gap: 0.1rem; min-width: 0; }
-.hdr-space .hdr-space-nav a { padding: 0.45rem 0.65rem; white-space: nowrap; color: var(--color-muted); text-decoration: none; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid transparent; transition: color 0.15s, background 0.15s; }
+.hdr-space .hdr-space-nav { flex: 1; flex-wrap: nowrap; gap: 0.1rem; min-width: 0; }
+.hdr-space .hdr-space-nav a { padding: 0.45rem 0.55rem; white-space: nowrap; color: var(--color-muted); text-decoration: none; font-size: 0.74rem; letter-spacing: 0.07em; text-transform: uppercase; border: 1px solid transparent; transition: color 0.15s, background 0.15s; }
 .hdr-space .hdr-space-nav a:hover { color: var(--color-text); }
 .hdr-space .hdr-space-nav a[aria-current="page"] { color: var(--color-accent); border-color: rgba(95, 227, 232, 0.35); background: rgba(95, 227, 232, 0.08); }
 .hdr-space-readout { display: flex; align-items: center; gap: 1.1rem; font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); white-space: nowrap; }
@@ -31,6 +31,8 @@
 .hdr-space-out:hover { background: rgba(95, 227, 232, 0.1); }
 .hdr-space-scan { height: 2px; opacity: 0.75; background: linear-gradient(90deg, transparent, var(--color-accent), transparent) no-repeat; background-size: 38% 100%; animation: sl-scan 7s linear infinite; }
 @keyframes sl-scan { from { background-position: -40% 0; } to { background-position: 140% 0; } }
+@media (max-width: 1180px) { .hdr-space-status { display: none; } .hdr-space-inner { gap: 0.8rem; } }
+@media (max-width: 900px) { .hdr-space .hdr-space-nav { flex-wrap: wrap; } }
 @media (max-width: 719px) { .hdr-space-inner { justify-content: space-between; } .hdr-space-brand { letter-spacing: 0.14em; font-size: 0.95rem; } .hdr-space-readout { gap: 0.7rem; } .hdr-space-status { display: none; } }
 
 /* panels: HUD glass with corner brackets */
@@ -134,3 +136,27 @@
 [data-theme="spacelog"] .break-card .unlock-kicker { color: #ff9a86; }
 [data-theme="spacelog"] .break-card h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
 [data-theme="spacelog"] .title-text { text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.2rem; color: var(--color-accent); }
+
+/* check-in moment: a HUD ping, two rings and a glow */
+[data-theme="spacelog"] .check-burst { border-color: var(--color-accent); box-shadow: 0 0 18px rgba(95, 227, 232, 0.7); }
+[data-theme="spacelog"] .habit-row[data-celebrate="true"] .check-burst::after { content: ""; position: absolute; inset: -3px; border-radius: inherit; border: 2px solid #e8fbff; animation: check-ring 0.8s ease-out 0.12s forwards; }
+[data-theme="spacelog"] .habit-row[data-celebrate="true"] .check { box-shadow: 0 0 0 4px rgba(95, 227, 232, 0.2), 0 0 34px rgba(95, 227, 232, 0.95); }
+[data-theme="spacelog"] .habit-count { border-radius: 0; border-color: rgba(95, 227, 232, 0.35); letter-spacing: 0.1em; text-transform: uppercase; }
+[data-theme="spacelog"] .habit-progress { border-radius: 0; background: rgba(95, 227, 232, 0.12); }
+[data-theme="spacelog"] .week-strip .cell { width: 0.8rem; height: 0.8rem; margin: 0; }
+
+/* achievements: the next patch in range, and tiers as rings round the emblem */
+[data-theme="spacelog"] .badge-next { background: linear-gradient(180deg, rgba(22, 34, 80, 0.8), rgba(12, 20, 50, 0.86)); border-color: rgba(95, 227, 232, 0.5); border-radius: 4px; box-shadow: 0 0 0 1px rgba(95, 227, 232, 0.12), 0 0 32px rgba(95, 227, 232, 0.14); }
+[data-theme="spacelog"] .badge-next-kicker { letter-spacing: 0.2em; }
+[data-theme="spacelog"] .badge[data-next="true"] { box-shadow: 0 0 0 1px rgba(95, 227, 232, 0.4), 0 0 20px rgba(95, 227, 232, 0.2); }
+[data-theme="spacelog"] .badge-emblem .emblem-ring { stroke: var(--color-accent); }
+
+/* journal: this week on a phone, as HUD tiles */
+[data-theme="spacelog"] .journal-week-day { border-radius: 0; border-color: rgba(95, 227, 232, 0.32); background: rgba(6, 12, 32, 0.7); }
+[data-theme="spacelog"] .journal-week-day[data-has="true"] .journal-week-dot { box-shadow: 0 0 8px 2px rgba(95, 227, 232, 0.7); }
+[data-theme="spacelog"] .journal-week-num { font-weight: 500; letter-spacing: 0.05em; }
+
+/* editor: a recorder light on the log surface */
+[data-theme="spacelog"] .editor-surface::before { content: "● REC"; position: absolute; top: 0.55rem; right: 0.8rem; z-index: 1; pointer-events: none; font-size: 0.68rem; letter-spacing: 0.18em; color: #ff8a80; animation: sl-pulse 1.6s ease-in-out infinite; }
+[data-theme="spacelog"] .editor-text { padding-top: 1.6rem; }
+[data-theme="spacelog"] .tool-label { letter-spacing: 0.08em; }

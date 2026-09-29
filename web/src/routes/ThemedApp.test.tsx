@@ -12,16 +12,17 @@ import { ThemedApp } from "./ThemedApp";
 vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({}) }));
 
 // A tiny in-memory API: one daily habit that can be checked in, undone and refused.
-let habit = { id: "h1", name: "Drink water", description: null, category: "hydration", archivedAt: null, createdAt: "2026-09-01T00:00:00Z", schedule: { type: "daily" }, pendingSchedule: null, streak: { current: 2, longest: 5, unit: "days", currentDays: 2, longestDays: 5 }, today: { due: true, logged: null as string | null, week: null } };
+let habit = { id: "h1", name: "Drink water", description: null, category: "hydration", archivedAt: null, createdAt: "2026-09-01T00:00:00Z", schedule: { type: "daily" }, pendingSchedule: null, streak: { current: 2, longest: 5, unit: "days", currentDays: 2, longestDays: 5 }, today: { due: true, logged: null as string | null, week: null }, week: [{ date: "2026-09-28", state: "done" }, { date: "2026-09-29", state: "done" }, { date: "2026-09-30", state: "open" }, { date: "2026-10-01", state: "future" }, { date: "2026-10-02", state: "future" }, { date: "2026-10-03", state: "future" }, { date: "2026-10-04", state: "future" }] };
 let failNext = false;
 const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: { status?: string } }) => {
-  if (path === "/api/today") return { date: "2026-09-30", habits: [habit], milestone: { milestone: 3, remaining: 1 }, writtenToday: false };
+  if (path === "/api/today") return { date: "2026-09-30", habits: [habit], milestone: { milestone: 3, remaining: 1, habitId: "h1", habitName: "Drink water" }, writtenToday: false };
   if (path === "/api/prompt") return { date: "2026-09-30", promptKey: "reflect.proud_of", skipsLeft: 3, answeredBy: null };
   if (path.startsWith("/api/journal")) return { entries: [], hasMore: false, days: [], today: "2026-09-30" };
   if (path.startsWith("/api/habits/h1/logs/")) {
     if (failNext) throw new Error("boom");
     const done = init?.method === "PUT" && init.body?.status === "done";
-    habit = { ...habit, streak: { ...habit.streak, current: done ? 3 : 2 }, today: { ...habit.today, logged: init?.method === "PUT" ? (init.body?.status ?? null) : null } };
+    const logged = init?.method === "PUT" ? (init.body?.status ?? null) : null;
+    habit = { ...habit, streak: { ...habit.streak, current: done ? 3 : 2 }, today: { ...habit.today, logged }, week: habit.week.map((c) => (c.date === "2026-09-30" ? { ...c, state: logged ?? "open" } : c)) };
     return { habit };
   }
   return {};
@@ -93,10 +94,22 @@ describe("ThemedApp", () => {
     failNext = false;
   });
 
-  it("shows the nearest milestone from the API", async () => {
+  it("shows the nearest milestone from the API, naming the habit that is nearly there", async () => {
     habit = { ...habit, today: { ...habit.today, logged: null } };
     renderAt(`/${mine}/today`, me(mine));
-    expect(await screen.findByText(/1 day|One (more )?day|Just one/i)).toBeInTheDocument();
+    expect(await screen.findByText(/one (more )?day|just one/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Drink water" }).getAttribute("href")).toBe(`/${mine}/habits/h1`);
+  });
+
+  it("counts the check-ins done today and shows this week under each habit", async () => {
+    habit = { ...habit, today: { ...habit.today, logged: null }, week: habit.week.map((c) => (c.date === "2026-09-30" ? { ...c, state: "open" } : c)) };
+    renderAt(`/${mine}/today`, me(mine));
+    expect(await screen.findByText(translate(mine, "today.habits.count", { done: "0", total: "1" }))).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Drink water: .*2/ })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: /Drink water/ }));
+    expect(await screen.findByText(translate(mine, "today.habits.count", { done: "1", total: "1" }))).toBeInTheDocument();
+    // The strip follows the tap at once: today's cell is done before the server answers.
+    expect(screen.getByRole("img", { name: /Drink water: .*3/ })).toBeInTheDocument();
   });
 });
 

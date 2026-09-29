@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { JournalWeek } from "../components/JournalWeek";
 import { MoodFace } from "../components/MoodPicker";
-import { dayLabel, monthOf } from "../lib/calendar";
+import { dayLabel, monthOf, shiftMonth } from "../lib/calendar";
 import { plainExcerpt } from "../lib/format";
 import { useCalendar, useEntries } from "../lib/journal";
 import type { Me } from "../lib/me";
@@ -25,6 +26,7 @@ export function JournalPage({ me }: { me: Me }) {
   const [typed, setTyped] = useState(params.get("q") ?? "");
   const q = useDebounced(typed.trim(), 300);
   const [month, setMonth] = useState<string | null>(date ? monthOf(date) : null);
+  const [monthOpen, setMonthOpen] = useState(false);
 
   useEffect(() => {
     setParams(
@@ -41,6 +43,9 @@ export function JournalPage({ me }: { me: Me }) {
   const entries = useEntries({ q, date });
   const shown = month ?? monthOf(date ?? new Date().toISOString().slice(0, 10));
   const calendar = useCalendar(shown);
+  // The week strip can straddle a month boundary, so it also sees the month before.
+  const previous = useCalendar(shiftMonth(shown, -1));
+  const today = calendar.data?.today ?? new Date().toISOString().slice(0, 10);
   const Calendar = calendarFor(me.theme);
   const rows = entries.data?.pages.flatMap((p) => p.entries) ?? [];
   const filtered = q !== "" || date !== null;
@@ -57,7 +62,7 @@ export function JournalPage({ me }: { me: Me }) {
     );
 
   return (
-    <div className="journal-page">
+    <div className="journal-page" data-month-open={monthOpen}>
       <header className="page-head">
         <div>
           <h1>{t("nav.journal")}</h1>
@@ -70,6 +75,7 @@ export function JournalPage({ me }: { me: Me }) {
 
       <div className="journal-layout">
         <section className="journal-main" aria-label={t("nav.journal")}>
+          <JournalWeek today={today} days={[...(previous.data?.days ?? []), ...(calendar.data?.days ?? [])]} selected={date} onSelect={selectDate} monthOpen={monthOpen} onToggleMonth={() => setMonthOpen((o) => !o)} />
           <div className="search">
             <label className="sr-only" htmlFor="journal-search">
               {t("journal.search.label")}
@@ -93,7 +99,8 @@ export function JournalPage({ me }: { me: Me }) {
           <ul className="entry-list">
             {rows.map((e) => (
               <li key={e.id}>
-                <Link className="entry-card" to={`/${me.theme}/journal/${e.id}`}>
+                <Link className="entry-card" to={`/${me.theme}/journal/${e.id}`} data-mood={e.mood ?? undefined}>
+                  {e.mood && <span className="entry-edge" aria-hidden="true" />}
                   <span className="entry-date">{dayLabel(e.date)}</span>
                   <span className="entry-excerpt">{plainExcerpt(e.excerpt) || t("journal.blank")}</span>
                   {e.mood && (
@@ -119,7 +126,7 @@ export function JournalPage({ me }: { me: Me }) {
           </h2>
           <Calendar
             month={shown}
-            today={calendar.data?.today ?? new Date().toISOString().slice(0, 10)}
+            today={today}
             days={calendar.data?.days ?? []}
             selected={date}
             onSelect={selectDate}

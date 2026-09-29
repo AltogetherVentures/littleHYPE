@@ -303,8 +303,10 @@ describe("today status (TD-1)", () => {
 
 describe("nearest milestone (TD-3)", () => {
   it("finds the closest upcoming milestone across habits", () => {
-    expect(nearestMilestone([5, 12])).toEqual({ milestone: 7, remaining: 2 });
-    expect(nearestMilestone([0])).toEqual({ milestone: 3, remaining: 3 });
+    expect(nearestMilestone([5, 11])).toEqual({ milestone: 7, remaining: 2, index: 0 });
+    expect(nearestMilestone([0])).toEqual({ milestone: 3, remaining: 3, index: 0 });
+    // A tie goes to the longer streak: 6 -> 7 and 13 -> 14 are both one day away.
+    expect(nearestMilestone([6, 13])).toEqual({ milestone: 14, remaining: 1, index: 1 });
     expect(nearestMilestone([100, 250])).toBeNull();
     expect(nearestMilestone([])).toBeNull();
   });

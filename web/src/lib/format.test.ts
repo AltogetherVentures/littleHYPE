@@ -47,8 +47,24 @@ describe("editor formatting", () => {
     expect(plainExcerpt("## A heading")).toBe("A heading.");
     expect(plainExcerpt("- item with **bold** and [a link](https://x.example)")).toBe("item with bold and a link");
     expect(plainExcerpt("plain text")).toBe("plain text");
-    expect(plainExcerpt("## A good day\nWoke up early\n- one\n- two")).toBe("A good day. Woke up early one two");
+    expect(plainExcerpt("## A good day\nWoke up early\n- one\n- two")).toBe("A good day. Woke up early · one · two");
     expect(plainExcerpt("tried the *breathing* thing and _this_ too")).toBe("tried the breathing thing and this too");
     expect(plainExcerpt("2 * 3 and snake_case_word")).toBe("2 * 3 and snake_case_word");
+  });
+});
+
+describe("excerpts end on a whole word", () => {
+  it("cuts a long preview at a word boundary and adds an ellipsis", () => {
+    const words = Array.from({ length: 40 }, (_, i) => `word${i}`).join(" ");
+    const out = plainExcerpt(words, 60);
+    expect(out.length).toBeLessThanOrEqual(61);
+    expect(out.endsWith("…")).toBe(true);
+    expect(/word\d+…$/.test(out)).toBe(true);
+  });
+  it("drops the partial word the server's character cut left behind", () => {
+    expect(plainExcerpt("Walked by the river, then read for an hour. Finished chapter six\n- Called Mum\n- Cooked s…")).toBe("Walked by the river, then read for an hour. Finished chapter six · Called Mum · Cooked…");
+  });
+  it("never trails punctuation before the ellipsis", () => {
+    expect(plainExcerpt("one two three, four", 14)).toBe("one two three…");
   });
 });

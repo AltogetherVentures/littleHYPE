@@ -172,7 +172,12 @@ function Editor({ me, initial }: { me: Me; initial: EntryView | null }) {
         <div className="editor-tools" role="toolbar" aria-label={t("journal.editor.toolbar")}>
           {TOOLS.map((tool) => (
             <button key={tool.kind} type="button" className="tool" title={t(tool.label)} aria-label={t(tool.label)} disabled={previewing} onClick={() => format(tool.kind)}>
-              <span aria-hidden="true">{tool.glyph}</span>
+              <span className="tool-glyph" aria-hidden="true">
+                {tool.glyph}
+              </span>
+              <span className="tool-label" aria-hidden="true">
+                {t(tool.label)}
+              </span>
             </button>
           ))}
         </div>
@@ -189,17 +194,19 @@ function Editor({ me, initial }: { me: Me; initial: EntryView | null }) {
       {previewing ? (
         <div className="editor-preview">{body.trim() ? <Markdown text={body} /> : <p className="empty-note">{t("journal.editor.previewEmpty")}</p>}</div>
       ) : (
-        <textarea
-          ref={text}
-          className="editor-text"
-          aria-label={t("journal.editor.label")}
-          placeholder={t("journal.editor.placeholder")}
-          value={body}
-          spellCheck
-          onChange={(e) => edit(e.target.value)}
-          onBlur={() => void saver.flush()}
-          onKeyDown={onKeyDown}
-        />
+        <div className="editor-surface">
+          <textarea
+            ref={text}
+            className="editor-text"
+            aria-label={t("journal.editor.label")}
+            placeholder={t("journal.editor.placeholder")}
+            value={body}
+            spellCheck
+            onChange={(e) => edit(e.target.value)}
+            onBlur={() => void saver.flush()}
+            onKeyDown={onKeyDown}
+          />
+        </div>
       )}
 
       <MoodPicker

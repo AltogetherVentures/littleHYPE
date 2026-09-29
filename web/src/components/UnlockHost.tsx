@@ -3,6 +3,7 @@ import { achievementCopy } from "../lib/content";
 import { useMarkSeen, useUnseenAchievements } from "../lib/achievements";
 import { unlockFor } from "../lib/overrides";
 import { useT, type StringKey } from "../lib/strings";
+import { tierOf } from "@shared/achievement-tiers";
 import { AchievementEmblem } from "./AchievementEmblem";
 
 /**
@@ -38,7 +39,7 @@ export function UnlockHost({ theme }: { theme: string }) {
       name={copy.name}
       description={copy.description}
       unlock={copy.unlock}
-      emblem={<AchievementEmblem family={current.family} size={56} />}
+      emblem={<AchievementEmblem family={current.family} tier={tierOf(current.key)} size={56} />}
       remaining={queue.length - 1}
       onDismiss={dismiss}
       t={(key, vars) => t(key as StringKey, vars)}

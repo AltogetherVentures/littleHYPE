@@ -143,3 +143,30 @@
 [data-theme="spellbook"] .break-card h2 { font-family: var(--font-body); font-style: italic; font-weight: 500; font-size: 1.4rem; text-transform: none; letter-spacing: 0; color: #4a0f25; }
 [data-theme="spellbook"] .break-card .unlock-kicker { color: #7d5510; }
 [data-theme="spellbook"] .title-text { color: #4a0f25; letter-spacing: 0.04em; font-size: 1.3rem; }
+
+/* check-in moment: gold sparks fly off the sigil */
+[data-theme="spellbook"] .check-burst { border-color: #f6d97a; box-shadow: 0 0 22px rgba(255, 215, 106, 0.9); }
+[data-theme="spellbook"] .check-burst::before, [data-theme="spellbook"] .check-burst::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #f6d97a; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; }
+[data-theme="spellbook"] .habit-row[data-celebrate="true"] .check-burst::before { --dx: -30px; --dy: -34px; animation: sp-spark 0.8s ease-out forwards; }
+[data-theme="spellbook"] .habit-row[data-celebrate="true"] .check-burst::after { --dx: 32px; --dy: -26px; animation: sp-spark 0.8s ease-out 0.08s forwards; }
+[data-theme="spellbook"] .habit-count { font-family: var(--font-heading); border-color: #c9962e; color: #7a1f3d; background: #fbf3de; }
+[data-theme="spellbook"] .habit-count[data-complete="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .habit-progress { background: #e6d5ad; }
+[data-theme="spellbook"] .habit-progress > span { background: linear-gradient(90deg, #c9962e, #f6d97a); }
+[data-theme="spellbook"] .week-strip .cell { width: 0.85rem; height: 0.85rem; }
+
+/* achievements: the spell within your grasp */
+[data-theme="spellbook"] .badge-next { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c9962e; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e, 0 0 26px rgba(255, 215, 106, 0.35); margin: 4px 4px 1.4rem; }
+[data-theme="spellbook"] .badge-next-kicker { font-family: var(--font-heading); letter-spacing: 0.16em; color: #8a5a20; }
+[data-theme="spellbook"] .badge-next .badge-togo { color: #7a1f3d; }
+[data-theme="spellbook"] .badge[data-next="true"] { box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #7a1f3d; }
+
+/* journal: this week on a phone, seven small runes */
+[data-theme="spellbook"] .journal-week-day { border-radius: 6px; border-color: #c6ae80; background: linear-gradient(180deg, #fbf3de, #f4e7c8); }
+[data-theme="spellbook"] .journal-week-day[data-has="true"] .journal-week-dot { box-shadow: 0 0 6px rgba(255, 215, 106, 0.8); }
+[data-theme="spellbook"] .journal-week-day[aria-pressed="true"] { background: #7a1f3d; color: #fff3d6; border-color: #c9962e; }
+
+/* editor: a small wax seal in the corner of the scroll */
+[data-theme="spellbook"] .editor-surface::after { content: ""; position: absolute; right: 0.6rem; bottom: 0.6rem; width: 26px; height: 26px; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #b8304f, #6b1a36 70%); box-shadow: 0 2px 4px rgba(58, 19, 34, 0.35), inset 0 0 0 5px rgba(255, 215, 106, 0.25); opacity: 0.85; }
+[data-theme="spellbook"] .tool { border-color: #c6ae80; background: #fbf3de; border-radius: 6px; }
+[data-theme="spellbook"] .tool-label { font-family: var(--font-heading); color: #8a5a20; }

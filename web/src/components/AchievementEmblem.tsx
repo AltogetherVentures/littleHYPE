@@ -9,13 +9,34 @@ const PATHS: Record<AchievementFamily, string[]> = {
   habits: ["M6 16a3 3 0 1 0 0 .01", "M12 8a3 3 0 1 0 0 .01", "M18 16a3 3 0 1 0 0 .01", "M8.2 13.8 10 10.8", "M13.8 10.8 15.8 13.8"],
 };
 
-/** One simple emblem per family of achievement; the theme dresses the badge around it. */
-export function AchievementEmblem({ family, size = 32 }: { family: AchievementFamily; size?: number }) {
+/** Small pips on an arc under the icon, one per tier above the first. */
+function pips(n: number) {
+  const out: { cx: number; cy: number }[] = [];
+  const spread = Math.min(n - 1, 4) * 0.42;
+  for (let i = 0; i < n; i++) {
+    const a = Math.PI / 2 + (n === 1 ? 0 : -spread / 2 + (spread * i) / (n - 1));
+    out.push({ cx: 12 + Math.cos(a) * 9.6, cy: 12 + Math.sin(a) * 9.6 });
+  }
+  return out;
+}
+
+/**
+ * One emblem per family of achievement, growing with its tier: the first rung is the bare
+ * icon, later rungs add pips under it and, from the third on, an outer ring, so a 100-day
+ * badge never looks like the 3-day one. The theme dresses the badge around it.
+ */
+export function AchievementEmblem({ family, tier = 0, size = 32 }: { family: AchievementFamily; tier?: number; size?: number }) {
+  const scale = tier >= 2 ? 0.72 : tier === 1 ? 0.82 : 1;
   return (
-    <svg className="emblem" viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {PATHS[family].map((d) => (
-        <path key={d} d={d} />
-      ))}
+    <svg className="emblem" data-tier={tier} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {tier >= 2 && <circle className="emblem-ring" cx="12" cy="12" r="11" strokeWidth="1" strokeDasharray={tier >= 4 ? undefined : "2.5 2"} />}
+      {tier >= 4 && <circle className="emblem-ring" cx="12" cy="12" r="8.6" strokeWidth="0.8" strokeDasharray="1 1.6" />}
+      <g transform={`translate(12 ${tier >= 1 ? 10.6 : 12}) scale(${scale}) translate(-12 -12)`}>
+        {PATHS[family].map((d) => (
+          <path key={d} d={d} />
+        ))}
+      </g>
+      {tier >= 1 && pips(Math.min(tier, 5)).map((p, i) => <circle key={i} className="emblem-pip" cx={p.cx} cy={p.cy} r="1.1" fill="currentColor" stroke="none" />)}
     </svg>
   );
 }

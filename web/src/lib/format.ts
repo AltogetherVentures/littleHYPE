@@ -47,9 +47,18 @@ export function applyFormat(text: string, start: number, end: number, kind: Form
   return { text: text.slice(0, lineStart) + block + text.slice(lineEnd), start: Math.max(lineStart, start + (allPrefixed ? -prefix.length : prefix.length)), end: end + delta };
 }
 
-/** A one-line preview of an entry with the Markdown furniture taken off. */
-export function plainExcerpt(excerpt: string): string {
-  return excerpt
+/** Longest preview shown on an entry card, in characters. */
+export const EXCERPT_MAX = 150;
+
+/**
+ * A one-line preview of an entry with the Markdown furniture taken off. Lines are joined
+ * with a middle dot (or a space after a full stop), and the result is cut at a word, never
+ * in the middle of one: the server's excerpt is a plain character cut, so a fragment that
+ * ends in an ellipsis loses its last, partial word.
+ */
+export function plainExcerpt(excerpt: string, max = EXCERPT_MAX): string {
+  const cut = excerpt.endsWith("…");
+  const lines = (cut ? excerpt.slice(0, -1).replace(/\S+$/, "") : excerpt)
     .split("\n")
     .map((line) => {
       const heading = /^#{1,3} +/.test(line);
@@ -61,6 +70,13 @@ export function plainExcerpt(excerpt: string): string {
         .trim();
       return heading && text && !/[.!?:]$/.test(text) ? `${text}.` : text;
     })
-    .filter(Boolean)
-    .join(" ");
+    .filter(Boolean);
+  let joined = "";
+  for (const line of lines) joined = joined === "" ? line : /[.!?:]$/.test(joined) ? `${joined} ${line}` : `${joined} · ${line}`;
+  if (joined.length > max) {
+    const at = joined.lastIndexOf(" ", max);
+    joined = joined.slice(0, at > max / 2 ? at : max).replace(/[\s·,;:]+$/, "");
+    return `${joined}…`;
+  }
+  return cut ? `${joined.replace(/[\s·,;:]+$/, "")}…` : joined;
 }

@@ -1,8 +1,11 @@
 import { HABIT_CATEGORIES } from "@shared/categories";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { CategoryGlyph } from "../components/CategoryGlyph";
 import { HabitForm, type HabitFormValues } from "../components/HabitControls";
 import { streakLabel } from "../components/HabitRow";
+import { WeekStrip } from "../components/WeekStrip";
+import { artFor } from "../lib/art";
 import { suggestionFor } from "../lib/content";
 import { errorCode, useHabitMutations, useHabits, type HabitView } from "../lib/habits";
 import { useT, type StringKey } from "../lib/strings";
@@ -17,13 +20,15 @@ export function HabitsPage({ me }: { me: Me }) {
   const [adding, setAdding] = useState(false);
   const [seed, setSeed] = useState<HabitFormValues>(BLANK);
 
+  const art = artFor(me.theme, "habits");
   const active = (data?.habits ?? []).filter((h) => !h.archivedAt);
   const archived = (data?.habits ?? []).filter((h) => h.archivedAt);
   const error = create.isError ? (errorCode(create.error) === "habit_limit_reached" ? t("habit.error.limit") : t("habit.error.generic")) : null;
 
   return (
     <div className="habits-page">
-      <header className="page-head">
+      <header className="page-head page-head-art">
+        {art && <img className="page-art" src={art} alt="" />}
         <div>
           <h1>{t("nav.habits")}</h1>
           <p className="page-intro">{t("habits.intro")}</p>
@@ -91,14 +96,20 @@ export function HabitsPage({ me }: { me: Me }) {
 
 function HabitCard({ habit, theme }: { habit: HabitView; theme: string }) {
   const t = useT();
+  const unit = habit.streak.unit === "weeks" ? t("habit.unit.weeks") : t("today.streak.unit");
   return (
     <li>
-      <Link className="habit-card" to={`/${theme}/habits/${habit.id}`} data-archived={habit.archivedAt !== null}>
-        <span className="habit-card-name">{habit.name}</span>
-        <span className="habit-card-meta">
-          {t(`category.${habit.category}` as StringKey)}
-          {habit.streak.current > 0 ? ` · ${streakLabel(t, habit)}` : ""}
+      <Link className="habit-card" to={`/${theme}/habits/${habit.id}`} data-archived={habit.archivedAt !== null} data-category={habit.category}>
+        <span className="habit-card-head">
+          <span className="habit-card-glyph">
+            <CategoryGlyph category={habit.category} />
+          </span>
+          <span className="habit-card-category">{t(`category.${habit.category}` as StringKey)}</span>
         </span>
+        <span className="habit-card-name">{habit.name}</span>
+        <span className="habit-card-meta">{habit.streak.current > 0 ? streakLabel(t, habit) : t("habit.card.nostreak")}</span>
+        {habit.streak.longest > 0 && <span className="habit-card-best">{t("habit.card.best", { n: String(habit.streak.longest), unit })}</span>}
+        {!habit.archivedAt && <WeekStrip week={habit.week} label={habit.name} />}
       </Link>
     </li>
   );

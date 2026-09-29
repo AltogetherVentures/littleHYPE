@@ -36,6 +36,7 @@ type Habit = {
   schedule: { type: string; days?: number[]; target?: number };
   pendingSchedule: { effectiveFrom: string; schedule: { type: string } } | null;
   streak: { current: number; longest: number; unit: string; currentDays: number };
+  week: { date: string; state: string }[];
   today: { due: boolean; logged: string | null; week: { done: number; target: number } | null };
 };
 
@@ -172,11 +173,13 @@ describe("today (TD-1, TD-3, TD-4)", () => {
     const daily = await newHabit(u, { name: "Daily" });
     const tueThu = await newHabit(u, { name: "Tue Thu", schedule: { type: "weekdays", days: [2, 4] } });
     for (const d of ["2026-09-28", "2026-09-29"]) await check(u, daily.id, d);
-    const today = (await api("/api/today", { as: u })).body as { date: string; habits: Habit[]; milestone: { milestone: number; remaining: number } | null };
+    const today = (await api("/api/today", { as: u })).body as { date: string; habits: Habit[]; milestone: { milestone: number; remaining: number; habitId: string; habitName: string } | null };
     expect(today.date).toBe("2026-09-30");
     expect(today.habits.map((h) => [h.name, h.today.due])).toEqual([["Daily", true], ["Tue Thu", false]]); // Wednesday
-    expect(today.milestone).toEqual({ milestone: 3, remaining: 1 });
+    expect(today.milestone).toEqual({ milestone: 3, remaining: 1, habitId: daily.id, habitName: "Daily" });
     expect(tueThu.id).toBeTruthy();
+    // Every habit carries its Monday-to-Sunday week for the strip under its name.
+    expect(today.habits[0]!.week.map((c) => c.state)).toEqual(["done", "done", "open", "future", "future", "future", "future"]);
   });
 
   it("shows weekly progress and stays due until the target is met", async () => {

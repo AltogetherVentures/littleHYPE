@@ -10,6 +10,7 @@ const habit = (over: Partial<HabitView["today"]> = {}, streak: Partial<HabitView
   createdAt: "2026-01-01T00:00:00.000Z",
   schedule: { type: "daily" },
   pendingSchedule: null,
+  week: [{ date: "2026-09-28", state: "done" }, { date: "2026-09-29", state: "open" }, { date: "2026-09-30", state: "future" }],
   streak: { current: 4, longest: 6, unit: "days", currentDays: 4, longestDays: 6, ...streak },
   today: { due: true, logged: null, week: null, ...over },
 });
@@ -37,5 +38,13 @@ describe("optimisticLog", () => {
     expect(next.today.week).toEqual({ done: 2, target: 3 });
     expect(next.streak.current).toBe(2);
     expect(optimisticLog({ ...weekly, today: { ...weekly.today, logged: "done" } }, null).today.week).toEqual({ done: 0, target: 3 });
+  });
+});
+
+describe("the week strip follows the tap", () => {
+  it("marks today's cell (the last one not still to come) done, resting, or open again", () => {
+    expect(optimisticLog(habit(), "done").week.map((c) => c.state)).toEqual(["done", "done", "future"]);
+    expect(optimisticLog(habit(), "skipped").week.map((c) => c.state)).toEqual(["done", "skipped", "future"]);
+    expect(optimisticLog(optimisticLog(habit(), "done"), null).week.map((c) => c.state)).toEqual(["done", "open", "future"]);
   });
 });

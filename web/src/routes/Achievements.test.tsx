@@ -61,10 +61,20 @@ describe("the achievements collection", () => {
     expect(await screen.findByText(first.name)).toBeTruthy();
     expect(screen.getAllByRole("listitem").filter((li) => li.classList.contains("badge"))).toHaveLength(ACHIEVEMENT_KEYS.length);
     expect(screen.getByText(translate(theme, "achievements.count", { n: "2", total: String(ACHIEVEMENT_KEYS.length) }))).toBeTruthy();
+    // One bar per locked badge, plus the "nearly there" card's bar for the closest one.
     const bars = screen.getAllByRole("progressbar");
-    expect(bars).toHaveLength(ACHIEVEMENT_KEYS.length - 2);
-    expect(bars[0]!.getAttribute("aria-valuenow")).toBe("2");
-    expect(bars[0]!.getAttribute("aria-valuemax")).toBe("7");
+    expect(bars).toHaveLength(ACHIEVEMENT_KEYS.length - 2 + 1);
+    expect(bars[1]!.getAttribute("aria-valuenow")).toBe("2");
+    expect(bars[1]!.getAttribute("aria-valuemax")).toBe("7");
+  });
+
+  it("puts the closest still-locked achievement first, in days to go rather than a fraction", async () => {
+    renderAt(`/${theme}/achievements`, me());
+    const next = await screen.findByRole("region", { name: translate(theme, "achievements.next.heading") });
+    // Every locked badge in the mock is 2 of 7 (streak family, so days), and the first of them wins the tie.
+    expect(within(next).getByText(achievementCopy(theme, ACHIEVEMENT_KEYS[2]!).name)).toBeTruthy();
+    expect(within(next).getByText(translate(theme, "achievements.togo.days", { n: "5" }))).toBeTruthy();
+    expect(within(next).getByRole("link", { name: translate(theme, "achievements.next.cta") }).getAttribute("href")).toBe(`/${theme}/today`);
   });
 });
 

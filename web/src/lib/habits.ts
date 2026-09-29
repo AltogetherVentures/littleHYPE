@@ -15,12 +15,14 @@ export interface HabitView {
   pendingSchedule: { effectiveFrom: string; schedule: Schedule } | null;
   streak: Pick<HabitAnalysis, "current" | "longest" | "unit" | "currentDays" | "longestDays">;
   today: TodayStatus;
+  /** This Monday-to-Sunday week, for the strip under the habit's name. */
+  week: GridCell[];
 }
 
 export interface TodayData {
   date: string;
   habits: HabitView[];
-  milestone: { milestone: number; remaining: number } | null;
+  milestone: { milestone: number; remaining: number; habitId: string; habitName: string } | null;
   /** Whether any entry with text exists for today (TD-2). */
   writtenToday: boolean;
 }
@@ -61,10 +63,15 @@ export function optimisticLog(habit: HabitView, status: LogStatus | null): Habit
     if (wasDone && !willDone) current = Math.max(0, current - 1);
   }
   const week = habit.today.week ? { ...habit.today.week, done: Math.max(0, habit.today.week.done + (willDone ? 1 : 0) - (wasDone ? 1 : 0)) } : null;
+  // Today is the last cell of the week that is not still to come.
+  const cell = status === "done" ? "done" : status === "skipped" ? "skipped" : "open";
+  let todayIndex = habit.week.length - 1;
+  while (todayIndex > 0 && habit.week[todayIndex]!.state === "future") todayIndex--;
   return {
     ...habit,
     streak: { ...habit.streak, current, longest: Math.max(habit.streak.longest, current), currentDays: habit.streak.unit === "days" ? current : habit.streak.currentDays },
     today: { ...habit.today, logged: status, week },
+    week: habit.week.map((c, i) => (i === todayIndex ? { ...c, state: cell } : c)),
   };
 }
 

@@ -6,7 +6,7 @@
 import type { HabitCategory } from "@shared/categories";
 import { CARD_THEMES } from "@themes/cards";
 import { renderCardSvg } from "@themes/card-kit";
-import { analyseHabit, completionGrid, nearestMilestone, todayStatus, type HabitLog, type Schedule, type ScheduleVersion } from "@shared/streaks";
+import { analyseHabit, completionGrid, currentWeek, nearestMilestone, todayStatus, type HabitLog, type Schedule, type ScheduleVersion } from "@shared/streaks";
 
 interface MockHabit {
   id: string;
@@ -52,6 +52,7 @@ function view(h: MockHabit) {
       pendingSchedule: null,
       streak: { current: a.current, longest: a.longest, unit: a.unit, currentDays: a.currentDays, longestDays: a.longestDays },
       today: todayStatus(input),
+      week: currentWeek(input),
     },
     analysis: a,
     input,
@@ -158,7 +159,9 @@ export function installMockApi() {
     if (path.startsWith("/api/onboarding")) return json({ onboarded: true, habitId: null });
     if (path === "/api/today") {
       const active = habits.filter((h) => !h.archivedAt).map((h) => view(h));
-      return json({ date: today, habits: active.map((v) => v.habit), milestone: nearestMilestone(active.map((v) => v.analysis.currentDays)), writtenToday: entries.some((e) => e.date === today) });
+      const nearest = nearestMilestone(active.map((v) => v.analysis.currentDays));
+      const milestone = nearest ? { milestone: nearest.milestone, remaining: nearest.remaining, habitId: active[nearest.index]!.habit.id, habitName: active[nearest.index]!.habit.name } : null;
+      return json({ date: today, habits: active.map((v) => v.habit), milestone, writtenToday: entries.some((e) => e.date === today) });
     }
     if (path === "/api/habits" && method === "GET") return json({ today, habits: habits.map((h) => view(h).habit) });
     const history = path.match(/^\/api\/habits\/([^/]+)\/history$/);

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -109,12 +109,37 @@ describe("journal list", () => {
     expect(await screen.findByText("quiet day with tea")).toBeTruthy();
   });
 
+  it("offers this week as a strip with a dot on written days, and opens the whole month on request", async () => {
+    renderAt(`/${theme}/journal`);
+    await screen.findByText("walked by the river");
+    const week = screen.getByRole("group", { name: t("journal.week.heading") });
+    const days = within(week).getAllByRole("button");
+    expect(days).toHaveLength(7);
+    // The mock's today is Wednesday 30 September 2026; the strip runs Monday 28 to Sunday 4.
+    expect(days[0]!.getAttribute("aria-label")).toContain("28 September 2026");
+    expect((days[6] as HTMLButtonElement).disabled).toBe(true);
+    const toggle = screen.getByRole("button", { name: t("journal.week.showMonth") });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    await userEvent.click(toggle);
+    expect(screen.getByRole("button", { name: t("journal.week.hideMonth") }).getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("colours an entry card by its mood", async () => {
+    renderAt(`/${theme}/journal`);
+    const card = (await screen.findByText("walked by the river")).closest(".entry-card")!;
+    expect(card.getAttribute("data-mood")).toBe("4");
+    expect(card.querySelector(".entry-edge")).not.toBeNull();
+    expect(screen.getByText("quiet day with tea").closest(".entry-card")!.hasAttribute("data-mood")).toBe(false);
+  });
+
   it("never lets a future day be picked", async () => {
     renderAt(`/${theme}/journal`);
     await screen.findByText("walked by the river");
     await userEvent.click(await screen.findByRole("button", { name: t("journal.calendar.next") }));
-    const october = await screen.findByRole("button", { name: /Thursday, 1 October 2026/ });
-    expect((october as HTMLButtonElement).disabled).toBe(true);
+    // Once in the month view and once in the week strip: both refuse.
+    const october = await screen.findAllByRole("button", { name: /Thursday, 1 October 2026/ });
+    expect(october.length).toBeGreaterThan(0);
+    for (const b of october) expect((b as HTMLButtonElement).disabled).toBe(true);
   });
 });
 
