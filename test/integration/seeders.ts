@@ -41,6 +41,24 @@ export const SEEDERS: Record<string, Seeder> = {
   prompt_history: async (sup, userId) => {
     await sup`insert into prompt_history (user_id, day, seq, prompt_key) values (${userId}, '2026-01-01', 1, 'reflect.proud_of')`;
   },
+  streak_break_cards: async (sup, userId) => {
+    const id = await habit(sup, userId);
+    await sup`insert into streak_break_cards (user_id, habit_id, category, length_days, broken_on) values (${userId}, ${id}, 'other', 9, '2026-01-01')`;
+  },
+  share_events: async (sup, userId) => {
+    await sup`insert into share_events (user_id, card_type, theme) values (${userId}, 'title', 'aaa')`;
+  },
+  referral_codes: async (sup, userId) => {
+    await sup`insert into referral_codes (user_id, code) values (${userId}, ${randomUUID().replace(/[^a-hj-np-z2-9]/g, "").padEnd(8, "k").slice(0, 8)})`;
+  },
+  referrals: async (sup, userId) => {
+    const friend = `user_${randomUUID()}`;
+    await sup`insert into profiles (user_id) values (${friend})`;
+    await sup`insert into referrals (referrer_id, referral_code, referred_user_id) values (${userId}, 'abcdefgh', ${friend})`;
+  },
+  referral_credits: async (sup, userId) => {
+    await sup`insert into referral_credits (user_id) values (${userId})`;
+  },
   reminder_log: async (sup, userId) => {
     await sup`insert into reminder_log (user_id, sent_on) values (${userId}, '2026-01-01')`;
   },

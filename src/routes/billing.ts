@@ -7,6 +7,8 @@ import { getDb } from "../db/client";
 import { withSystem, withUser } from "../db/user";
 import { errorResponse, json } from "../lib/http";
 import { getOrCreateMe } from "../profile/service";
+import { attachReferral } from "../referrals/service";
+import { REFERRAL_COOKIE } from "../../shared/sharing";
 
 interface StripeEvent {
   id: string;
@@ -40,15 +42,33 @@ async function createCheckout(request: Request, env: Env): Promise<Response> {
   }
   const sql = getDb(env);
   let alreadyPaid = false;
+  let referred = false;
   try {
-    alreadyPaid = await withUser(sql, claims, async (tx) => (await getOrCreateMe(tx, claims.userId)).paid);
+    await withUser(sql, claims, async (tx) => {
+      alreadyPaid = (await getOrCreateMe(tx, claims.userId)).paid;
+      // A friend who arrived through a referral link (cookie set by /r/<code>) is recorded now,
+      // before paying, and gets the referral discount (SH-12, SH-16).
+      if (!alreadyPaid) referred = await attachReferral(tx, cookieValue(request, REFERRAL_COOKIE));
+    });
   } finally {
     await sql.end();
   }
   if (alreadyPaid) return errorResponse(409, "already_paid");
 
-  const session = await createCheckoutSession(env, { userId: claims.userId, email: await getClerkEmail(env, claims.userId) });
+  const session = await createCheckoutSession(env, {
+    userId: claims.userId,
+    email: await getClerkEmail(env, claims.userId),
+    promotionCodeId: referred ? (env.STRIPE_REFERRAL_PROMOTION_ID ?? null) : null,
+  });
   return session ? json(session) : errorResponse(502, "checkout_failed");
+}
+
+function cookieValue(request: Request, name: string): string | null {
+  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
+    const [k, ...v] = part.trim().split("=");
+    if (k === name) return v.join("=") || null;
+  }
+  return null;
 }
 
 async function receiveWebhook(request: Request, env: Env): Promise<Response> {

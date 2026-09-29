@@ -12,8 +12,10 @@ import { handlePromptRoutes } from "./routes/prompts";
 import { handleHealthRoutes } from "./routes/health";
 import { handleMeRoutes } from "./routes/me";
 import { handlePageRoutes } from "./routes/pages";
+import { handleSharingRoutes } from "./routes/sharing";
 import { handleUnsubscribeRoutes } from "./routes/unsubscribe";
 import { runReminders } from "./email/reminders";
+import { settleAllReferrals } from "./referrals/settle";
 
 export interface Env {
   ENVIRONMENT: string;
@@ -39,9 +41,11 @@ export interface Env {
   STRIPE_PRICE_ID?: string;
   /** "true" once Stripe Tax is set up in the Stripe dashboard. */
   STRIPE_AUTOMATIC_TAX?: string;
+  /** A Stripe promotion code id ("promo_...") for the $5-off referral discount (SH-16); optional until created in Stripe. */
+  STRIPE_REFERRAL_PROMOTION_ID?: string;
 }
 
-const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleBillingRoutes, handleUnsubscribeRoutes, handleAdminRoutes];
+const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleBillingRoutes, handleSharingRoutes, handleUnsubscribeRoutes, handleAdminRoutes];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -66,6 +70,11 @@ export default {
     ctx.waitUntil(
       runReminders(env).catch((err) => {
         console.error("reminders-failed", err instanceof Error ? (err.stack ?? err.message) : err);
+      }),
+    );
+    ctx.waitUntil(
+      settleAllReferrals(env).catch((err) => {
+        console.error("referral-settle-failed", err instanceof Error ? (err.stack ?? err.message) : err);
       }),
     );
   },

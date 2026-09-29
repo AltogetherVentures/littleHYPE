@@ -65,7 +65,9 @@ describe("row-level security (PV-1)", () => {
 
   it("every user-owned table: a user sees their own rows and never another user's", async () => {
     for (const table of tables) {
-      const rows = await asUser(a, (tx) => tx.unsafe<{ user_id: string }[]>(`select user_id from ${table}`));
+      // referrals are owned by the referrer; the referred user's id is deliberately not readable
+      const owner = table === "referrals" ? "referrer_id" : "user_id";
+      const rows = await asUser(a, (tx) => tx.unsafe<{ user_id: string }[]>(`select ${owner} as user_id from ${table}`));
       expect(rows.length, `${table}: user A sees something`).toBeGreaterThan(0);
       expect(new Set(rows.map((r) => r.user_id)), `${table}: only A's rows`).toEqual(new Set([a]));
     }

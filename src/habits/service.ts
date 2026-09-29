@@ -252,3 +252,16 @@ export async function todayPayload(tx: postgres.TransactionSql, userId: string, 
   const habits = (await listHabits(tx, userId, today)).filter((h) => !h.archivedAt);
   return { date: today, habits, milestone: nearestMilestone(habits.map((h) => h.streak.currentDays)), writtenToday: await writtenOn(tx, userId, today) };
 }
+
+export interface HabitAnalysisRow {
+  id: string;
+  category: HabitCategory;
+  archived: boolean;
+  analysis: HabitAnalysis;
+}
+
+/** The streak analysis of every habit (breaks included), for titles and break cards. */
+export async function analyseAllHabits(tx: postgres.TransactionSql, userId: string, today: string): Promise<HabitAnalysisRow[]> {
+  const { rows, versions, logs } = await load(tx, userId);
+  return rows.map((r) => ({ id: r.id, category: r.category, archived: r.archived_at !== null, analysis: analyseHabit({ versions: versions.get(r.id) ?? [], logs: logs.get(r.id) ?? [], today }) }));
+}
