@@ -36,3 +36,39 @@ export async function getClerkEmail(env: Env, userId: string): Promise<string | 
     return null;
   }
 }
+
+export interface ClerkUserSummary {
+  id: string;
+  email: string | null;
+  name: string | null;
+}
+
+const summarise = (u: { id: string; primary_email_address_id?: string | null; email_addresses?: { id: string; email_address: string }[]; first_name?: string | null; last_name?: string | null }): ClerkUserSummary => ({
+  id: u.id,
+  email: (u.email_addresses?.find((e) => e.id === u.primary_email_address_id) ?? u.email_addresses?.[0])?.email_address ?? null,
+  name: [u.first_name, u.last_name].filter(Boolean).join(" ") || null,
+});
+
+/** Finds sign-ins by email or name for the admin tool. Returns null if Clerk could not be asked. */
+export async function searchClerkUsers(env: Env, query: string): Promise<ClerkUserSummary[] | null> {
+  try {
+    const res = await fetch(`https://api.clerk.com/v1/users?limit=10&query=${encodeURIComponent(query)}`, { headers: { authorization: `Bearer ${env.CLERK_SECRET_KEY}` } });
+    if (!res.ok) {
+      console.error("clerk-search-failed", { status: res.status });
+      return null;
+    }
+    return ((await res.json()) as Parameters<typeof summarise>[0][]).map(summarise);
+  } catch (err) {
+    console.error("clerk-search-failed", { error: err instanceof Error ? err.message : "unknown" });
+    return null;
+  }
+}
+
+export async function getClerkUser(env: Env, userId: string): Promise<ClerkUserSummary | null> {
+  try {
+    const res = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(userId)}`, { headers: { authorization: `Bearer ${env.CLERK_SECRET_KEY}` } });
+    return res.ok ? summarise((await res.json()) as Parameters<typeof summarise>[0]) : null;
+  } catch {
+    return null;
+  }
+}

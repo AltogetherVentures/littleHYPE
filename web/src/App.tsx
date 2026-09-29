@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { AdminPage } from "./routes/AdminPage";
 import { AuthPage } from "./routes/AuthPage";
 import { CheckoutSuccess } from "./routes/CheckoutSuccess";
 import { Landing } from "./routes/Landing";
@@ -19,6 +20,7 @@ export function App() {
       <Route path="/paywall" element={<Paywall />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/unsubscribe" element={<Unsubscribe />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="/privacy" element={<Legal kind="privacy" />} />
       <Route path="/terms" element={<Legal kind="terms" />} />
       <Route path="/:theme/*" element={<ThemeRoute />} />

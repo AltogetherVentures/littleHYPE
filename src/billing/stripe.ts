@@ -45,7 +45,10 @@ export async function createCheckoutSession(env: Env, input: { userId: string; e
   }
 }
 
-/** Refunds a payment in full (used by the admin refund-and-delete step, PY-5). */
+/**
+ * Refunds a payment in full (used by the admin refund-and-delete step, PY-5). A payment that
+ * was already refunded counts as done, so the step can be safely retried after a partial failure.
+ */
 export async function refundPaymentIntent(env: Env, paymentIntent: string): Promise<boolean> {
   try {
     const res = await fetch("https://api.stripe.com/v1/refunds", {
@@ -53,8 +56,11 @@ export async function refundPaymentIntent(env: Env, paymentIntent: string): Prom
       headers: { authorization: `Bearer ${env.STRIPE_SECRET_KEY}`, "content-type": "application/x-www-form-urlencoded", "idempotency-key": `refund-${paymentIntent}` },
       body: new URLSearchParams({ payment_intent: paymentIntent }),
     });
-    if (!res.ok) console.error("stripe-refund-failed", { status: res.status, paymentIntent });
-    return res.ok;
+    if (res.ok) return true;
+    const body = (await res.json().catch(() => ({}))) as { error?: { code?: string } };
+    if (body.error?.code === "charge_already_refunded") return true;
+    console.error("stripe-refund-failed", { status: res.status, code: body.error?.code, paymentIntent });
+    return false;
   } catch (err) {
     console.error("stripe-refund-failed", { paymentIntent, error: err instanceof Error ? err.message : "unknown" });
     return false;

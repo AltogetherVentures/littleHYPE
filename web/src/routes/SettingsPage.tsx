@@ -194,6 +194,7 @@ export function SettingsPage({ me }: { me: Me }) {
         <p className="actions">
           <Link to="/privacy">{t("settings.links.privacy")}</Link>
           <Link to="/terms">{t("settings.links.terms")}</Link>
+          {me.isAdmin && <Link to="/admin">{t("settings.admin")}</Link>}
           <button className="link-button" onClick={() => void signOut({ redirectUrl: "/" })}>
             {t("settings.signout")}
           </button>

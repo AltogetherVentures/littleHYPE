@@ -108,6 +108,51 @@ Repeat Parts 1 to 5 with:
 
 ---
 
+## 9. Payments (Stripe)
+
+Until this is done the paywall's button says checkout isn't available (the API returns 503 `checkout_unavailable`) and nobody can pay; staging users can still be marked paid by SQL (Part 6).
+
+1. Stripe dashboard, **Products**: create "littleHYPE" with a **one-time** price of **$49.00 USD**. Copy the **price id** (`price_...`).
+2. **Developers, API keys**: copy the **secret key** (`sk_test_...` for staging, `sk_live_...` for production) **[secret]**.
+3. **Developers, Webhooks, Add endpoint**: URL `https://<your app>/api/stripe/webhook`; events `checkout.session.completed`, `checkout.session.async_payment_succeeded` and `charge.refunded`. Copy its **signing secret** (`whsec_...`) **[secret]**.
+4. Set them (each prompts for the value):
+   ```bash
+   npx wrangler secret put STRIPE_SECRET_KEY --env staging
+   npx wrangler secret put STRIPE_WEBHOOK_SECRET --env staging
+   ```
+   The price id is not secret: add `STRIPE_PRICE_ID = "price_..."` under `[env.staging.vars]` in `wrangler.toml`.
+5. **Stripe Tax** (PY-2, EU VAT): set it up in the Stripe dashboard (Tax), then add `STRIPE_AUTOMATIC_TAX = "true"` to the same vars block. Do not set it before Tax is configured; Stripe rejects the request.
+6. Receipts (PY-4): Settings, Emails, **Successful payments** on.
+7. Try it with a Stripe test card (`4242 4242 4242 4242`). The purchase appears in `purchases` within seconds and the browser leaves the "Confirming your payment" page.
+
+## 10. Reminder emails (Resend)
+
+The cron trigger runs every 15 minutes and logs `reminders-disabled` until all three secrets exist.
+
+1. Resend, **Domains**: add and verify the domain you will send from (DNS records).
+2. Resend, **API keys**: create a key **[secret]**.
+3. Choose a long random string for signing unsubscribe links **[secret]** (for example `openssl rand -hex 32`).
+   ```bash
+   npx wrangler secret put RESEND_API_KEY --env staging
+   npx wrangler secret put EMAIL_TOKEN_SECRET --env staging
+   npx wrangler secret put RESEND_FROM --env staging     # e.g. littleHYPE <reminders@your-domain>
+   ```
+4. In the app, Settings, set a reminder a few minutes ahead. The next 15-minute tick sends one email, in the theme's voice, with a one-click unsubscribe. Check `npx wrangler tail --env staging` for `reminders-run`.
+
+## 11. Referrals
+
+- `littlehype.com/r/<code>` opens the sharer's theme showcase and remembers the referrer for 30 days.
+- **The friend's $5 off (SH-16):** in Stripe create a **coupon** ($5.00 off, once) and a **promotion code** for it; put the promotion code's id (`promo_...`) in `wrangler.toml` as `STRIPE_REFERRAL_PROMOTION_ID`. Until then friends can still enter a code by hand at checkout, and referrals are still tracked.
+- Rewards: a referral counts once the friend's 14-day refund window has passed with the purchase still paid; every three earn one credit (stored, redeemable when add-on themes exist). The cron settles these automatically.
+
+## 12. Admin tools
+
+Sign in with the account whose Clerk public metadata is `{ "role": "admin" }` (Part 3, step 5) and open `/admin` (or Settings, Admin tools). You can find an account, change its theme (audited) and refund-and-delete (the purchase is refunded in Stripe first; nothing is deleted if that fails). Admins see accounts and purchases only, never journals, habits or check-ins (PV-3). Turn Clerk's own "delete account" off (Clerk dashboard, User & authentication) so deletion always goes through the app, which also removes the data.
+
+**Migrations:** apply every new file in `supabase/migrations/` (0002 to 0010 so far) to each Supabase project, in order, before deploying the Worker that needs it.
+
+---
+
 ## Local development
 
 Needs Node 22 and a local Postgres 16.

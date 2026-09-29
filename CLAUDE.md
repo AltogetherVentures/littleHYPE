@@ -14,16 +14,18 @@ littleHYPE deliberately uses the same stack as reNudge (`AltogetherVentures/renu
 - **Frontend:** React 19 + Vite + React Router 7 + TanStack Query (`web/`). Styling is plain CSS over theme tokens.
 - **Auth:** Clerk (users, not organizations). Admin = `metadata.role === "admin"` in the session token.
 - **Database:** Supabase Postgres via Hyperdrive, connecting as the restricted `app_user` role.
-- **Payments (next slice):** Stripe Checkout + webhook. **Email (later):** Resend. **Reminders (later):** Worker cron.
+- **Payments:** Stripe Checkout + signature-verified webhook (`src/billing/`). **Email:** Resend, sent from the Worker cron (`*/15 * * * *`, `src/email/`). Both stay off until their secrets are set.
 - **Environments:** `staging` and `production`, each with its own Supabase project, Hyperdrive config and Clerk instance.
 
 ## Layout
 
 ```
-src/         Worker: auth/, db/, profile/, routes/, shell.ts
-shared/      Pure code used by both Worker and SPA (theme-routing.ts)
+src/         Worker: auth/, db/, profile/, habits/, journal/, prompts/, achievements/, account/, admin/,
+             billing/, email/, referrals/, sharing/, routes/, shell.ts (plus the scheduled handler in index.ts)
+shared/      Pure code used by both Worker and SPA (theme-routing, streaks, prompts, achievements, sharing, ...)
 web/         React SPA (npm workspace)
-themes/      registry.ts + one folder per theme (see "Design system" below)
+themes/      registry.ts + one folder per theme (see "Design system" below); emails.ts and cards.ts import each
+             theme's email/share-card files by name for the Worker (test/emails.test.ts keeps them in step)
 supabase/migrations/   Plain SQL, applied BY HAND to both projects
 test/        Unit tests; test/integration needs Postgres (scripts/setup-test-db.sh)
 marketing/   The pre-existing static brand site (standalone, not built by CI, not part of the Worker)
@@ -36,7 +38,8 @@ A theme is a distinct world, not a colour swap (PRD "Theme briefs"). Each `theme
 - `tokens.css` - colour, font, radius and shadow custom properties in a `[data-theme="<slug>"]` block. The neutral defaults in `themes/default/tokens.css` use `:where(:root)` (zero specificity) so a theme can never lose to them; a test enforces it.
 - `theme.css` - atmosphere: textures, panel materials, buttons, motion. It restyles the shared class names (`.panel`, `.hero`, `.button`, `.tab`, ...) and the theme's own header classes. **App structure and behaviour never change per theme.**
 - `strings.json` - the theme's voice, using the PRD vocabulary table. Missing keys fall back to `default/strings.json`. Never override `billing.`/`paywall.`/`privacy.`/`delete.`/`refund.`/`export.`/`legal.`/`auth.` keys.
-- `Header.tsx` - the one component override (TH-11), receiving `HeaderProps` from `web/src/lib/overrides-types.ts`. Other overrides (calendar, achievement unlock) come with those features.
+- `Header.tsx`, `Calendar.tsx`, `Unlock.tsx` - the three component overrides (TH-11), receiving `HeaderProps` / `CalendarProps` / `UnlockProps` from `web/src/lib/overrides-types.ts`. `web/src/lib/design-completeness.test.ts` fails if a launch theme lacks one.
+- `card.ts` + `card-fonts.generated.ts` - the share-card art (background, frame, palette) and its embedded fonts (regenerate with `node scripts/embed-card-fonts.mjs`); `email-theme.json` - the reminder email's colours. Words for both come from `titles.json`, `break-cards.json`, `email.json`, `strings.json`.
 - `assets/hero.svg`, `habits.svg`, `prompt.svg` - original artwork (no franchise references, TH-15; no scripts or external loads). `test/themes.test.ts` checks them; `web/src/lib/design-completeness.test.ts` fails if a launch theme lacks artwork or a header.
 
 Class names are shared, so when a base rule and a theme rule tie on specificity the later stylesheet wins and the bundler decides the order: give theme selectors more specificity (`.hdr-x .hdr-x-nav a`, `[data-theme="x"] .panel`), never rely on order.
@@ -53,7 +56,11 @@ Class names are shared, so when a base rule and a theme rule tie on specificity 
 - **Every UI string goes through `t()`** with a key that exists in the default table (typed as `StringKey`, so a typo fails typecheck).
 - **Access is gated server-side** from the `purchases` table, never from the client.
 - **Nothing silently degrades.** If a fallback exists (e.g. theme lookup failing on page load), it logs a greppable line (`theme-resolve-failed`).
-- **Journal text never appears** in logs, analytics, share cards or admin tools (PV-3, PV-4, SH-10).
+- **Journal text never appears** in logs, analytics, share cards, emails or admin tools (PV-3, PV-4, SH-10). Achievements, prompts and reminders are judged from counts and dates only; "written" means `body ~ '[^[:space:]]'`.
+- **Database function convention:** every function in a migration is `SECURITY DEFINER` only when it must be, pins `set search_path = public, pg_temp`, is revoked from PUBLIC/anon/authenticated and granted to `app_user`. Catalog-wide tests enforce all three. Cross-user work (reminder cron, Stripe webhook, referral settling, unsubscribe) runs through `withSystem` (`app.current_role = 'system'`) and narrow functions that check it; admin work through `withUser` with the verified admin claim and functions that check it. Never widen `app_user`'s table grants for these.
+- **Pool connections run with `fetch_types: false`** (Hyperdrive), so array parameters don't serialise: pass lists as JSON (`tx.json(list)` + `jsonb_array_elements_text`), never `= any($1)`. In tagged templates write regex classes as `[^[:space:]]`, not `\S` (the escape is eaten).
+- **Money is only recorded by the signature-verified Stripe webhook** (`record_purchase`, system-only). The browser returning from checkout proves nothing.
+- **Nothing is deleted by a side effect.** Account deletion, refund-and-delete and deletion of a habit/entry each require an explicit confirmation from the person or admin; a refund seen in Stripe only marks the purchase refunded.
 - **Integration tests fail loudly** without `PG_SUPERUSER_URL` / `PG_APP_URL`; never make them skip.
 
 ## Working notes
@@ -76,4 +83,9 @@ npm run deploy:staging     # after docs/setup.md
 
 ## Build status
 
-Slice 1: theme system, routing, Clerk auth, account + theme lock, onboarding picker, and a full design pass (per-theme headers, artwork, textures, phone layout) on Today / showcase / landing. **Not built yet:** Stripe checkout/webhook (so no one can pay: staging users are marked paid by SQL), habits, journal, prompts, achievements, reminders, sharing/referrals, export/deletion, share cards, admin UI.
+The whole PRD MVP is built. What is verified where:
+
+- **Tested (unit, component, integration against real Postgres; contrast checked from rendered pixels):** themes and routing, accounts and the theme lock, habits and streaks, journal (autosave, Markdown-lite, search, calendar), daily prompts, onboarding, achievements, settings, export, self-serve deletion, titles, streak-break cards, share cards, referrals and credits, reminder emails, admin tools, Stripe checkout/webhook/refund logic.
+- **Not verified against live services (needs the keys in `docs/setup.md` Parts 9 to 12):** Stripe (checkout, webhook, refund), Resend (sending), Clerk user deletion and search from the Worker, the cron trigger on Cloudflare. Each is off or returns a clear 503 / `reminders-disabled` log until its secrets exist.
+- **Deliberate deviations from the PRD:** the journal editor is a plain-text editor with Markdown-lite (bold, italic, headings, lists, quotes, links) and a preview, not a rich-text editor; share cards are composed as SVG in the Worker and rasterised to PNG in the browser (fonts embedded), not rendered to PNG server-side; `habits` has no schedule columns (schedules live only in `habit_schedule_versions`).
+- **Before launch (people, not code):** a lawyer's review of `legal.*` (marked DRAFT in the app), a real Stripe account with a $49 price and a $5-off promotion code, a verified Resend sending domain, a production Supabase/Clerk/Hyperdrive and the domain decision (`docs/launch-checklist.md`).

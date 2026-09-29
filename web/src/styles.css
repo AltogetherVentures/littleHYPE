@@ -465,3 +465,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 .check-row input { width: 1.3rem; height: 1.3rem; }
 .referral-stats { margin: 1rem 0 0; padding-left: 1.2rem; color: var(--color-muted); }
 .break-card .actions, .share-card .actions { justify-content: center; }
+
+/* admin (neutral) */
+.admin .panel { margin-top: 1.25rem; }
+.admin-results { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0.4rem; }
+.admin-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1.2rem; margin: 0 0 1.25rem; }
+.admin-facts dt { font-weight: 700; }
+.admin-facts dd { margin: 0; overflow-wrap: anywhere; }
+.admin-log { font-size: 0.92rem; padding-left: 1.2rem; }

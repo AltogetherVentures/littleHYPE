@@ -65,12 +65,20 @@ describe("row-level security (PV-1)", () => {
 
   it("every user-owned table: a user sees their own rows and never another user's", async () => {
     for (const table of tables) {
+      if (table === "admin_actions") continue; // staff-only, not user-owned: covered by its own test below
       // referrals are owned by the referrer; the referred user's id is deliberately not readable
       const owner = table === "referrals" ? "referrer_id" : "user_id";
       const rows = await asUser(a, (tx) => tx.unsafe<{ user_id: string }[]>(`select ${owner} as user_id from ${table}`));
       expect(rows.length, `${table}: user A sees something`).toBeGreaterThan(0);
       expect(new Set(rows.map((r) => r.user_id)), `${table}: only A's rows`).toEqual(new Set([a]));
     }
+  });
+
+  it("admin_actions is readable only in an admin's scope, never a user's or an unscoped query", async () => {
+    expect((await sup`select 1 from admin_actions`).length).toBeGreaterThan(0);
+    expect(await asUser(a, (tx) => tx`select 1 from admin_actions`)).toHaveLength(0);
+    expect((await asUser(a, (tx) => tx`select 1 from admin_actions`, true)).length).toBeGreaterThan(0);
+    await expect(asUser(a, (tx) => tx`insert into admin_actions (admin_id, action, target_user_id) values (${a}, 'theme_change', ${a})`, true)).rejects.toThrow(/permission denied/);
   });
 
   it("every table: a query with no user scope returns nothing", async () => {

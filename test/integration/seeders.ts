@@ -59,6 +59,9 @@ export const SEEDERS: Record<string, Seeder> = {
   referral_credits: async (sup, userId) => {
     await sup`insert into referral_credits (user_id) values (${userId})`;
   },
+  admin_actions: async (sup, userId) => {
+    await sup`insert into admin_actions (admin_id, action, target_user_id) values (${userId}, 'theme_change', ${userId})`;
+  },
   reminder_log: async (sup, userId) => {
     await sup`insert into reminder_log (user_id, sent_on) values (${userId}, '2026-01-01')`;
   },
