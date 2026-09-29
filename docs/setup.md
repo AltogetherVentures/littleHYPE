@@ -134,4 +134,6 @@ npm run dev:web
 ```
 Open http://localhost:5173. (`setup-test-db.sh` is for disposable databases only; never point it at Supabase.)
 
+**Design gallery.** To review every theme without signing in: `npm run visual` (builds and serves on http://127.0.0.1:4173), then for example `/?scene=today&theme=<slug>` or `scene=picker`. Try a phone width in your browser's device toolbar. `npm run visual:contrast` (with the gallery running) checks text contrast from the real pixels; it needs Chromium (`CHROMIUM_PATH` or `npx playwright-core install chromium`).
+
 Integration tests **fail** rather than skip when `PG_SUPERUSER_URL` / `PG_APP_URL` are missing, on purpose.

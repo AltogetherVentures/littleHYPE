@@ -20,6 +20,22 @@ describe("theme folders (TH-12, NF-6)", () => {
     expect(folders.sort()).toEqual([...THEME_SLUGS].sort());
   });
 
+  it("has well-formed artwork for every illustration slot", () => {
+    for (const slug of ["default", ...THEME_SLUGS]) {
+      for (const name of ["hero", "habits", "prompt"]) {
+        const file = path.join(themesDir, slug, "assets", `${name}.svg`);
+        expect(existsSync(file), `${slug}/assets/${name}.svg`).toBe(true);
+        const svg = readFileSync(file, "utf8").trim();
+        expect(svg.startsWith("<svg"), `${slug}/${name} starts with <svg`).toBe(true);
+        expect(svg, `${slug}/${name} declares a namespace`).toContain('xmlns="http://www.w3.org/2000/svg"');
+        expect(svg, `${slug}/${name} has a viewBox`).toContain("viewBox=");
+        expect(svg.endsWith("</svg>"), `${slug}/${name} is closed`).toBe(true);
+        // Artwork is a static asset: no scripts, no external loads.
+        expect(svg).not.toMatch(/<script|href="https?:|xlink:href="https?:|url\(https?:/i);
+      }
+    }
+  });
+
   it("keeps the neutral defaults at zero specificity so a theme can never lose to them", () => {
     // :root and [data-theme] are equally specific; the bundler decides which
     // comes later. A plain :root here made every theme silently invisible.

@@ -5,32 +5,18 @@ import { AppShell } from "../components/AppShell";
 import { homePathFor, type Me } from "../lib/me";
 import { ThemeProvider, useT, type StringKey } from "../lib/strings";
 import { useDocumentTheme } from "../lib/useDocumentTheme";
-
-function Today() {
-  const t = useT();
-  return (
-    <>
-      <h1>{t("today.title")}</h1>
-      <p>{t("today.greeting")}</p>
-      <section className="card">
-        <h2>{t("today.habits.heading")}</h2>
-        <p>{t("today.habits.empty")}</p>
-      </section>
-      <section className="card">
-        <h2>{t("today.prompt.heading")}</h2>
-        <p>{t("today.prompt.empty")}</p>
-      </section>
-    </>
-  );
-}
+import { Today } from "./Today";
 
 function ComingSoon({ title }: { title: StringKey }) {
   const t = useT();
   return (
-    <>
-      <h1>{t(title)}</h1>
+    <section className="panel coming-soon">
+      <header className="panel-head">
+        <h1 className="panel-title">{t(title)}</h1>
+        <span className="panel-tag">{t("today.tag.soon")}</span>
+      </header>
       <p>{t("soon.body")}</p>
-    </>
+    </section>
   );
 }
 
@@ -54,9 +40,9 @@ export function ThemedApp({ me }: { me: Me }) {
 
   return (
     <ThemeProvider theme={me.theme}>
-      <AppShell theme={me.theme}>
+      <AppShell theme={me.theme} me={me}>
         <Routes>
-          <Route path="today" element={<Today />} />
+          <Route path="today" element={<Today me={me} />} />
           <Route path="journal" element={<ComingSoon title="nav.journal" />} />
           <Route path="habits" element={<ComingSoon title="nav.habits" />} />
           <Route path="achievements" element={<ComingSoon title="nav.achievements" />} />

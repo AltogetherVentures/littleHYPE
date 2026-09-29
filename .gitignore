@@ -27,3 +27,4 @@ dist-ssr
 .dev.vars
 .wrangler
 web/dist
+visual-dist

@@ -6,6 +6,8 @@ export interface MeState {
   theme: string | null;
   timezone: string;
   paid: boolean;
+  /** ISO timestamp the account was created; themes use it for "days since" style flourishes. */
+  createdAt: string;
 }
 
 export class DomainError extends Error {
@@ -20,13 +22,13 @@ export class DomainError extends Error {
 /** Creates the profile on first sight (idempotent) and returns the user's state. */
 export async function getOrCreateMe(tx: postgres.TransactionSql, userId: string): Promise<MeState> {
   await tx`insert into profiles (user_id) values (${userId}) on conflict (user_id) do nothing`;
-  const [row] = await tx<{ theme: string | null; timezone: string; paid: boolean }[]>`
-    select p.theme, p.timezone,
+  const [row] = await tx<{ theme: string | null; timezone: string; paid: boolean; created_at: Date }[]>`
+    select p.theme, p.timezone, p.created_at,
            exists (select 1 from purchases x where x.user_id = p.user_id and x.status = 'paid') as paid
       from profiles p
      where p.user_id = ${userId}`;
   if (!row) throw new DomainError(404, "profile_not_found");
-  return { userId, theme: row.theme, timezone: row.timezone, paid: row.paid };
+  return { userId, theme: row.theme, timezone: row.timezone, paid: row.paid, createdAt: row.created_at.toISOString() };
 }
 
 /** Just the saved theme, without creating a profile (used by page navigations). */

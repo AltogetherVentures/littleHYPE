@@ -9,7 +9,7 @@ import { ThemedApp } from "./ThemedApp";
 vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({}) }));
 
 const [mine, other] = THEME_SLUGS as unknown as [string, string];
-const me = (theme: string | null, paid = true): Me => ({ userId: "u1", theme, timezone: "UTC", paid, isAdmin: false });
+const me = (theme: string | null, paid = true): Me => ({ userId: "u1", theme, timezone: "UTC", paid, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" });
 
 function Where() {
   const l = useLocation();

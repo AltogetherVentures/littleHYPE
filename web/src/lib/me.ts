@@ -8,6 +8,7 @@ export interface Me {
   timezone: string;
   paid: boolean;
   isAdmin: boolean;
+  createdAt: string;
 }
 
 export const ME_KEY = ["me"] as const;

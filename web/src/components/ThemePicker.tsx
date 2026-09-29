@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { THEME_SLUGS } from "@themes/registry";
+import { artFor } from "../lib/art";
 import { translate, useT } from "../lib/strings";
 
 interface Props {
@@ -9,9 +10,9 @@ interface Props {
 }
 
 /**
- * Onboarding theme picker. Each option previews its own theme by carrying its
- * own data-theme attribute and reading its own string table (ON-2). The note
- * about the purchase is billing copy, so it is always the default wording.
+ * Onboarding theme picker. Each option previews its own world by carrying its
+ * own data-theme attribute, its own artwork and its own string table (ON-2).
+ * The note about the purchase is billing copy, so it is always default wording.
  */
 export function ThemePicker({ busy, error, onChoose }: Props) {
   const t = useT();
@@ -20,10 +21,10 @@ export function ThemePicker({ busy, error, onChoose }: Props) {
   return (
     <section className="picker">
       <h1>{t("picker.heading")}</h1>
-      <p>{t("picker.intro")}</p>
+      <p className="picker-intro">{t("picker.intro")}</p>
       <div className="picker-grid" role="radiogroup" aria-label={t("picker.heading")}>
         {THEME_SLUGS.map((slug) => {
-          const name = translate(slug, "theme.name");
+          const art = artFor(slug, "hero");
           return (
             <label key={slug} className="theme-card" data-theme={slug} data-selected={selected === slug}>
               <input
@@ -33,9 +34,15 @@ export function ThemePicker({ busy, error, onChoose }: Props) {
                 checked={selected === slug}
                 onChange={() => setSelected(slug)}
               />
-              <span className="theme-card-name">{name}</span>
-              <span className="theme-card-tagline">{translate(slug, "theme.tagline")}</span>
-              <span className="theme-card-preview">&ldquo;{translate(slug, "theme.preview")}&rdquo;</span>
+              {art && <img className="theme-card-art" src={art} alt="" />}
+              <span className="theme-card-body">
+                <span className="theme-card-name">{translate(slug, "theme.name")}</span>
+                <span className="theme-card-tagline">{translate(slug, "theme.tagline")}</span>
+                <span className="theme-card-preview">&ldquo;{translate(slug, "theme.preview")}&rdquo;</span>
+              </span>
+              <span className="theme-card-check" aria-hidden="true">
+                &#10003;
+              </span>
             </label>
           );
         })}
@@ -46,12 +53,8 @@ export function ThemePicker({ busy, error, onChoose }: Props) {
           {error}
         </p>
       )}
-      <button
-        className="button"
-        disabled={!selected || busy}
-        onClick={() => selected && onChoose(selected)}
-      >
-        {busy ? t("picker.choosing") : t("picker.choose", { name: selected ? translate(selected, "theme.name") : "..." })}
+      <button className="button" disabled={!selected || busy} onClick={() => selected && onChoose(selected)}>
+        {busy ? t("picker.choosing") : selected ? t("picker.choose", { name: translate(selected, "theme.name") }) : t("picker.pick")}
       </button>
     </section>
   );

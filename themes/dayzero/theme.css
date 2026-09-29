@@ -1,0 +1,63 @@
+/* Day Zero: concrete and charcoal, grain, warning orange, hazard tape and a stencilled counter. */
+[data-theme="dayzero"] body { background: radial-gradient(1200px 800px at 50% -12%, #2c2e2c, transparent 70%), var(--color-bg); background-attachment: fixed; }
+[data-theme="dayzero"] body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E"); opacity: 0.09; }
+[data-theme="dayzero"] body::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.6) 100%); }
+[data-theme="dayzero"] #root { position: relative; z-index: 1; }
+[data-theme="dayzero"] h1, [data-theme="dayzero"] h2 { text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
+
+/* header: hazard tape, survival counter */
+.hdr-zero { position: sticky; top: 0; z-index: 40; background: #141514; border-bottom: 3px solid #ff7a1a; }
+.hdr-zero-hazard { height: 8px; background: repeating-linear-gradient(-45deg, #ff7a1a 0 14px, #141514 14px 28px); }
+.hdr-zero-bar { display: flex; align-items: center; gap: 1.25rem; max-width: 72rem; margin: 0 auto; padding: 0.55rem 16px; }
+.hdr-zero-counter { display: flex; flex-direction: column; align-items: center; line-height: 1; padding: 0.3rem 0.85rem 0.25rem; border: 2px solid #ff7a1a; background: #1f1a14; transform: rotate(-2deg); }
+.hdr-zero-label { font-family: var(--font-body); font-size: 0.56rem; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #ff7a1a; }
+.hdr-zero-num { font-family: var(--font-heading); font-size: 2.5rem; line-height: 1; color: #ff7a1a; text-shadow: 0 0 14px rgba(255, 122, 26, 0.6); font-variant-numeric: tabular-nums; animation: dz-flicker 5s steps(1, end) infinite; }
+@keyframes dz-flicker { 0%, 100% { opacity: 1; } 7% { opacity: 0.55; } 9% { opacity: 1; } 52% { opacity: 1; } 54% { opacity: 0.6; } 56% { opacity: 1; } 81% { opacity: 0.8; } 83% { opacity: 1; } }
+.hdr-zero-brand { font-family: var(--font-heading); font-size: 1.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: #ebe8df; }
+.hdr-zero-nav { flex: 1; flex-wrap: nowrap; min-width: 0; gap: 0.1rem; margin-left: 0.25rem; }
+.hdr-zero .hdr-zero-nav a { white-space: nowrap; padding: 0.3rem 0.55rem; color: #b4b1a4; text-decoration: none; font-family: var(--font-heading); font-size: 1.08rem; letter-spacing: 0.08em; text-transform: uppercase; border: 0; }
+.hdr-zero .hdr-zero-nav a:hover { color: #ebe8df; }
+.hdr-zero .hdr-zero-nav a[aria-current="page"] { background: #ff7a1a; color: #170f05; }
+.hdr-zero-right { display: flex; align-items: center; gap: 1rem; white-space: nowrap; }
+.hdr-zero-status { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #b4b1a4; }
+.hdr-zero-status i { width: 8px; height: 8px; background: #ff7a1a; border-radius: 50%; animation: dz-blink 1.6s ease-in-out infinite; }
+@keyframes dz-blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+.hdr-zero-out { background: none; border: 1px solid #ff7a1a; color: #ff7a1a; font-family: var(--font-heading); font-size: 1.05rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.75rem; cursor: pointer; }
+.hdr-zero-out:hover { background: #ff7a1a; color: #170f05; }
+@media (max-width: 1100px) { .hdr-zero-brand { display: none; } }
+@media (max-width: 719px) { .hdr-zero-status, .hdr-zero-brand { display: none; } .hdr-zero-bar { justify-content: space-between; } }
+
+/* panels: riveted steel plates */
+[data-theme="dayzero"] .panel,
+[data-theme="dayzero"] .hero,
+[data-theme="dayzero"] .vocab-item,
+[data-theme="dayzero"] .gate-card {
+  border: 2px solid #4c4f49; border-radius: 2px;
+  background:
+    radial-gradient(circle at 11px 11px, #74776e 0 2.5px, transparent 3.2px) no-repeat,
+    radial-gradient(circle at calc(100% - 11px) 11px, #74776e 0 2.5px, transparent 3.2px) no-repeat,
+    radial-gradient(circle at 11px calc(100% - 11px), #74776e 0 2.5px, transparent 3.2px) no-repeat,
+    radial-gradient(circle at calc(100% - 11px) calc(100% - 11px), #74776e 0 2.5px, transparent 3.2px) no-repeat,
+    linear-gradient(180deg, #2d2f2c, #232523);
+  box-shadow: inset 0 0 0 1px #0d0e0d, 0 7px 0 rgba(0, 0, 0, 0.4);
+}
+[data-theme="dayzero"] .panel { padding-top: 1.5rem; }
+[data-theme="dayzero"] .hero { padding-top: 2rem; }
+[data-theme="dayzero"] .hero-eyebrow { color: #ff7a1a; font-weight: 700; letter-spacing: 0.2em; }
+[data-theme="dayzero"] .hero-title,
+[data-theme="dayzero"] .showcase-hero h1 { font-size: clamp(3.2rem, 10vw, 5.4rem); letter-spacing: 0.05em; line-height: 0.95; }
+[data-theme="dayzero"] .hero-title::after { content: ""; display: block; width: 4.5rem; height: 8px; margin-top: 0.6rem; background: #ff7a1a; }
+[data-theme="dayzero"] .hero-greeting { font-weight: 600; }
+[data-theme="dayzero"] .hero-art { border: 2px solid #4c4f49; box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35); }
+[data-theme="dayzero"] .panel-title { font-size: 1.6rem; letter-spacing: 0.12em; }
+[data-theme="dayzero"] .panel-title::before { content: ""; display: inline-block; width: 0.7rem; height: 0.7rem; margin-right: 0.6rem; background: #ff7a1a; transform: translateY(-2px); }
+[data-theme="dayzero"] .panel-tag { background: #ff7a1a; border: 0; border-radius: 0; color: #170f05; font-weight: 800; letter-spacing: 0.14em; transform: rotate(-2deg); }
+[data-theme="dayzero"] .streak-num { font-size: 5.2rem; text-shadow: 0 0 20px rgba(255, 122, 26, 0.5); }
+[data-theme="dayzero"] .today-note { font-style: normal; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.85rem; color: #b4b1a4; }
+[data-theme="dayzero"] .today-note::before { content: "// "; color: #ff7a1a; }
+[data-theme="dayzero"] .button { border-radius: 0; font-family: var(--font-heading); font-weight: 400; font-size: 1.3rem; letter-spacing: 0.12em; text-transform: uppercase; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+[data-theme="dayzero"] .tabbar { background: #141514; border-top: 3px solid #ff7a1a; }
+[data-theme="dayzero"] .tab[aria-current="page"] { color: #ff7a1a; }
+[data-theme="dayzero"] .tab-label { font-family: var(--font-heading); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.theme-card[data-theme="dayzero"], .world-card[data-theme="dayzero"] { background: linear-gradient(180deg, #2d2f2c, #1f211f); border: 2px solid #4c4f49; border-radius: 2px; box-shadow: inset 0 0 0 1px #0d0e0d, 0 6px 0 rgba(0, 0, 0, 0.4); }
+.theme-card[data-theme="dayzero"] .theme-card-name, .world-card[data-theme="dayzero"] .world-card-name { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; }

@@ -23,11 +23,25 @@ littleHYPE deliberately uses the same stack as reNudge (`AltogetherVentures/renu
 src/         Worker: auth/, db/, profile/, routes/, shell.ts
 shared/      Pure code used by both Worker and SPA (theme-routing.ts)
 web/         React SPA (npm workspace)
-themes/      registry.ts + one folder per theme: tokens.css, strings.json (later: prompts, achievements, assets)
+themes/      registry.ts + one folder per theme (see "Design system" below)
 supabase/migrations/   Plain SQL, applied BY HAND to both projects
 test/        Unit tests; test/integration needs Postgres (scripts/setup-test-db.sh)
 marketing/   The pre-existing static brand site (standalone, not built by CI, not part of the Worker)
 ```
+
+## Design system: what a theme is
+
+A theme is a distinct world, not a colour swap (PRD "Theme briefs"). Each `themes/<slug>/` folder contains:
+
+- `tokens.css` - colour, font, radius and shadow custom properties in a `[data-theme="<slug>"]` block. The neutral defaults in `themes/default/tokens.css` use `:where(:root)` (zero specificity) so a theme can never lose to them; a test enforces it.
+- `theme.css` - atmosphere: textures, panel materials, buttons, motion. It restyles the shared class names (`.panel`, `.hero`, `.button`, `.tab`, ...) and the theme's own header classes. **App structure and behaviour never change per theme.**
+- `strings.json` - the theme's voice, using the PRD vocabulary table. Missing keys fall back to `default/strings.json`. Never override `billing.`/`paywall.`/`privacy.`/`delete.`/`refund.`/`export.`/`legal.`/`auth.` keys.
+- `Header.tsx` - the one component override (TH-11), receiving `HeaderProps` from `web/src/lib/overrides-types.ts`. Other overrides (calendar, achievement unlock) come with those features.
+- `assets/hero.svg`, `habits.svg`, `prompt.svg` - original artwork (no franchise references, TH-15; no scripts or external loads). `test/themes.test.ts` checks them; `web/src/lib/design-completeness.test.ts` fails if a launch theme lacks artwork or a header.
+
+Class names are shared, so when a base rule and a theme rule tie on specificity the later stylesheet wins and the bundler decides the order: give theme selectors more specificity (`.hdr-x .hdr-x-nav a`, `[data-theme="x"] .panel`), never rely on order.
+
+**Review designs in a browser, not by reading CSS.** `npm run visual` serves a gallery of the real screens with sample data and Clerk stubbed out (`http://127.0.0.1:4173/?scene=today|journal|picker|showcase|landing&theme=<slug>`; add `&signedout=1` for signed-out screens). `npm run visual:contrast` then measures WCAG AA contrast from real rendered pixels (axe cannot see text over gradients and textures). Do both for every theme at desktop and phone width before shipping a design change (TH-14, NF-4).
 
 ## Non-negotiable rules
 
@@ -62,4 +76,4 @@ npm run deploy:staging     # after docs/setup.md
 
 ## Build status
 
-Slice 1 (this): theme system, routing, Clerk auth, account + theme lock, themed Today stub, onboarding picker. **Not built yet:** Stripe checkout/webhook (so no one can pay: staging users are marked paid by SQL), habits, journal, prompts, achievements, reminders, sharing/referrals, export/deletion, share cards, admin UI.
+Slice 1: theme system, routing, Clerk auth, account + theme lock, onboarding picker, and a full design pass (per-theme headers, artwork, textures, phone layout) on Today / showcase / landing. **Not built yet:** Stripe checkout/webhook (so no one can pay: staging users are marked paid by SQL), habits, journal, prompts, achievements, reminders, sharing/referrals, export/deletion, share cards, admin UI.

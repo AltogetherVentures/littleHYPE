@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#241713"/><stop offset=".55" stop-color="#7a3512"/><stop offset=".85" stop-color="#ff7a1a"/><stop offset="1" stop-color="#ffb060"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd9a0"/><stop offset=".55" stop-color="#ff9a3c"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .18 0"/>
+    </filter>
+    <clipPath id="frame"><rect x="8" y="8" width="464" height="284" rx="4"/></clipPath>
+    <style>
+      .flicker { animation: flick 3.4s steps(1, end) infinite; }
+      @keyframes flick { 0%,100% { opacity: 1 } 9% { opacity: .55 } 11% { opacity: 1 } 47% { opacity: 1 } 49% { opacity: .6 } 51% { opacity: 1 } 78% { opacity: .8 } 80% { opacity: 1 } }
+      .blink { animation: blink 2.2s ease-in-out infinite; }
+      @keyframes blink { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
+      .wave { animation: wave 2.4s ease-out infinite; transform-origin: 88px -54px; }
+      .wave2 { animation: wave 2.4s ease-out infinite .8s; transform-origin: 88px -54px; }
+      @keyframes wave { 0% { opacity: .9; transform: scale(.5) } 100% { opacity: 0; transform: scale(1.5) } }
+    </style>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect x="8" y="8" width="464" height="284" fill="url(#sky)"/>
+    <circle cx="206" cy="176" r="92" fill="url(#sun)" class="flicker"/>
+    <circle cx="206" cy="180" r="34" fill="#ffd9a0" opacity=".92"/>
+
+    <!-- far skyline -->
+    <path d="M8 232V196l18-6v-20l14-4v30l10-4v-16h16v32l14-8v-36l10-6v44h12v-24l18 6v30l16-10v-14h14v28l12-4v-40l16 6v38h14v-22l12-4v30h20v-16l14 4v-26l16-8v50h14v-30l12 4v34h22v-18l14-6v24H472v22H8z" fill="#3a1f14" opacity=".85"/>
+    <!-- near ruins -->
+    <path d="M8 292V240l22-8 6-26 22-4 6 22 26-8V184l16-6 4 30 18 4v-36l22-6 6 30 16 2 8-22 14 2v36l24 6v-24l16-4 10 28 22-2 6-28 16 4v-30l20-6 8 30 24 6 10-14 22 6 24-6v36l24 6 12-18 20 6 20-12V292z" fill="#160d0a"/>
+    <!-- rebar -->
+    <path d="M108 180l-4-22M112 180l3-28M330 198l-3-24" stroke="#160d0a" stroke-width="2"/>
+    <!-- barbed wire -->
+    <path d="M8 262q60-14 120 0t120 0 120 0 104 0" stroke="#5e4a3c" stroke-width="2"/>
+    <g stroke="#5e4a3c" stroke-width="1.6">
+      <path d="M32 258l6 8M38 258l-6 8M84 259l6 8M90 259l-6 8M136 262l6 8M142 262l-6 8M188 259l6 8M194 259l-6 8M240 254l6 8M246 254l-6 8M292 257l6 8M298 257l-6 8M344 262l6 8M350 262l-6 8M396 259l6 8M402 259l-6 8"/>
+    </g>
+
+    <!-- the radio -->
+    <g transform="translate(300 176)">
+      <path d="M88-54 60-8" stroke="#c9c2b2" stroke-width="2.6"/>
+      <circle cx="88" cy="-54" r="3.2" fill="#ff7a1a" class="blink"/>
+      <circle cx="88" cy="-54" r="10" stroke="#ff7a1a" stroke-width="1.6" class="wave" transform="translate(-0 0)"/>
+      <rect x="0" y="-8" width="124" height="72" rx="6" fill="#4b4d43" stroke="#1d1e1a" stroke-width="3"/>
+      <rect x="10" y="2" width="56" height="34" rx="3" fill="#161712" stroke="#2c2d27" stroke-width="2"/>
+      <path d="M18 27h40" stroke="#ff7a1a" stroke-width="2" stroke-opacity=".8"/>
+      <path d="M18 20q6-8 10 0t10 0 10 0 8-2" stroke="#ff9a3c" stroke-width="2" class="flicker"/>
+      <circle cx="94" cy="20" r="14" fill="#2c2d27" stroke="#1d1e1a" stroke-width="2"/>
+      <path d="M94 8v8" stroke="#ebe8df" stroke-width="2.4" transform="rotate(38 94 20)"/>
+      <g fill="#1d1e1a"><rect x="12" y="44" width="10" height="10" rx="2"/><rect x="28" y="44" width="10" height="10" rx="2"/><rect x="44" y="44" width="10" height="10" rx="2"/></g>
+      <circle cx="108" cy="52" r="4" fill="#ff7a1a" class="blink"/>
+      <rect x="66" y="43" width="30" height="4" rx="2" fill="#1d1e1a"/><rect x="66" y="51" width="30" height="4" rx="2" fill="#1d1e1a"/>
+    </g>
+
+    <!-- tally marks scratched into the foreground -->
+    <g stroke="#d7d0be" stroke-width="3.4" opacity=".92" transform="translate(0 -86)">
+      <path d="M40 132v34M50 132v34M60 132v34M70 132v34M32 160l50-20"/>
+      <path d="M104 132v34M114 132v34M124 132v34M134 132v34M96 160l50-20"/>
+      <path d="M40 182v34M50 182v34M60 182v34"/>
+    </g>
+  </g>
+  <rect x="8" y="8" width="464" height="284" rx="4" stroke="#d7d0be" stroke-opacity=".35" stroke-width="2"/>
+  <rect x="8" y="8" width="464" height="284" filter="url(#grain)" clip-path="url(#frame)"/>
+</svg>

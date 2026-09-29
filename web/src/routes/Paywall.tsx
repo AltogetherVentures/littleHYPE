@@ -13,8 +13,10 @@ export function Paywall() {
           <Navigate to={homePathFor(me)} replace />
         ) : (
           <main className="page-narrow">
-            <h1>{t("paywall.heading")}</h1>
-            <p>{t("paywall.body")}</p>
+            <div className="gate-card">
+              <h1>{t("paywall.heading")}</h1>
+              <p>{t("paywall.body")}</p>
+            </div>
           </main>
         )
       }

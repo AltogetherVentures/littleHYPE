@@ -1,36 +1,48 @@
 import { useClerk } from "@clerk/clerk-react";
 import type { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import type { Me } from "../lib/me";
+import { headerFor } from "../lib/overrides";
+import type { HeaderProps, NavItem } from "../lib/overrides-types";
 import { useT, type StringKey } from "../lib/strings";
+import { icons } from "./icons";
+import { TabBar } from "./TabBar";
 
-const NAV: { to: string; label: StringKey }[] = [
-  { to: "today", label: "nav.today" },
-  { to: "journal", label: "nav.journal" },
-  { to: "habits", label: "nav.habits" },
-  { to: "achievements", label: "nav.achievements" },
-  { to: "settings", label: "nav.settings" },
+const NAV: { to: string; label: StringKey; icon: keyof typeof icons }[] = [
+  { to: "today", label: "nav.today", icon: "today" },
+  { to: "journal", label: "nav.journal", icon: "journal" },
+  { to: "habits", label: "nav.habits", icon: "habits" },
+  { to: "achievements", label: "nav.achievements", icon: "achievements" },
+  { to: "settings", label: "nav.settings", icon: "settings" },
 ];
 
-/** Themed header and navigation. The theme changes wording and tokens, not structure. */
-export function AppShell({ theme, children }: { theme: string; children: ReactNode }) {
+/**
+ * Themed frame around every signed-in screen. The theme may replace the header
+ * component (TH-11) and restyles everything else through tokens and theme CSS;
+ * the structure, navigation and behaviour are the same in every theme.
+ */
+export function AppShell({ theme, me, children }: { theme: string; me: Me; children: ReactNode }) {
   const t = useT();
   const { signOut } = useClerk();
+  const Header = headerFor(theme);
+
+  const items: NavItem[] = NAV.map(({ to, label, icon }) => ({
+    to: `/${theme}/${to}`,
+    label: t(label),
+    icon: icons[icon],
+  }));
+  const headerT: HeaderProps["t"] = (key, vars) => t(key as StringKey, vars);
+
   return (
     <div className="shell">
-      <header className="shell-header">
-        <span className="brand">{t("theme.name")}</span>
-        <nav aria-label="Main">
-          {NAV.map(({ to, label }) => (
-            <NavLink key={to} to={`/${theme}/${to}`}>
-              {t(label)}
-            </NavLink>
-          ))}
-        </nav>
-        <button className="link-button" onClick={() => void signOut({ redirectUrl: "/" })}>
-          {t("auth.signOut")}
-        </button>
-      </header>
-      <main>{children}</main>
+      <Header
+        items={items}
+        t={headerT}
+        onSignOut={() => void signOut({ redirectUrl: "/" })}
+        createdAt={me.createdAt}
+        timezone={me.timezone}
+      />
+      <main id="main">{children}</main>
+      <TabBar items={items} />
     </div>
   );
 }

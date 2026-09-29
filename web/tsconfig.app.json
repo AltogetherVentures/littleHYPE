@@ -23,5 +23,5 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src", "../shared", "../themes/registry.ts"]
+  "include": ["src", "visual", "../shared", "../themes/registry.ts", "../themes/*/Header.tsx"]
 }

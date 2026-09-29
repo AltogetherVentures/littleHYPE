@@ -5,8 +5,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import { App } from "./App";
 import "./styles.css";
-// One tokens block per theme, discovered from the themes/ folders.
-import.meta.glob("../../themes/*/tokens.css", { eager: true });
+// Each theme's tokens.css and theme.css, discovered from the themes/ folders.
+import.meta.glob("../../themes/*/*.css", { eager: true });
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } } });
 
