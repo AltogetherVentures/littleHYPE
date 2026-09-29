@@ -65,3 +65,17 @@
 [data-theme="spacelog"] .tab-label { letter-spacing: 0.06em; text-transform: uppercase; }
 .theme-card[data-theme="spacelog"], .world-card[data-theme="spacelog"] { background: linear-gradient(180deg, #0f1a3d, #080f24); border-color: rgba(95, 227, 232, 0.3); box-shadow: 0 0 30px rgba(60, 80, 220, 0.2); border-radius: 6px; }
 .theme-card[data-theme="spacelog"] .theme-card-name, .world-card[data-theme="spacelog"] .world-card-name { letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* habits: HUD check rings, star-chart history */
+[data-theme="spacelog"] .habit-row { background: rgba(10, 18, 44, 0.6); border-color: rgba(95, 227, 232, 0.22); border-radius: 3px; }
+[data-theme="spacelog"] .habit-row[data-state="done"] { background: rgba(95, 227, 232, 0.08); box-shadow: inset 3px 0 0 var(--color-accent); }
+[data-theme="spacelog"] .check { border-radius: 50%; box-shadow: 0 0 0 4px rgba(95, 227, 232, 0.12), inset 0 0 12px rgba(95, 227, 232, 0.15); }
+[data-theme="spacelog"] .check[aria-pressed="true"] { box-shadow: 0 0 0 4px rgba(95, 227, 232, 0.2), 0 0 18px rgba(95, 227, 232, 0.6); }
+[data-theme="spacelog"] .habit-name { letter-spacing: 0.03em; }
+[data-theme="spacelog"] .cell { border-radius: 50%; width: 1.1rem; height: 1.1rem; margin: 0.175rem; background: rgba(169, 182, 223, 0.18); }
+[data-theme="spacelog"] .cell[data-state="done"] { background: #e8fbff; box-shadow: 0 0 8px 2px rgba(95, 227, 232, 0.85); }
+[data-theme="spacelog"] .cell[data-state="skipped"] { border: 1.5px dashed var(--color-accent); background: transparent; }
+[data-theme="spacelog"] .segment, [data-theme="spacelog"] .chip { border-radius: 0; }
+[data-theme="spacelog"] input:not([type="radio"]), [data-theme="spacelog"] select, [data-theme="spacelog"] textarea { background: rgba(6, 12, 32, 0.7); border-radius: 2px; }
+[data-theme="spacelog"] .habit-card { background: linear-gradient(180deg, rgba(22, 34, 80, 0.8), rgba(12, 20, 50, 0.86)); border-color: rgba(95, 227, 232, 0.26); border-radius: 4px; }
+[data-theme="spacelog"] .stat-num { text-shadow: 0 0 22px rgba(95, 227, 232, 0.5); font-weight: 500; }

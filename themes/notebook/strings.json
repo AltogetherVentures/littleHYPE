@@ -28,5 +28,22 @@
   "soon.body": "This page hasn't been written yet.",
   "theme.name": "NoteBook",
   "theme.tagline": "A favourite notebook and a good pen. A small daily ritual, just for you.",
-  "theme.preview": "Nice one. That's three days in a row."
+  "theme.preview": "Nice one. That's three days in a row.",
+  "habits.intro": "All the little things you're keeping up.",
+  "habits.add": "Add a habit",
+  "habits.empty": "A blank page. Start with one small thing.",
+  "habits.suggestions": "Ideas for the first line",
+  "habit.action.done": "Tick",
+  "habit.action.skip": "Rest day",
+  "habit.action.undo": "Rub it out",
+  "habit.state.done": "Ticked",
+  "habit.state.skipped": "Rest day",
+  "habit.state.missed": "Missed page",
+  "habit.streak.days": "{n} days in a row",
+  "habit.streak.weeks": "{n} weeks in a row",
+  "today.notdue.heading": "Not on today's page",
+  "today.allclear": "Everything's ticked off. Lovely.",
+  "today.milestone": "{remaining} more days to a {milestone}-day streak.",
+  "today.milestone.one": "Just one more day to a {milestone}-day streak.",
+  "habit.edit": "Edit"
 }

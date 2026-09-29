@@ -62,3 +62,20 @@
 .theme-card[data-theme="spellbook"], .world-card[data-theme="spellbook"] { background: linear-gradient(180deg, #fbf3de, #f0e0bb); border: 1px solid #c6ae80; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80, 0 14px 24px -12px rgba(58, 19, 34, 0.45); border-radius: 6px; }
 .theme-card[data-theme="spellbook"] .theme-card-art, .world-card[data-theme="spellbook"] .world-card-art { padding: 8px 8px 0; }
 .theme-card[data-theme="spellbook"] .theme-card-name, .world-card[data-theme="spellbook"] .world-card-name { font-weight: 600; letter-spacing: 0.06em; color: #4a0f25; }
+
+/* habits: rune sigil checks, moon-phase history */
+[data-theme="spellbook"] .habit-row { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 4px; }
+[data-theme="spellbook"] .habit-row[data-state="done"] { border-color: #7a1f3d; box-shadow: inset 0 0 0 1px rgba(122, 31, 61, 0.25), 0 0 16px rgba(255, 215, 106, 0.35); }
+[data-theme="spellbook"] .check { border: 2px solid #7a1f3d; background: radial-gradient(circle, #fff6df 0 55%, #f0dcaa 100%); box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e; }
+[data-theme="spellbook"] .check[aria-pressed="true"] { background: radial-gradient(circle, #ffe9a8, #d9a83a); color: #4a0f25; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e, 0 0 20px rgba(255, 215, 106, 0.8); }
+[data-theme="spellbook"] .habit-name { font-family: var(--font-heading); font-weight: 600; letter-spacing: 0.04em; }
+[data-theme="spellbook"] .cell { border-radius: 50%; width: 1.35rem; height: 1.35rem; background: #2b0f22; border: 1.5px solid #c9962e; opacity: 0.35; }
+[data-theme="spellbook"] .cell[data-state="done"] { background: radial-gradient(circle at 35% 35%, #fff3c8, #e8b84a); opacity: 1; box-shadow: 0 0 8px rgba(255, 215, 106, 0.85); }
+[data-theme="spellbook"] .cell[data-state="skipped"] { background: linear-gradient(90deg, #f5e6b8 50%, #2b0f22 50%); opacity: 0.85; border: 1.5px solid #c9962e; }
+[data-theme="spellbook"] .cell[data-state="missed"] { background: #2b0f22; opacity: 0.9; border-color: #7a1f3d; }
+[data-theme="spellbook"] .cell[data-state="open"] { background: transparent; opacity: 1; border-color: #7a1f3d; }
+[data-theme="spellbook"] .habit-card { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80; margin: 4px; }
+[data-theme="spellbook"] .habit-card-name { font-weight: 600; letter-spacing: 0.04em; color: #4a0f25; }
+[data-theme="spellbook"] .segment[data-selected="true"], [data-theme="spellbook"] .chip[aria-pressed="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .stat-num { font-weight: 700; color: #7a1f3d; }
+[data-theme="spellbook"] .confirm { background: #fbf3de; border: 2px double #7a1f3d; }

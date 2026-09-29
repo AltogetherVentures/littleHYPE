@@ -3,6 +3,7 @@ import { errorResponse } from "./lib/http";
 import { DomainError } from "./profile/service";
 import { handleAdminRoutes } from "./routes/admin";
 import { handleConfigRoutes } from "./routes/config";
+import { handleHabitRoutes } from "./routes/habits";
 import { handleHealthRoutes } from "./routes/health";
 import { handleMeRoutes } from "./routes/me";
 import { handlePageRoutes } from "./routes/pages";
@@ -21,7 +22,7 @@ export interface Env {
   PUBLIC_BASE_URL: string;
 }
 
-const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleAdminRoutes];
+const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleAdminRoutes];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {

@@ -10,6 +10,9 @@ import { Showcase } from "../src/routes/Showcase";
 import { ThemedApp } from "../src/routes/ThemedApp";
 import "../src/styles.css";
 import.meta.glob("../../themes/*/*.css", { eager: true });
+import { installMockApi } from "./mock-api";
+
+installMockApi();
 
 /**
  * Design gallery: the real screens with sample data.
@@ -56,7 +59,7 @@ function Scene() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={new QueryClient()}>
-      <MemoryRouter initialEntries={[`/${theme}/${scene === "journal" ? "journal" : "today"}`]}>
+      <MemoryRouter initialEntries={[`/${theme}/${["journal", "habits", "habit"].includes(scene) ? (scene === "habit" ? "habits/h3" : scene) : "today"}`]}>
         <Scene />
       </MemoryRouter>
     </QueryClientProvider>

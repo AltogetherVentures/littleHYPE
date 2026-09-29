@@ -61,3 +61,24 @@
 [data-theme="dayzero"] .tab-label { font-family: var(--font-heading); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .theme-card[data-theme="dayzero"], .world-card[data-theme="dayzero"] { background: linear-gradient(180deg, #2d2f2c, #1f211f); border: 2px solid #4c4f49; border-radius: 2px; box-shadow: inset 0 0 0 1px #0d0e0d, 0 6px 0 rgba(0, 0, 0, 0.4); }
 .theme-card[data-theme="dayzero"] .theme-card-name, .world-card[data-theme="dayzero"] .world-card-name { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; }
+
+/* habits: stencil square checks, tally-mark history */
+[data-theme="dayzero"] .habit-row { background: #1f211f; border: 2px solid #4c4f49; border-radius: 0; }
+[data-theme="dayzero"] .habit-row[data-state="done"] { border-color: #ff7a1a; background: #251f18; }
+[data-theme="dayzero"] .check { border-radius: 0; border: 3px solid #ff7a1a; width: 3rem; height: 3rem; }
+[data-theme="dayzero"] .check[aria-pressed="true"] { background: #ff7a1a; color: #170f05; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5); }
+[data-theme="dayzero"] .habit-name { font-family: var(--font-heading); font-size: 1.45rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
+[data-theme="dayzero"] .habit-row[data-state="done"] .habit-name { text-decoration-color: #ff7a1a; }
+[data-theme="dayzero"] .cell { border-radius: 0; width: 0.5rem; height: 1.45rem; margin: 0 0.45rem; border: 0; background: rgba(180, 177, 164, 0.16); }
+[data-theme="dayzero"] .cell[data-state="done"] { background: #ebe8df; transform: rotate(-4deg); }
+[data-theme="dayzero"] .cell[data-state="skipped"] { background: transparent; border-left: 3px dotted #b4b1a4; width: 0.25rem; }
+[data-theme="dayzero"] .cell[data-state="missed"] { background: #ff7a1a; opacity: 0.55; }
+[data-theme="dayzero"] .cell[data-state="open"] { background: transparent; border: 2px solid #ff7a1a; }
+[data-theme="dayzero"] .grid-week { gap: 0.2rem; }
+[data-theme="dayzero"] .habit-card { background: linear-gradient(180deg, #2d2f2c, #232523); border: 2px solid #4c4f49; border-radius: 2px; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.4); }
+[data-theme="dayzero"] .habit-card-name { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; }
+[data-theme="dayzero"] .segment, [data-theme="dayzero"] .chip { border-radius: 0; border-width: 2px; }
+[data-theme="dayzero"] .segment[data-selected="true"], [data-theme="dayzero"] .chip[aria-pressed="true"] { background: #ff7a1a; border-color: #ff7a1a; color: #170f05; }
+[data-theme="dayzero"] input:not([type="radio"]), [data-theme="dayzero"] select, [data-theme="dayzero"] textarea { border-radius: 0; border-width: 2px; background: #161716; }
+[data-theme="dayzero"] .stat-num { font-weight: 400; text-shadow: 0 0 18px rgba(255, 122, 26, 0.5); }
+[data-theme="dayzero"] .confirm { background: #1f211f; border: 3px solid #ff7a1a; border-radius: 0; }

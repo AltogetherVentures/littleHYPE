@@ -67,3 +67,20 @@
 .theme-card[data-theme="notebook"]::before, .world-card[data-theme="notebook"]::before { content: ""; position: absolute; top: -8px; left: 50%; width: 76px; height: 18px; margin-left: -38px; z-index: 2; background: repeating-linear-gradient(45deg, #f3d36b 0 6px, #f7e08f 6px 12px); opacity: 0.9; transform: rotate(-3deg); }
 .theme-card[data-theme="notebook"] .theme-card-name, .world-card[data-theme="notebook"] .world-card-name { font-weight: 700; font-size: 2rem; }
 .world-card[data-theme="notebook"] { position: relative; }
+
+/* habits: hand-drawn tick circles, ink history squares */
+[data-theme="notebook"] .habit-row { background: #fffef9; border: 1px dashed #c9bfa2; border-radius: 4px; }
+[data-theme="notebook"] .habit-row[data-state="done"] { border-style: solid; border-color: #c23b32; }
+[data-theme="notebook"] .check { border: 2.5px solid #1d2946; border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
+[data-theme="notebook"] .check[aria-pressed="true"] { background: transparent; color: #c23b32; border-color: #c23b32; }
+[data-theme="notebook"] .check svg { width: 30px; height: 30px; }
+[data-theme="notebook"] .habit-name { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; }
+[data-theme="notebook"] .cell { border-radius: 3px; background: transparent; border: 1.5px solid #c9d3e6; }
+[data-theme="notebook"] .cell[data-state="done"] { background: #fffef9; border-color: #1d2946; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23c23b32' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 11 4 4 8-10'/%3E%3C/svg%3E"); background-size: 80% 80%; background-position: center; background-repeat: no-repeat; }
+[data-theme="notebook"] .cell[data-state="skipped"] { border: 1.5px dashed #1d2946; }
+[data-theme="notebook"] .cell[data-state="missed"] { border-color: #d3b0ad; background: #fbeeed; opacity: 1; }
+[data-theme="notebook"] .habit-card { background: #fffef9; border: 1px solid #e6dcc0; border-radius: 3px; }
+[data-theme="notebook"] .habit-card-name { font-weight: 700; font-size: 1.6rem; }
+[data-theme="notebook"] .segment[data-selected="true"], [data-theme="notebook"] .chip[aria-pressed="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
+[data-theme="notebook"] .stat-num { font-weight: 700; }
+[data-theme="notebook"] .confirm { background: #fffef9; border: 2px dashed #b3261e; }
