@@ -74,7 +74,7 @@ jobs:
   # Production is always manual: npm run deploy:production.
   # Migrations are NOT deployed by this job: apply them by hand to both projects.
   deploy-staging:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.STAGING_DEPLOY_ENABLED == 'true'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [typecheck, test, database-gate]
     runs-on: ubuntu-latest
     environment: staging

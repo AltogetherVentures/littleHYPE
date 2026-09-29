@@ -85,12 +85,14 @@ There is no checkout yet, so you mark yourself as having paid by hand. This is f
 
 To re-run the picker for the same user, delete the account's rows in the SQL editor (`delete from profiles where user_id = 'user_XXXXXXXX';` removes its purchases, themes and audit rows too) and sign in again.
 
-## 7. Turn on auto-deploy for staging (optional)
+## 7. Auto-deploy for staging (the same method as reNudge)
 
-CI runs on every pull request. To have merges to `main` deploy staging:
+CI runs on every pull request. Every push to `main` (a merged PR) then deploys staging from GitHub Actions, the same way reNudge deploys. The job needs two secrets:
 
-1. GitHub repository, Settings, **Environments**, create `staging`. Add secrets `CLOUDFLARE_API_TOKEN` (create at Cloudflare, My Profile, API Tokens, template **Edit Cloudflare Workers**) and `CLOUDFLARE_ACCOUNT_ID`.
-2. Settings, Secrets and variables, **Variables**, add `STAGING_DEPLOY_ENABLED` = `true`.
+1. GitHub repository, Settings, **Environments**, create `staging`.
+2. In that environment add secrets `CLOUDFLARE_API_TOKEN` (create at Cloudflare, My Profile, API Tokens, template **Edit Cloudflare Workers**; the one reNudge uses works if both Workers live in the same Cloudflare account) and `CLOUDFLARE_ACCOUNT_ID`.
+
+Until the secrets exist the deploy job fails on `main`; PR checks are unaffected.
 
 Migrations are **never** deployed automatically. When a new file appears in `supabase/migrations/`, run it in the SQL editor of **both** projects.
 
