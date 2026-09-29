@@ -5,6 +5,7 @@ import { AppShell } from "../components/AppShell";
 import { homePathFor, type Me } from "../lib/me";
 import { ThemeProvider } from "../lib/strings";
 import { useDocumentTheme } from "../lib/useDocumentTheme";
+import { BreakCardHost } from "../components/BreakCardHost";
 import { UnlockHost } from "../components/UnlockHost";
 import { AchievementsPage } from "./AchievementsPage";
 import { EntryPage } from "./EntryPage";
@@ -52,6 +53,7 @@ export function ThemedApp({ me }: { me: Me }) {
           <Route path="*" element={<Navigate to={homePathFor(me)} replace />} />
         </Routes>
         {me.onboarded && <UnlockHost theme={me.theme} />}
+        {me.onboarded && <BreakCardHost theme={me.theme} />}
       </AppShell>
     </ThemeProvider>
   );

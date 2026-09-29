@@ -100,5 +100,9 @@
   "achievements.count": "{n} of {total} patches earned",
   "achievements.unlocked": "Awarded {date}",
   "achievements.unlock.heading": "Mission patch earned",
-  "achievements.unlock.dismiss": "Acknowledge"
+  "achievements.unlock.dismiss": "Acknowledge",
+  "share.startAgain": "Relaunch",
+  "share.dismiss": "Stand down",
+  "today.title.heading": "Callsign",
+  "today.title.empty": "Complete objectives to earn a callsign."
 }

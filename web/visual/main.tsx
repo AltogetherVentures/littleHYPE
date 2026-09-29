@@ -8,6 +8,8 @@ import { Landing } from "../src/routes/Landing";
 import { Legal } from "../src/routes/Legal";
 import { Paywall } from "../src/routes/Paywall";
 import { Showcase } from "../src/routes/Showcase";
+import { ShareDialog } from "../src/components/ShareDialog";
+import { ThemeProvider } from "../src/lib/strings";
 import { ThemedApp } from "../src/routes/ThemedApp";
 import "../src/styles.css";
 import.meta.glob("../../themes/*/*.css", { eager: true });
@@ -37,7 +39,7 @@ const me: Me = {
 };
 
 const sceneRoute = (s: string) =>
-  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of", welcome: "welcome", achievements: "achievements", unlock: "today", settings: "settings" })[s] ?? "today";
+  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of", welcome: "welcome", achievements: "achievements", unlock: "today", settings: "settings", breakcard: "today" })[s] ?? "today";
 
 function Scene() {
   switch (scene) {
@@ -51,6 +53,12 @@ function Scene() {
       return <Showcase slug={theme} />;
     case "landing":
       return <Landing />;
+    case "share":
+      return (
+        <ThemeProvider theme={theme}>
+          <ShareDialog type="title" onClose={() => {}} />
+        </ThemeProvider>
+      );
     case "privacy":
       return <Legal kind="privacy" />;
     case "paywall":

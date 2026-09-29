@@ -98,5 +98,9 @@
   "achievements.count": "{n} of {total} badges earned",
   "achievements.unlocked": "Earned {date}",
   "achievements.unlock.heading": "Survival badge earned",
-  "achievements.unlock.dismiss": "Noted"
+  "achievements.unlock.dismiss": "Noted",
+  "share.startAgain": "Get back up",
+  "share.dismiss": "Ignore it",
+  "today.title.heading": "Your rep",
+  "today.title.empty": "Survive a few days and you'll earn a name."
 }

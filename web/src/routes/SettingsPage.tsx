@@ -7,6 +7,7 @@ import { useApi } from "../lib/api";
 import { HABITS_KEY, TODAY_KEY } from "../lib/habits";
 import { ME_KEY, type Me } from "../lib/me";
 import { PROMPT_KEY } from "../lib/prompt";
+import { useReferrals } from "../lib/sharing";
 import { useT } from "../lib/strings";
 
 function timezoneChoices(current: string): string[] {
@@ -22,6 +23,8 @@ export function SettingsPage({ me }: { me: Me }) {
   const client = useQueryClient();
   const { signOut } = useClerk();
   const download = useDownloadExport();
+  const referrals = useReferrals();
+  const [copied, setCopied] = useState(false);
   const zones = useMemo(() => timezoneChoices(me.timezone), [me.timezone]);
 
   const [timezone, setTimezone] = useState(me.timezone);
@@ -128,6 +131,41 @@ export function SettingsPage({ me }: { me: Me }) {
           {saveReminder.isSuccess && <span role="status">{t("settings.saved")}</span>}
           {saveReminder.isError && <span role="alert">{t("settings.error")}</span>}
         </div>
+      </section>
+
+      <section className="panel" aria-labelledby="set-ref">
+        <h2 id="set-ref" className="panel-title">
+          {t("settings.referral.heading")}
+        </h2>
+        <p>{t("settings.referral.body")}</p>
+        {referrals.data && (
+          <>
+            <label className="field">
+              <span>{t("settings.referral.link")}</span>
+              <input readOnly value={referrals.data.link} onFocus={(e) => e.currentTarget.select()} />
+            </label>
+            <div className="actions">
+              <button
+                className="button"
+                onClick={() =>
+                  void navigator.clipboard
+                    ?.writeText(referrals.data!.link)
+                    .then(() => setCopied(true))
+                    .catch(() => setCopied(false))
+                }
+              >
+                {t("settings.referral.copy")}
+              </button>
+              {copied && <span role="status">{t("settings.referral.copied")}</span>}
+            </div>
+            <ul className="referral-stats">
+              <li>{t("settings.referral.confirmed", { n: String(referrals.data.confirmed) })}</li>
+              <li>{t("settings.referral.pending", { n: String(referrals.data.pending) })}</li>
+              <li>{t("settings.referral.credits", { n: String(referrals.data.creditsEarned) })}</li>
+              <li>{t("settings.referral.next", { n: String(referrals.data.nextCreditIn) })}</li>
+            </ul>
+          </>
+        )}
       </section>
 
       <section className="panel" aria-labelledby="set-data">

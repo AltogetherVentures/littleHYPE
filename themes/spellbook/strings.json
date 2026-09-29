@@ -98,5 +98,9 @@
   "achievements.count": "{n} of {total} spells learned",
   "achievements.unlocked": "Learned {date}",
   "achievements.unlock.heading": "Spell learned",
-  "achievements.unlock.dismiss": "Onward"
+  "achievements.unlock.dismiss": "Onward",
+  "share.startAgain": "Chalk a new circle",
+  "share.dismiss": "Not now",
+  "today.title.heading": "Your standing",
+  "today.title.empty": "Keep a ritual going and the academy will name you."
 }

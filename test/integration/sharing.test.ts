@@ -401,3 +401,64 @@ describe("referral privacy and permissions", () => {
     }
   });
 });
+
+describe("share card images", () => {
+  const card = (u: string, query: string) => call(`/api/share/card?${query}`, { as: u });
+
+  it("draws the title card in the person's theme from category and streak alone", async () => {
+    const u = await user({ theme: "dayzero" });
+    const h = await newHabit(u, { name: "Private marathon plan", category: "exercise" });
+    await doneOn(u, h.id, ...range(9, 0)); // 10 days
+    await api("/api/journal", { as: u, method: "POST", body: { body: "JOURNAL-MARKER private thoughts" } });
+    const res = await card(u, "type=title&format=story");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("image/svg+xml");
+    expect(res.headers.get("cache-control")).toContain("no-store");
+    const svg = await res.text();
+    expect(svg).toContain('width="1080" height="1920"');
+    expect(svg).toContain("Bebas Neue");
+    expect(svg).toContain("app.example/r/");
+    expect(svg).not.toContain("Private marathon plan"); // default is the category only (SH-10)
+    expect(svg).not.toContain("JOURNAL-MARKER");
+  });
+
+  it("shows the habit's name only when asked, and in the square size when asked", async () => {
+    const u = await user({ theme: "spacelog" });
+    const h = await newHabit(u, { name: "Deep work", category: "mindfulness" });
+    await doneOn(u, h.id, ...range(9, 0));
+    const plain = await (await card(u, "type=title&format=square")).text();
+    const named = await (await card(u, "type=title&format=square&showName=1")).text();
+    expect(plain).toContain('width="1080" height="1080"');
+    expect(plain).not.toContain("Deep work");
+    expect(named).toContain("Deep work");
+  });
+
+  it("draws the streak-break card with the theme's own joke, the category and the length", async () => {
+    const u = await user({ theme: "spacelog" });
+    const h = await newHabit(u, { name: "Water", category: "hydration" });
+    await doneOn(u, h.id, ...range(10, 3));
+    const { card: pending } = (await api("/api/break-card", { as: u })).body;
+    const svg = await (await card(u, `type=break&format=story&card=${pending.id}`)).text();
+    expect(svg).toContain("MISSION FAILURE REPORT");
+    expect(svg).toMatch(/8 DAYS|8 days/i);
+    expect(svg).not.toContain("Water"); // the custom name, unless asked
+    expect(await (await card(u, `type=break&format=story&card=${pending.id}&showName=1`)).text()).toContain("Water");
+  });
+
+  it("refuses bad requests, someone else's card, a missing title and a person with no theme", async () => {
+    const u = await user({ theme: "spacelog" });
+    const other = await user({ theme: "spacelog" });
+    expect((await card(u, "type=journal&format=story")).status).toBe(400);
+    expect((await card(u, "type=title&format=poster")).status).toBe(400);
+    expect((await api("/api/share/card?type=title", { as: u })).status).toBe(404); // no streak yet: no title
+    const h = await newHabit(other);
+    await doneOn(other, h.id, ...range(10, 3));
+    const { card: theirs } = (await api("/api/break-card", { as: other })).body;
+    expect((await card(u, `type=break&card=${theirs.id}`)).status).toBe(404);
+    expect((await card(u, "type=break&card=not-a-uuid")).status).toBe(404);
+    expect((await card(u, "type=break")).status).toBe(404);
+    const bare = await user({ theme: null });
+    expect((await card(bare, "type=title")).status).toBe(409);
+    expect((await call("/api/share/card?type=title")).status).toBe(401);
+  });
+});

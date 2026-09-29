@@ -25,6 +25,8 @@ const scenes = [
     [`habit ${t}`, `scene=habit&theme=${t}`],
     [`welcome ${t}`, `scene=welcome&theme=${t}`],
     [`settings ${t}`, `scene=settings&theme=${t}`],
+    [`breakcard ${t}`, `scene=breakcard&theme=${t}`],
+    [`share ${t}`, `scene=share&theme=${t}`],
     [`achievements ${t}`, `scene=achievements&theme=${t}`],
     [`unlock ${t}`, `scene=unlock&theme=${t}`],
     [`entry ${t}`, `scene=entry&theme=${t}`],

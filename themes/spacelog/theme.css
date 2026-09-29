@@ -127,3 +127,10 @@
 @keyframes sl-dock { from { transform: translateY(-90px) scale(1.6) rotate(-25deg); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes sl-spin { to { transform: rotate(360deg); } }
 [data-theme="spacelog"] .unlock-line { font-style: italic; }
+
+/* sharing */
+[data-theme="spacelog"] .break-scrim, [data-theme="spacelog"] .share-scrim { background: radial-gradient(circle at 50% 40%, rgba(60, 20, 40, 0.5), rgba(3, 6, 18, 0.94) 70%); }
+[data-theme="spacelog"] .break-card, [data-theme="spacelog"] .share-card { background: linear-gradient(180deg, rgba(20, 32, 76, 0.94), rgba(10, 18, 46, 0.96)); border: 1px solid rgba(255, 140, 120, 0.55); border-radius: 4px; }
+[data-theme="spacelog"] .break-card .unlock-kicker { color: #ff9a86; }
+[data-theme="spacelog"] .break-card h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
+[data-theme="spacelog"] .title-text { text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.2rem; color: var(--color-accent); }

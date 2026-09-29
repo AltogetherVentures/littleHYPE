@@ -7,6 +7,7 @@ import { errorResponse, json, readJsonObject } from "../lib/http";
 import { matchPath } from "../lib/router";
 import { getOrCreateMe } from "../profile/service";
 import { referralLandingTheme, referralStats } from "../referrals/service";
+import { buildShareCard } from "../sharing/card";
 import { currentTitle, dismissBreakCard, pendingBreakCard, recordShare } from "../sharing/service";
 import { REFERRAL_CODE_PATTERN, REFERRAL_COOKIE, REFERRAL_COOKIE_DAYS } from "../../shared/sharing";
 
@@ -19,7 +20,7 @@ export async function handleSharingRoutes(request: Request, env: Env): Promise<R
   const landing = matchPath("/r/:code", pathname);
   if (landing && (method === "GET" || method === "HEAD")) return referralLanding(landing.code!, url, env);
 
-  const isApi = pathname === "/api/title" || pathname === "/api/break-card" || pathname === "/api/share-events" || pathname === "/api/referrals" || pathname.startsWith("/api/break-card/");
+  const isApi = pathname === "/api/title" || pathname === "/api/break-card" || pathname === "/api/share-events" || pathname === "/api/referrals" || pathname === "/api/share/card" || pathname.startsWith("/api/break-card/");
   if (!isApi) return null;
 
   const claims = await requireAuth(env, request);
@@ -43,6 +44,13 @@ export async function handleSharingRoutes(request: Request, env: Env): Promise<R
         if (!body || (body.cardType !== "title" && body.cardType !== "break")) return errorResponse(400, "invalid_card_type");
         await recordShare(tx, userId, body.cardType);
         return json({ ok: true });
+      }
+      if (method === "GET" && pathname === "/api/share/card") {
+        const type = url.searchParams.get("type");
+        const format = url.searchParams.get("format") ?? "story";
+        if ((type !== "title" && type !== "break") || (format !== "story" && format !== "square")) return errorResponse(400, "invalid_card_request");
+        const svg = await buildShareCard(tx, userId, today, env.PUBLIC_BASE_URL, { type, format, showName: url.searchParams.get("showName") === "1", cardId: url.searchParams.get("card") });
+        return new Response(svg, { headers: { "content-type": "image/svg+xml; charset=utf-8", "cache-control": "private, no-store" } });
       }
       if (method === "GET" && pathname === "/api/referrals") {
         const stats = await referralStats(tx, userId);

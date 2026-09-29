@@ -126,3 +126,10 @@
 [data-theme="dayzero"] .unlock-stamp { position: absolute; right: -1.6rem; bottom: -0.6rem; padding: 0.3rem 0.8rem; line-height: 1; border: 3px solid #ff3b1a; color: #ff3b1a; background: rgba(23, 15, 5, 0.85); font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: 0.12em; text-transform: uppercase; transform: rotate(-12deg); animation: dz-stamp 0.5s 0.5s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
 @keyframes dz-stamp { from { transform: rotate(-12deg) scale(3); opacity: 0; } to { transform: rotate(-12deg) scale(1); opacity: 1; } }
 [data-theme="dayzero"] .unlock-kicker { color: #b4b1a4; }
+
+/* sharing */
+[data-theme="dayzero"] .break-scrim, [data-theme="dayzero"] .share-scrim { background: rgba(6, 6, 5, 0.88); }
+[data-theme="dayzero"] .break-card, [data-theme="dayzero"] .share-card { background: linear-gradient(180deg, #2d2f2c, #232523); border: 2px solid #4c4f49; border-radius: 2px; border-top: 8px solid #ff7a1a; }
+[data-theme="dayzero"] .break-card h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: 400; text-transform: none; letter-spacing: 0; }
+[data-theme="dayzero"] .break-card .unlock-kicker { color: #ff7a1a; font-family: var(--font-heading); font-size: 1.3rem; letter-spacing: 0.12em; }
+[data-theme="dayzero"] .title-text { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; color: #ff7a1a; }

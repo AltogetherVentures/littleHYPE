@@ -93,5 +93,9 @@
   "achievements.count": "{n} of {total} stickers collected",
   "achievements.unlocked": "Stuck in on {date}",
   "achievements.unlock.heading": "You've earned a sticker",
-  "achievements.unlock.dismiss": "Lovely"
+  "achievements.unlock.dismiss": "Lovely",
+  "share.startAgain": "Smooth it out, start fresh",
+  "share.dismiss": "Maybe later",
+  "today.title.heading": "Your title",
+  "today.title.empty": "Keep a habit going and a title will appear in the margin."
 }

@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { HabitRow } from "../components/HabitRow";
 import { artFor } from "../lib/art";
 import { flairFor } from "../lib/flair";
-import { promptText } from "../lib/content";
+import { ShareDialog } from "../components/ShareDialog";
+import { promptText, titleText } from "../lib/content";
+import { useTitle } from "../lib/sharing";
 import { usePrompt, useSkipPrompt } from "../lib/prompt";
 import { useSetLog, useToday } from "../lib/habits";
 import type { Me } from "../lib/me";
@@ -24,6 +26,8 @@ export function Today({ me }: { me: Me }) {
   const setLog = useSetLog();
   const prompt = usePrompt();
   const skip = useSkipPrompt();
+  const title = useTitle();
+  const [sharing, setSharing] = useState(false);
 
   const habits = data?.habits ?? [];
   const due = habits.filter((h) => h.today.due);
@@ -183,9 +187,27 @@ export function Today({ me }: { me: Me }) {
                 : t("today.streak.empty")}
             </p>
           </section>
+          <section className="panel panel-title-card" aria-labelledby="title-heading">
+            <header className="panel-head">
+              <h2 id="title-heading" className="panel-title">
+                {t("today.title.heading")}
+              </h2>
+            </header>
+            {title.data?.title ? (
+              <>
+                <p className="title-text">{titleText(me.theme, title.data.title.key, title.data.title.streakDays)}</p>
+                <button type="button" className="link-button" onClick={() => setSharing(true)}>
+                  {t("today.title.share")}
+                </button>
+              </>
+            ) : (
+              <p className="streak-empty">{t("today.title.empty")}</p>
+            )}
+          </section>
           <p className="today-note">{t("today.note")}</p>
         </aside>
       </div>
+      {sharing && <ShareDialog type="title" onClose={() => setSharing(false)} />}
     </div>
   );
 }

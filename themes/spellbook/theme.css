@@ -136,3 +136,10 @@
 [data-theme="spellbook"] .unlock-sparks i:nth-child(4) { --dx: 40px; --dy: -84px; animation-delay: 2s; }
 [data-theme="spellbook"] .unlock-sparks i:nth-child(5) { --dx: 0; --dy: -100px; animation-delay: 1.2s; }
 @keyframes sp-spark { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+
+/* sharing */
+[data-theme="spellbook"] .break-scrim, [data-theme="spellbook"] .share-scrim { background: radial-gradient(circle at 50% 40%, rgba(122, 31, 61, 0.5), rgba(20, 6, 16, 0.94) 72%); }
+[data-theme="spellbook"] .break-card, [data-theme="spellbook"] .share-card { background: linear-gradient(180deg, #fbf3de, #f0e0bb); border: 1px solid #c6ae80; box-shadow: 0 0 0 4px #f4e7c8, 0 0 0 5px #c6ae80, 0 20px 60px rgba(0, 0, 0, 0.5); }
+[data-theme="spellbook"] .break-card h2 { font-family: var(--font-body); font-style: italic; font-weight: 500; font-size: 1.4rem; text-transform: none; letter-spacing: 0; color: #4a0f25; }
+[data-theme="spellbook"] .break-card .unlock-kicker { color: #7d5510; }
+[data-theme="spellbook"] .title-text { color: #4a0f25; letter-spacing: 0.04em; font-size: 1.3rem; }

@@ -4,6 +4,8 @@
  * check-ins made in the gallery behave like the real thing.
  */
 import type { HabitCategory } from "@shared/categories";
+import { CARD_THEMES } from "@themes/cards";
+import { renderCardSvg } from "@themes/card-kit";
 import { analyseHabit, completionGrid, nearestMilestone, todayStatus, type HabitLog, type Schedule, type ScheduleVersion } from "@shared/streaks";
 
 interface MockHabit {
@@ -119,6 +121,25 @@ export function installMockApi() {
       if (!e) return json({ error: "entry_not_found" }, 404);
       if (method === "PATCH") Object.assign(e, JSON.parse(String(init?.body)));
       return json({ entry: full(e) });
+    }
+    if (path === "/api/title") return json({ title: { category: "hydration", key: "hydration.rank3", rank: 3, streakDays: 43, habitId: "h1" } });
+    if (path === "/api/break-card") {
+      const scene = new URLSearchParams(window.location.search).get("scene");
+      return json({ card: scene === "breakcard" ? { id: "0b7d2f0e-1111-4222-8333-444455556666", category: "hydration", lengthDays: 12, brokenOn: today } : null });
+    }
+    if (path === "/api/referrals") return json({ code: "k7m2q9xa", link: "https://littlehype.com/r/k7m2q9xa", pending: 1, confirmed: 2, creditsEarned: 0, creditsRedeemed: 0, nextCreditIn: 1 });
+    if (path === "/api/share-events") return json({ ok: true });
+    if (path === "/api/share/card") {
+      const theme = new URLSearchParams(window.location.search).get("theme") ?? "";
+      const t = CARD_THEMES[theme];
+      if (!t) return json({ error: "theme_required" }, 409);
+      const format = url.searchParams.get("format") === "square" ? "square" : "story";
+      const strings = t.strings;
+      const svg =
+        url.searchParams.get("type") === "break"
+          ? renderCardSvg(t.style, format, { kicker: t.breakCard.name, headline: t.breakCard.variants[0]!.replace("{category}", "Hydration").replace("{length}", "12"), sub: t.breakCard.restart, habitName: url.searchParams.get("showName") ? "Drink water" : null, themeName: strings["theme.name"]!, referralUrl: "https://littlehype.com/r/k7m2q9xa" })
+          : renderCardSvg(t.style, format, { kicker: "Hydration", headline: t.titles["hydration.rank3"]!, sub: (strings["habit.streak.days"] ?? "{n} days").replace("{n}", "43"), habitName: url.searchParams.get("showName") ? "Drink water" : null, themeName: strings["theme.name"]!, referralUrl: "https://littlehype.com/r/k7m2q9xa" });
+      return new Response(svg, { headers: { "content-type": "image/svg+xml" } });
     }
     if (path === "/api/achievements/unseen") {
       const showUnlock = new URLSearchParams(window.location.search).get("scene") === "unlock";
