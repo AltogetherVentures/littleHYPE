@@ -38,3 +38,20 @@ export interface CalendarProps {
   onMonthChange: (month: string) => void;
   t: (key: string, vars?: Record<string, string>) => string;
 }
+
+/**
+ * The props the themed achievement-unlock moment receives (TH-11). The theme owns the
+ * staging and animation of the celebration; the app owns when it appears and what it says
+ * (the achievement's own themed copy). `onDismiss` must be reachable by keyboard.
+ */
+export interface UnlockProps {
+  name: string;
+  description: string;
+  /** The theme's celebratory line. */
+  unlock: string;
+  emblem: ReactNode;
+  /** How many more are waiting behind this one. */
+  remaining: number;
+  onDismiss: () => void;
+  t: (key: string, vars?: Record<string, string>) => string;
+}

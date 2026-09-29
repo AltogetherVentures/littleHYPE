@@ -88,5 +88,10 @@
   "welcome.reminder.time": "What time?",
   "welcome.timezone": "Your days follow your timezone: {tz}.",
   "welcome.finish": "Open my notebook",
-  "welcome.finish.busy": "Sharpening the pencil..."
+  "welcome.finish.busy": "Sharpening the pencil...",
+  "achievements.intro": "Little rewards for turning up. Never for writing more.",
+  "achievements.count": "{n} of {total} stickers collected",
+  "achievements.unlocked": "Stuck in on {date}",
+  "achievements.unlock.heading": "You've earned a sticker",
+  "achievements.unlock.dismiss": "Lovely"
 }

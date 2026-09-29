@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import type { HabitCategory } from "@shared/categories";
 import type { GridCell, HabitAnalysis, LogStatus, Schedule, ScheduleVersion, TodayStatus } from "@shared/streaks";
+import { invalidateAchievements } from "./achievements";
 import { ApiError, useApi } from "./api";
 
 export interface HabitView {
@@ -94,6 +95,7 @@ export function useSetLog() {
     },
     onSuccess: ({ habit }) => replaceHabit(client, habit),
     onSettled: (_data, _err, { habitId }) => {
+      invalidateAchievements(client);
       void client.invalidateQueries({ queryKey: TODAY_KEY });
       void client.invalidateQueries({ queryKey: historyKey(habitId) });
     },

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthPage } from "./routes/AuthPage";
 import { Landing } from "./routes/Landing";
+import { Legal } from "./routes/Legal";
 import { NotFound } from "./routes/NotFound";
 import { Onboarding } from "./routes/Onboarding";
 import { Paywall } from "./routes/Paywall";
@@ -14,6 +15,8 @@ export function App() {
       <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
       <Route path="/paywall" element={<Paywall />} />
       <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/privacy" element={<Legal kind="privacy" />} />
+      <Route path="/terms" element={<Legal kind="terms" />} />
       <Route path="/:theme/*" element={<ThemeRoute />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

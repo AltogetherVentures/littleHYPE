@@ -47,6 +47,10 @@ export function Landing() {
           })}
         </ul>
       </section>
+      <footer className="landing-footer">
+        <Link to="/privacy">{t("settings.links.privacy")}</Link>
+        <Link to="/terms">{t("settings.links.terms")}</Link>
+      </footer>
     </main>
   );
 }

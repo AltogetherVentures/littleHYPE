@@ -93,5 +93,10 @@
   "welcome.reminder.time": "Check-in time",
   "welcome.timezone": "Your days follow your timezone: {tz}.",
   "welcome.finish": "Enter the safe house",
-  "welcome.finish.busy": "Bolting the door..."
+  "welcome.finish.busy": "Bolting the door...",
+  "achievements.intro": "Badges for showing up. Nobody gets one for talking too much.",
+  "achievements.count": "{n} of {total} badges earned",
+  "achievements.unlocked": "Earned {date}",
+  "achievements.unlock.heading": "Survival badge earned",
+  "achievements.unlock.dismiss": "Noted"
 }

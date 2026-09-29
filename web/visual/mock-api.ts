@@ -120,6 +120,19 @@ export function installMockApi() {
       if (method === "PATCH") Object.assign(e, JSON.parse(String(init?.body)));
       return json({ entry: full(e) });
     }
+    if (path === "/api/achievements/unseen") {
+      const showUnlock = new URLSearchParams(window.location.search).get("scene") === "unlock";
+      return json({ unseen: showUnlock ? [{ key: "streak_7", family: "streak", unlockedAt: new Date().toISOString() }, { key: "first_entry", family: "entry", unlockedAt: new Date().toISOString() }] : [] });
+    }
+    if (path === "/api/achievements/seen") return json({ ok: true });
+    if (path === "/api/achievements") {
+      const rows: [string, string, number, number, boolean][] = [
+        ["first_entry", "entry", 1, 1, true], ["first_checkin", "checkin", 1, 1, true], ["streak_3", "streak", 3, 3, true], ["streak_7", "streak", 7, 7, true], ["streak_14", "streak", 12, 14, false],
+        ["streak_30", "streak", 12, 30, false], ["streak_60", "streak", 12, 60, false], ["streak_100", "streak", 12, 100, false], ["entries_7", "days", 7, 7, true], ["entries_30", "days", 13, 30, false],
+        ["entries_100", "days", 13, 100, false], ["prompts_10", "prompt", 4, 10, false], ["prompts_50", "prompt", 4, 50, false], ["habits_3", "habits", 1, 3, false],
+      ];
+      return json({ achievements: rows.map(([key, family, current, target, got]) => ({ key, family, unlockedAt: got ? new Date(Date.now() - 86_400_000 * 3).toISOString() : null, seen: got, progress: { current, target } })) });
+    }
     if (path === "/api/prompt") return json({ date: today, promptKey: "reflect.proud_of", skipsLeft: 3, answeredBy: null });
     if (path.startsWith("/api/onboarding")) return json({ onboarded: true, habitId: null });
     if (path === "/api/today") {

@@ -103,3 +103,27 @@
 [data-theme="spacelog"] .cal-star-day[data-today="true"] { border-color: var(--color-accent); border-radius: 50%; }
 [data-theme="spacelog"] .cal-star-day[aria-pressed="true"] { background: rgba(95, 227, 232, 0.16); border: 1px dashed var(--color-accent); border-radius: 50%; }
 [data-theme="spacelog"] .cal-star-day:disabled { opacity: 0.3; cursor: default; }
+
+/* achievements: mission patches, and a patch docking under a radar sweep */
+[data-theme="spacelog"] .badge { background: linear-gradient(180deg, rgba(22, 34, 80, 0.8), rgba(12, 20, 50, 0.86)); border-color: rgba(95, 227, 232, 0.26); border-radius: 4px; }
+[data-theme="spacelog"] .badge-emblem { position: relative; width: 4.6rem; height: 4.6rem; border: 2px solid var(--color-accent); background: radial-gradient(circle at 35% 30%, rgba(95, 227, 232, 0.28), rgba(12, 20, 50, 0.9)); box-shadow: 0 0 0 4px rgba(8, 15, 36, 0.9), 0 0 0 5.5px rgba(95, 227, 232, 0.55), 0 0 18px rgba(95, 227, 232, 0.35); }
+[data-theme="spacelog"] .badge[data-unlocked="false"] .badge-emblem { background: rgba(6, 12, 32, 0.7); box-shadow: 0 0 0 4px rgba(8, 15, 36, 0.9), 0 0 0 5.5px rgba(43, 60, 114, 0.9); border: 2px dashed #4a5c96; }
+[data-theme="spacelog"] .badge-name { font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; }
+[data-theme="spacelog"] .badge-status { color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.76rem; }
+[data-theme="spacelog"] .bar { border-radius: 0; height: 0.4rem; background: rgba(95, 227, 232, 0.14); }
+[data-theme="spacelog"] .bar > span { border-radius: 0; box-shadow: 0 0 8px var(--color-accent); }
+[data-theme="spacelog"] .unlock-space { background: radial-gradient(circle at 50% 42%, rgba(30, 60, 140, 0.55), rgba(3, 6, 18, 0.94) 70%); }
+[data-theme="spacelog"] .unlock-radar { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+[data-theme="spacelog"] .unlock-radar i { position: absolute; border: 1px solid rgba(95, 227, 232, 0.28); border-radius: 50%; animation: sl-ping 3.2s ease-out infinite; }
+[data-theme="spacelog"] .unlock-radar i:nth-child(1) { width: 18rem; height: 18rem; }
+[data-theme="spacelog"] .unlock-radar i:nth-child(2) { width: 30rem; height: 30rem; animation-delay: 0.8s; }
+[data-theme="spacelog"] .unlock-radar i:nth-child(3) { width: 44rem; height: 44rem; animation-delay: 1.6s; }
+@keyframes sl-ping { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(1.1); } }
+[data-theme="spacelog"] .unlock-space .unlock-card { background: linear-gradient(180deg, rgba(20, 32, 76, 0.94), rgba(10, 18, 46, 0.96)); border-color: rgba(95, 227, 232, 0.5); border-radius: 4px; }
+[data-theme="spacelog"] .unlock-kicker { color: var(--color-accent); }
+[data-theme="spacelog"] .unlock-space h2 { font-size: 1.4rem; letter-spacing: 0.1em; text-transform: uppercase; }
+[data-theme="spacelog"] .unlock-patch { position: relative; display: inline-grid; place-items: center; width: 6.4rem; height: 6.4rem; margin: 0.8rem 0 0.2rem; border-radius: 50%; color: var(--color-accent); border: 2px solid var(--color-accent); background: radial-gradient(circle at 35% 30%, rgba(95, 227, 232, 0.32), rgba(12, 20, 50, 0.95)); box-shadow: 0 0 0 5px rgba(8, 15, 36, 0.9), 0 0 0 7px rgba(95, 227, 232, 0.6), 0 0 34px rgba(95, 227, 232, 0.55); animation: sl-dock 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+[data-theme="spacelog"] .unlock-patch-ring { position: absolute; inset: -14px; border: 1px dashed rgba(95, 227, 232, 0.6); border-radius: 50%; animation: sl-spin 16s linear infinite; }
+@keyframes sl-dock { from { transform: translateY(-90px) scale(1.6) rotate(-25deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sl-spin { to { transform: rotate(360deg); } }
+[data-theme="spacelog"] .unlock-line { font-style: italic; }

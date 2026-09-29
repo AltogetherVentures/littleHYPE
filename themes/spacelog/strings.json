@@ -95,5 +95,10 @@
   "welcome.reminder.time": "Transmission time",
   "welcome.timezone": "Mission days follow your timezone: {tz}.",
   "welcome.finish": "Begin mission",
-  "welcome.finish.busy": "Preparing for launch..."
+  "welcome.finish.busy": "Preparing for launch...",
+  "achievements.intro": "Every patch is earned by showing up, never by writing more.",
+  "achievements.count": "{n} of {total} patches earned",
+  "achievements.unlocked": "Awarded {date}",
+  "achievements.unlock.heading": "Mission patch earned",
+  "achievements.unlock.dismiss": "Acknowledge"
 }

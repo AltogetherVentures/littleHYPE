@@ -3,27 +3,17 @@ import { decideThemeRoute } from "@shared/theme-routing";
 import { THEME_SLUGS } from "@themes/registry";
 import { AppShell } from "../components/AppShell";
 import { homePathFor, type Me } from "../lib/me";
-import { ThemeProvider, useT, type StringKey } from "../lib/strings";
+import { ThemeProvider } from "../lib/strings";
 import { useDocumentTheme } from "../lib/useDocumentTheme";
+import { UnlockHost } from "../components/UnlockHost";
+import { AchievementsPage } from "./AchievementsPage";
 import { EntryPage } from "./EntryPage";
 import { HabitDetail } from "./HabitDetail";
 import { HabitsPage } from "./HabitsPage";
 import { JournalPage } from "./JournalPage";
+import { SettingsPage } from "./SettingsPage";
 import { Today } from "./Today";
 import { Welcome } from "./Welcome";
-
-function ComingSoon({ title }: { title: StringKey }) {
-  const t = useT();
-  return (
-    <section className="panel coming-soon">
-      <header className="panel-head">
-        <h1 className="panel-title">{t(title)}</h1>
-        <span className="panel-tag">{t("today.tag.soon")}</span>
-      </header>
-      <p>{t("soon.body")}</p>
-    </section>
-  );
-}
 
 /**
  * Everything under /<theme>/... for a signed-in, paid, onboarded user. The URL
@@ -57,10 +47,11 @@ export function ThemedApp({ me }: { me: Me }) {
           <Route path="journal/:id" element={<EntryPage me={me} />} />
           <Route path="habits" element={<HabitsPage me={me} />} />
           <Route path="habits/:id" element={<HabitDetail me={me} />} />
-          <Route path="achievements" element={<ComingSoon title="nav.achievements" />} />
-          <Route path="settings" element={<ComingSoon title="nav.settings" />} />
+          <Route path="achievements" element={<AchievementsPage me={me} />} />
+          <Route path="settings" element={<SettingsPage me={me} />} />
           <Route path="*" element={<Navigate to={homePathFor(me)} replace />} />
         </Routes>
+        {me.onboarded && <UnlockHost theme={me.theme} />}
       </AppShell>
     </ThemeProvider>
   );

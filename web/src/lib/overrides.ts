@@ -1,7 +1,8 @@
 import type { ComponentType } from "react";
 import { DefaultHeader } from "../components/DefaultHeader";
 import { DefaultCalendar } from "../components/DefaultCalendar";
-import type { CalendarProps, HeaderProps } from "./overrides-types";
+import { DefaultUnlock } from "../components/DefaultUnlock";
+import type { CalendarProps, HeaderProps, UnlockProps } from "./overrides-types";
 
 /**
  * Component overrides live in a small registry (TH-11): only where tokens and
@@ -41,4 +42,21 @@ export function calendarFor(theme: string | null | undefined): ComponentType<Cal
 
 export function themesWithCalendarOverride(): string[] {
   return Object.keys(calendarBySlug);
+}
+
+const unlocks = import.meta.glob<{ default: ComponentType<UnlockProps> }>("../../../themes/*/Unlock.tsx", {
+  eager: true,
+});
+const unlockBySlug: Record<string, ComponentType<UnlockProps>> = {};
+for (const [path, mod] of Object.entries(unlocks)) {
+  const slug = /themes\/([^/]+)\/Unlock\.tsx$/.exec(path)?.[1];
+  if (slug) unlockBySlug[slug] = mod.default;
+}
+
+export function unlockFor(theme: string | null | undefined): ComponentType<UnlockProps> {
+  return (theme && unlockBySlug[theme]) || DefaultUnlock;
+}
+
+export function themesWithUnlockOverride(): string[] {
+  return Object.keys(unlockBySlug);
 }

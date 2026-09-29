@@ -419,3 +419,36 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 .welcome .chips { margin-bottom: 0.5rem; }
 .suggestion-note { color: var(--color-muted); margin: 0.75rem 0 0.5rem; }
 .welcome .field { margin-top: 0.75rem; }
+
+/* achievements: the collection and the unlock moment */
+.collection-count { margin: 0.4rem 0 0; color: var(--color-muted); }
+.badge-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+.badge { display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; padding: 1.1rem 1.15rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: calc(var(--radius) * 1.25); box-shadow: var(--shadow); }
+.badge-emblem { display: grid; place-items: center; width: 4.2rem; height: 4.2rem; margin-bottom: 0.4rem; border-radius: 50%; border: 2px solid var(--color-accent); color: var(--color-accent); }
+.badge[data-unlocked="false"] .badge-emblem { border-style: dashed; border-color: var(--color-border); color: var(--color-muted); }
+.badge-name { font-size: 1.25rem; margin: 0; }
+.badge-desc { margin: 0; color: var(--color-muted); font-size: 0.95rem; }
+.badge-status { margin: 0.4rem 0 0; font-size: 0.88rem; font-weight: 600; }
+.badge-progress { width: 100%; margin-top: auto; padding-top: 0.5rem; }
+.bar { height: 0.55rem; border-radius: 999px; background: color-mix(in srgb, var(--color-border) 55%, transparent); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--color-accent); border-radius: inherit; }
+.unlock-scrim { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 1rem; background: rgb(0 0 0 / 62%); animation: unlock-fade 0.25s ease-out; }
+.unlock-card { position: relative; width: min(24rem, 100%); max-height: 100%; overflow: auto; padding: 1.6rem 1.4rem 1.4rem; text-align: center; background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); border-radius: calc(var(--radius) * 1.5); box-shadow: var(--shadow), 0 20px 60px rgb(0 0 0 / 45%); animation: unlock-rise 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.unlock-card h2 { font-size: 1.7rem; margin: 0.6rem 0 0.4rem; }
+.unlock-kicker { margin: 0; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); }
+.unlock-desc { color: var(--color-muted); font-size: 0.92rem; }
+.unlock-more { color: var(--color-muted); font-size: 0.85rem; margin: 0 0 0.6rem; }
+.unlock-emblem { display: inline-grid; place-items: center; width: 5rem; height: 5rem; margin-bottom: 0.4rem; border: 2px solid var(--color-accent); border-radius: 50%; color: var(--color-accent); }
+@keyframes unlock-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes unlock-rise { from { transform: translateY(24px) scale(0.94); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .unlock-scrim, .unlock-card, .unlock-card * { animation: none !important; } }
+
+/* settings and legal */
+.settings-page .panel { margin-bottom: 1.25rem; }
+.settings-page .actions { gap: 1rem 1.25rem; }
+.settings-page select { max-width: 24rem; }
+.legal { line-height: 1.7; }
+.legal-draft { padding: 0.75rem 1rem; border: 2px dashed var(--color-text); border-radius: var(--radius); background: var(--color-surface); font-weight: 600; }
+.legal h2 { font-size: 1.2rem; margin-top: 1.5rem; }
+.landing-footer { display: flex; justify-content: center; gap: 1.5rem; padding: 2rem 16px 3rem; }
+.inline-field input:not([type="radio"]):not([type="checkbox"]) { width: auto; min-width: 8rem; }

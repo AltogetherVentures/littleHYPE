@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemePicker } from "../src/components/ThemePicker";
 import type { Me } from "../src/lib/me";
 import { Landing } from "../src/routes/Landing";
+import { Legal } from "../src/routes/Legal";
 import { Paywall } from "../src/routes/Paywall";
 import { Showcase } from "../src/routes/Showcase";
 import { ThemedApp } from "../src/routes/ThemedApp";
@@ -36,7 +37,7 @@ const me: Me = {
 };
 
 const sceneRoute = (s: string) =>
-  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of", welcome: "welcome" })[s] ?? "today";
+  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of", welcome: "welcome", achievements: "achievements", unlock: "today", settings: "settings" })[s] ?? "today";
 
 function Scene() {
   switch (scene) {
@@ -50,6 +51,8 @@ function Scene() {
       return <Showcase slug={theme} />;
     case "landing":
       return <Landing />;
+    case "privacy":
+      return <Legal kind="privacy" />;
     case "paywall":
       return <Paywall />;
     default:

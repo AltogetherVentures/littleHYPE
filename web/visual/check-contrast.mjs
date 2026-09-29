@@ -24,11 +24,15 @@ const scenes = [
     [`habits ${t}`, `scene=habits&theme=${t}`],
     [`habit ${t}`, `scene=habit&theme=${t}`],
     [`welcome ${t}`, `scene=welcome&theme=${t}`],
+    [`settings ${t}`, `scene=settings&theme=${t}`],
+    [`achievements ${t}`, `scene=achievements&theme=${t}`],
+    [`unlock ${t}`, `scene=unlock&theme=${t}`],
     [`entry ${t}`, `scene=entry&theme=${t}`],
     [`newentry ${t}`, `scene=newentry&theme=${t}`],
     [`showcase ${t}`, `scene=showcase&theme=${t}&signedout=1`],
   ]),
   ["picker", "scene=picker&theme=x"],
+  ["privacy", "scene=privacy&signedout=1&theme=x"],
   ["landing", "scene=landing&signedout=1&theme=x"],
 ];
 
@@ -51,12 +55,22 @@ for (const [name, query] of scenes) {
       const out = [];
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       const seen = new Set();
+      const modal = document.querySelector("[role=dialog][aria-modal=true]"); // what sits behind a modal is dimmed and inert
       for (let node = walker.nextNode(); node; node = walker.nextNode()) {
         const text = node.nodeValue.trim();
         const el = node.parentElement;
         if (!text || seen.has(el) || ["SCRIPT", "STYLE"].includes(el.tagName)) continue;
         const cs = getComputedStyle(el);
-        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0 || el.closest(".sr-only")) continue; // sr-only text is not visible
+        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0 || el.closest(".sr-only") || (modal && !modal.contains(el))) continue; // sr-only text is not visible
+        // Rotated text (a stamp, a tilted sticker) has an axis-aligned box that covers its
+        // surroundings, so pixel sampling cannot judge it. Anything turned by more than about
+        // three degrees is skipped here and has to be checked by eye and by colour maths.
+        let rotated = false;
+        for (let a = el; a && a !== document.body; a = a.parentElement) {
+          const m = new DOMMatrix(getComputedStyle(a).transform === "none" ? undefined : getComputedStyle(a).transform);
+          if (Math.abs(m.b) > 0.05) rotated = true;
+        }
+        if (rotated) continue;
         const range = document.createRange();
         range.selectNodeContents(node);
         const r = range.getBoundingClientRect();

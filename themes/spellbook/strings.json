@@ -93,5 +93,10 @@
   "welcome.reminder.time": "Hour of summons",
   "welcome.timezone": "Your days follow your timezone: {tz}.",
   "welcome.finish": "Enter the study",
-  "welcome.finish.busy": "Lighting the candles..."
+  "welcome.finish.busy": "Lighting the candles...",
+  "achievements.intro": "Every spell is learned through practice, never through length.",
+  "achievements.count": "{n} of {total} spells learned",
+  "achievements.unlocked": "Learned {date}",
+  "achievements.unlock.heading": "Spell learned",
+  "achievements.unlock.dismiss": "Onward"
 }

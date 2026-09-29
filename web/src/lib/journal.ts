@@ -1,5 +1,6 @@
 import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CalendarDay } from "./calendar";
+import { invalidateAchievements } from "./achievements";
 import { useApi } from "./api";
 import { TODAY_KEY } from "./habits";
 
@@ -63,6 +64,7 @@ export function useCalendar(month: string) {
 export function useJournalRefresh() {
   const client = useQueryClient();
   return () => {
+    invalidateAchievements(client);
     void client.invalidateQueries({ queryKey: JOURNAL_KEY });
     void client.invalidateQueries({ queryKey: ["journal-calendar"] });
     void client.invalidateQueries({ queryKey: TODAY_KEY });
