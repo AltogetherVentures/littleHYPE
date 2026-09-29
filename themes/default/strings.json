@@ -11,7 +11,7 @@
   "common.error": "Something went wrong. Please try again.",
   "common.retry": "Try again",
   "paywall.heading": "Complete your purchase to continue",
-  "paywall.body": "littleHYPE is a one-time purchase of $49 for lifetime access. Checkout is being connected; once your payment is confirmed you can choose your theme.",
+  "paywall.body": "littleHYPE is a one-time purchase of $49 USD for lifetime access, not a subscription. Once your payment is confirmed you choose your theme.",
   "picker.heading": "Choose your world",
   "picker.intro": "Pick the theme you want to journal in. Each one has its own look, language and rituals.",
   "picker.choose": "Choose {name}",
@@ -255,5 +255,14 @@
   "privacy.unsubscribe.done": "You're unsubscribed. We won't send you any more reminder emails.",
   "privacy.unsubscribe.hint": "You can turn reminders back on any time in Settings.",
   "privacy.unsubscribe.error": "That link didn't work, so nothing was changed. You can turn reminders off in Settings after signing in.",
-  "privacy.unsubscribe.home": "Go to littleHYPE"
+  "privacy.unsubscribe.home": "Go to littleHYPE",
+  "paywall.buy": "Buy littleHYPE for $49",
+  "paywall.busy": "Opening checkout...",
+  "paywall.unavailable": "Checkout isn't available right now. Please try again a little later.",
+  "paywall.error": "We couldn't open checkout. Nothing was charged. Please try again.",
+  "paywall.secure": "Payment is handled securely by Stripe. You'll be sent back here when it's done.",
+  "billing.success.heading": "Confirming your payment",
+  "billing.success.waiting": "This usually takes a few seconds. Please keep this page open.",
+  "billing.success.slow": "Your payment is taking longer than usual to confirm. You can close this page: your access unlocks as soon as it goes through, and you'll get a receipt from Stripe by email.",
+  "billing.success.check": "Check again"
 }

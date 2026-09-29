@@ -1,4 +1,5 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { EMAILS } from "../themes/emails";
 import { renderReminder } from "../src/email/render";
@@ -17,7 +18,8 @@ const contrast = (a: string, b: string) => {
 describe("theme email registry", () => {
   it("covers exactly the registered themes", () => {
     expect(Object.keys(EMAILS).sort()).toEqual([...THEME_SLUGS].sort());
-    const folders = readdirSync(new URL("../themes", import.meta.url), { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== "default").map((d) => d.name);
+    const root = join(import.meta.dirname, "..", "themes");
+    const folders = readdirSync(root).filter((name) => name !== "default" && statSync(join(root, name)).isDirectory());
     expect(folders.sort()).toEqual([...THEME_SLUGS].sort());
   });
 

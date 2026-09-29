@@ -5,6 +5,7 @@ import { handleAdminRoutes } from "./routes/admin";
 import { handleConfigRoutes } from "./routes/config";
 import { handleHabitRoutes } from "./routes/habits";
 import { handleAccountRoutes } from "./routes/account";
+import { handleBillingRoutes } from "./routes/billing";
 import { handleAchievementRoutes } from "./routes/achievements";
 import { handleJournalRoutes } from "./routes/journal";
 import { handlePromptRoutes } from "./routes/prompts";
@@ -32,9 +33,15 @@ export interface Env {
   RESEND_FROM?: string;
   /** Signs unsubscribe links; any long random string. */
   EMAIL_TOKEN_SECRET?: string;
+  /** Payments stay off until these are set (docs/setup.md). Secrets except the price id and tax flag. */
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  STRIPE_PRICE_ID?: string;
+  /** "true" once Stripe Tax is set up in the Stripe dashboard. */
+  STRIPE_AUTOMATIC_TAX?: string;
 }
 
-const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleUnsubscribeRoutes, handleAdminRoutes];
+const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleBillingRoutes, handleUnsubscribeRoutes, handleAdminRoutes];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {

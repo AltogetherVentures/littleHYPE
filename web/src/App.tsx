@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthPage } from "./routes/AuthPage";
+import { CheckoutSuccess } from "./routes/CheckoutSuccess";
 import { Landing } from "./routes/Landing";
 import { Legal } from "./routes/Legal";
 import { NotFound } from "./routes/NotFound";
@@ -14,6 +15,7 @@ export function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/sign-in/*" element={<AuthPage mode="sign-in" />} />
       <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
+      <Route path="/checkout/success" element={<CheckoutSuccess />} />
       <Route path="/paywall" element={<Paywall />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/unsubscribe" element={<Unsubscribe />} />
