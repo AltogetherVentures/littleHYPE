@@ -20,6 +20,8 @@ export interface TodayData {
   date: string;
   habits: HabitView[];
   milestone: { milestone: number; remaining: number } | null;
+  /** Whether any entry with text exists for today (TD-2). */
+  writtenToday: boolean;
 }
 
 export interface HabitHistory {

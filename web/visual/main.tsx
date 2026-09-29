@@ -33,6 +33,9 @@ const me: Me = {
   createdAt: new Date(Date.now() - (day - 1) * 86_400_000).toISOString(),
 };
 
+const sceneRoute = (s: string) =>
+  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of" })[s] ?? "today";
+
 function Scene() {
   switch (scene) {
     case "picker":
@@ -59,7 +62,7 @@ function Scene() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={new QueryClient()}>
-      <MemoryRouter initialEntries={[`/${theme}/${["journal", "habits", "habit"].includes(scene) ? (scene === "habit" ? "habits/h3" : scene) : "today"}`]}>
+      <MemoryRouter initialEntries={[`/${theme}/${sceneRoute(scene)}`]}>
         <Scene />
       </MemoryRouter>
     </QueryClientProvider>

@@ -41,10 +41,12 @@ export function Today({ me }: { me: Me }) {
           </h1>
           <p className="hero-greeting">{t("today.greeting")}</p>
           <div className="hero-actions">
-            <Link className="button" to={`/${me.theme}/journal`}>
-              {t("today.cta")}
+            <Link className="button" to={`/${me.theme}/journal/new`}>
+              {data?.writtenToday ? t("today.cta.again") : t("today.cta")}
             </Link>
-            <span className="hero-sub">{t("today.cta.sub")}</span>
+            <span className="hero-sub" data-written={data?.writtenToday ?? false}>
+              {data?.writtenToday ? t("today.written") : t("today.cta.sub")}
+            </span>
           </div>
         </div>
         {hero && <img className="hero-art" src={hero} alt="" />}

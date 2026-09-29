@@ -19,3 +19,22 @@ export interface HeaderProps {
   createdAt: string;
   timezone: string;
 }
+
+/**
+ * The props every themed calendar receives (TH-11). A theme may draw the month however it
+ * likes (a star chart, a wall calendar of tally marks) but must render each non-blank day
+ * as a button that calls `onSelect`, marks `selected` with aria-pressed, and is named for
+ * screen readers; the date maths comes from web/src/lib/calendar.ts.
+ */
+export interface CalendarProps {
+  /** "YYYY-MM" */
+  month: string;
+  /** The user's local today, "YYYY-MM-DD". */
+  today: string;
+  days: { date: string; count: number; mood: number | null }[];
+  /** The day whose entries are shown, if any. */
+  selected: string | null;
+  onSelect: (date: string) => void;
+  onMonthChange: (month: string) => void;
+  t: (key: string, vars?: Record<string, string>) => string;
+}

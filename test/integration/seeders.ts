@@ -38,4 +38,7 @@ export const SEEDERS: Record<string, Seeder> = {
     const id = await habit(sup, userId);
     await sup`insert into habit_logs (habit_id, user_id, log_date, status) values (${id}, ${userId}, '2026-01-01', 'done')`;
   },
+  journal_entries: async (sup, userId) => {
+    await sup`insert into journal_entries (user_id, entry_date, body) values (${userId}, '2026-01-01', 'Seeded entry')`;
+  },
 };

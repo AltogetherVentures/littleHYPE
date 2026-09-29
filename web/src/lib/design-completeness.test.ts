@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { THEME_SLUGS } from "@themes/registry";
 import { artFor, themesWithArt, type ArtName } from "./art";
-import { headerFor, themesWithHeaderOverride } from "./overrides";
+import { calendarFor, headerFor, themesWithCalendarOverride, themesWithHeaderOverride } from "./overrides";
+import { DefaultCalendar } from "../components/DefaultCalendar";
 import { DefaultHeader } from "../components/DefaultHeader";
 
 /**
@@ -29,9 +30,15 @@ describe("every launch theme ships a full design", () => {
     for (const slug of THEME_SLUGS) expect(headerFor(slug)).not.toBe(DefaultHeader);
   });
 
+  it("has its own calendar component (TH-11) rather than the neutral one", () => {
+    expect(themesWithCalendarOverride().sort()).toEqual([...THEME_SLUGS].sort());
+    for (const slug of THEME_SLUGS) expect(calendarFor(slug)).not.toBe(DefaultCalendar);
+  });
+
   it("falls back to the neutral header and art for an unknown theme", () => {
     expect(headerFor("nosuchtheme")).toBe(DefaultHeader);
     expect(headerFor(null)).toBe(DefaultHeader);
+    expect(calendarFor("nosuchtheme")).toBe(DefaultCalendar);
     expect(artFor("nosuchtheme", "hero")).toBe(artFor(null, "hero"));
   });
 });

@@ -79,3 +79,33 @@
 [data-theme="spellbook"] .segment[data-selected="true"], [data-theme="spellbook"] .chip[aria-pressed="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
 [data-theme="spellbook"] .stat-num { font-weight: 700; color: #7a1f3d; }
 [data-theme="spellbook"] .confirm { background: #fbf3de; border: 2px double #7a1f3d; }
+
+/* journal: scrolls, an illuminated page and a lunar calendar */
+[data-theme="spellbook"] .entry-card, [data-theme="spellbook"] .journal-side { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80; margin: 4px; }
+[data-theme="spellbook"] .entry-date { letter-spacing: 0.04em; color: #4a0f25; font-weight: 600; }
+[data-theme="spellbook"] .side-title { text-transform: uppercase; letter-spacing: 0.14em; color: #4a0f25; }
+[data-theme="spellbook"] .entry-mood { color: #7a1f3d; }
+[data-theme="spellbook"] .editor-text { border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f8eed8, 0 0 0 4px #c6ae80; margin: 4px 0; background: linear-gradient(180deg, #fbf3de, #f4e7c8); font-size: 1.25rem; line-height: 1.75; caret-color: #7a1f3d; }
+[data-theme="spellbook"] .editor-preview { border: 1px dashed #c6ae80; border-radius: 6px; background: #fbf3de; }
+[data-theme="spellbook"] .entry-body > p:first-child::first-letter { font-family: var(--font-heading); font-size: 3.1rem; float: left; line-height: 0.9; padding: 0.1rem 0.4rem 0 0; color: #7a1f3d; }
+[data-theme="spellbook"] .tool, [data-theme="spellbook"] .mood-option { border-radius: 6px; border-color: #c6ae80; background: #fbf3de; }
+[data-theme="spellbook"] .tool { font-family: var(--font-heading); }
+[data-theme="spellbook"] .mood-option[data-selected="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .segment[aria-pressed="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .save-state { font-style: italic; }
+[data-theme="spellbook"] .save-state.save-saved::before { content: "\2726"; margin-right: 0.4rem; color: #a7761a; }
+[data-theme="spellbook"] .cal-moon { text-align: center; }
+[data-theme="spellbook"] .cal-moon-head { display: flex; align-items: center; justify-content: space-between; }
+[data-theme="spellbook"] .cal-moon-head button { min-width: 2.75rem; min-height: 2.75rem; border: 1px solid #c6ae80; border-radius: 50%; background: #fbf3de; color: #4a0f25; font-size: 1.3rem; cursor: pointer; }
+[data-theme="spellbook"] .cal-moon-title { font-family: var(--font-heading); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.95rem; color: #4a0f25; }
+[data-theme="spellbook"] .cal-moon-rule { color: #7d5510; letter-spacing: 0.5em; font-size: 0.7rem; margin: 0.25rem 0 0.4rem; }
+[data-theme="spellbook"] .cal-moon-weekdays, [data-theme="spellbook"] .cal-moon-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+[data-theme="spellbook"] .cal-moon-weekdays { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+[data-theme="spellbook"] .cal-moon-day { position: relative; aspect-ratio: 1; min-height: 2.5rem; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: #3a1322; }
+[data-theme="spellbook"] .cal-moon-disc { position: absolute; inset: 12%; border-radius: 50%; border: 1.5px solid #c9962e; background: rgba(43, 15, 34, 0.1); }
+[data-theme="spellbook"] .cal-moon-num { position: relative; font-family: var(--font-heading); font-size: 0.9rem; font-variant-numeric: lining-nums; }
+[data-theme="spellbook"] .cal-moon-day[data-has="true"] .cal-moon-disc { background: radial-gradient(circle at 35% 32%, #fff0b3, #e7b940 60%, #b98a22); box-shadow: 0 0 8px rgba(201, 150, 46, 0.7); }
+[data-theme="spellbook"] .cal-moon-day[data-today="true"] .cal-moon-disc { border-color: #7a1f3d; border-width: 2.5px; }
+[data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-disc { background: #7a1f3d; border-color: #c9962e; }
+[data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-num { color: #fff3d6; }
+[data-theme="spellbook"] .cal-moon-day:disabled { opacity: 0.4; cursor: default; }

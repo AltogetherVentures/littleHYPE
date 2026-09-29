@@ -84,3 +84,37 @@
 [data-theme="notebook"] .segment[data-selected="true"], [data-theme="notebook"] .chip[aria-pressed="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
 [data-theme="notebook"] .stat-num { font-weight: 700; }
 [data-theme="notebook"] .confirm { background: #fffef9; border: 2px dashed #b3261e; }
+
+/* journal: loose pages, ruled paper and a desk calendar */
+[data-theme="notebook"] .entry-card { background: #fffef9; border: 1px solid #e6dcc0; border-radius: 3px; box-shadow: 0 1px 0 rgba(29, 41, 70, 0.08), 0 6px 14px -8px rgba(29, 41, 70, 0.3); }
+[data-theme="notebook"] .entry-list li:nth-child(odd) .entry-card { transform: rotate(-0.35deg); }
+[data-theme="notebook"] .entry-list li:nth-child(even) .entry-card { transform: rotate(0.3deg); }
+[data-theme="notebook"] .entry-list .entry-card:hover { transform: rotate(0deg) translateY(-2px); }
+[data-theme="notebook"] .entry-card::before { content: ""; position: absolute; top: -7px; left: 1.4rem; width: 3.4rem; height: 14px; background: rgba(240, 214, 140, 0.7); transform: rotate(-2deg); }
+[data-theme="notebook"] .entry-date { font-size: 1.5rem; font-weight: 700; }
+[data-theme="notebook"] .journal-side { background: transparent; border: 0; box-shadow: none; padding: 0; }
+[data-theme="notebook"] .side-title { font-size: 1.5rem; }
+[data-theme="notebook"] .editor-text { border: 1px solid #e0d6ba; border-radius: 3px; background-color: #fffef9; background-image: linear-gradient(90deg, transparent 3.4rem, rgba(194, 59, 50, 0.4) 3.4rem, rgba(194, 59, 50, 0.4) calc(3.4rem + 1px), transparent calc(3.4rem + 1px)), repeating-linear-gradient(0deg, transparent 0 calc(1.87rem - 1px), rgba(122, 150, 214, 0.35) calc(1.87rem - 1px) 1.87rem); background-attachment: local; padding: 1.87rem 1.2rem 1rem 4.4rem; line-height: 1.87rem; font-size: 1.1rem; caret-color: #b3261e; }
+[data-theme="notebook"] .editor-preview { border: 1px dashed #c9d3e6; border-radius: 3px; background: #fffef9; }
+[data-theme="notebook"] .tool, [data-theme="notebook"] .mood-option { border-radius: 3px; background: #fffef9; border-color: #d6cbb0; }
+[data-theme="notebook"] .tool { font-family: var(--font-heading); font-size: 1.3rem; }
+[data-theme="notebook"] .mood-option[data-selected="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
+[data-theme="notebook"] .segment[aria-pressed="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
+[data-theme="notebook"] .save-state { font-family: var(--font-heading); font-size: 1.15rem; }
+[data-theme="notebook"] .save-state.save-saved { color: #2f6b3a; }
+[data-theme="notebook"] .entry-body h2, [data-theme="notebook"] .entry-body h3, [data-theme="notebook"] .entry-body h4 { font-weight: 700; }
+[data-theme="notebook"] .cal-desk { position: relative; padding: 1.5rem 0.9rem 0.9rem; background: #fffef9; border: 1px solid #e0d6ba; border-radius: 3px; box-shadow: 0 1px 0 rgba(29, 41, 70, 0.1), 0 8px 16px -10px rgba(29, 41, 70, 0.4); }
+[data-theme="notebook"] .cal-desk::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: -6px; height: 5px; background: #f0e8d0; border: 1px solid #e0d6ba; border-top: 0; border-radius: 0 0 3px 3px; }
+[data-theme="notebook"] .cal-desk-rings { position: absolute; top: -9px; left: 0; right: 0; display: flex; justify-content: space-evenly; }
+[data-theme="notebook"] .cal-desk-rings i { width: 11px; height: 20px; border: 2px solid #8e96aa; border-radius: 6px; background: linear-gradient(#fffef9, #dcd6c4); }
+[data-theme="notebook"] .cal-desk-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+[data-theme="notebook"] .cal-desk-head button { min-width: 2.75rem; min-height: 2.75rem; border: 0; background: none; color: #1d2946; font-size: 1.5rem; cursor: pointer; }
+[data-theme="notebook"] .cal-desk-title { font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700; color: #b3261e; }
+[data-theme="notebook"] .cal-desk-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+[data-theme="notebook"] .cal-desk-table th { font-family: var(--font-heading); font-size: 1.1rem; color: var(--color-muted); font-weight: 600; }
+[data-theme="notebook"] .cal-desk-table td { padding: 1px; text-align: center; }
+[data-theme="notebook"] .cal-desk-day { width: 100%; aspect-ratio: 1; min-height: 2.5rem; border: 2px solid transparent; background: none; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; color: var(--color-text); cursor: pointer; border-radius: 50%; }
+[data-theme="notebook"] .cal-desk-day[data-has="true"] { border-color: #b3261e; border-radius: 52% 48% 55% 45% / 46% 56% 44% 54%; color: #b3261e; }
+[data-theme="notebook"] .cal-desk-day[data-today="true"] { text-decoration: underline wavy #1d2946; text-underline-offset: 4px; }
+[data-theme="notebook"] .cal-desk-day[aria-pressed="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
+[data-theme="notebook"] .cal-desk-day:disabled { opacity: 0.35; cursor: default; }

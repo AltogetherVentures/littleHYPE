@@ -14,6 +14,7 @@ import {
   type ScheduleVersion,
   type TodayStatus,
 } from "../../shared/streaks";
+import { writtenOn } from "../journal/service";
 import { DomainError } from "../profile/service";
 
 export interface HabitView {
@@ -242,11 +243,12 @@ export async function habitHistory(tx: postgres.TransactionSql, userId: string, 
 export interface TodayPayload {
   date: string;
   habits: HabitView[];
+  writtenToday: boolean;
   milestone: { milestone: number; remaining: number } | null;
 }
 
 /** Everything the Today screen needs about habits (TD-1, TD-3), for the user's local today (TD-4). */
 export async function todayPayload(tx: postgres.TransactionSql, userId: string, today: string): Promise<TodayPayload> {
   const habits = (await listHabits(tx, userId, today)).filter((h) => !h.archivedAt);
-  return { date: today, habits, milestone: nearestMilestone(habits.map((h) => h.streak.currentDays)) };
+  return { date: today, habits, milestone: nearestMilestone(habits.map((h) => h.streak.currentDays)), writtenToday: await writtenOn(tx, userId, today) };
 }

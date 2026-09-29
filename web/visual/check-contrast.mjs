@@ -23,6 +23,8 @@ const scenes = [
     [`journal ${t}`, `scene=journal&theme=${t}`],
     [`habits ${t}`, `scene=habits&theme=${t}`],
     [`habit ${t}`, `scene=habit&theme=${t}`],
+    [`entry ${t}`, `scene=entry&theme=${t}`],
+    [`newentry ${t}`, `scene=newentry&theme=${t}`],
     [`showcase ${t}`, `scene=showcase&theme=${t}&signedout=1`],
   ]),
   ["picker", "scene=picker&theme=x"],
@@ -53,7 +55,7 @@ for (const [name, query] of scenes) {
         const el = node.parentElement;
         if (!text || seen.has(el) || ["SCRIPT", "STYLE"].includes(el.tagName)) continue;
         const cs = getComputedStyle(el);
-        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0) continue;
+        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0 || el.closest(".sr-only")) continue; // sr-only text is not visible
         const range = document.createRange();
         range.selectNodeContents(node);
         const r = range.getBoundingClientRect();

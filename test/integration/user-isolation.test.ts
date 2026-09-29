@@ -109,6 +109,17 @@ describe("row-level security (PV-1)", () => {
     expect(exposed).toEqual([]);
   });
 
+  it("every function in the public schema pins its search_path (Supabase linter 0011)", async () => {
+    const unpinned = await sup<{ signature: string }[]>`
+      select p.oid::regprocedure::text as signature
+        from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public'
+         and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')
+         and not coalesce(p.proconfig::text ilike '%search_path=%', false)`;
+    expect(unpinned.map((f) => f.signature)).toEqual([]);
+  });
+
   it("the Data API roles cannot read, write or delete any table", async () => {
     for (const role of ["anon", "authenticated"]) {
       for (const table of tables) {

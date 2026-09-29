@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { DefaultHeader } from "../components/DefaultHeader";
-import type { HeaderProps } from "./overrides-types";
+import { DefaultCalendar } from "../components/DefaultCalendar";
+import type { CalendarProps, HeaderProps } from "./overrides-types";
 
 /**
  * Component overrides live in a small registry (TH-11): only where tokens and
@@ -23,4 +24,21 @@ export function headerFor(theme: string | null | undefined): ComponentType<Heade
 
 export function themesWithHeaderOverride(): string[] {
   return Object.keys(headerBySlug);
+}
+
+const calendars = import.meta.glob<{ default: ComponentType<CalendarProps> }>("../../../themes/*/Calendar.tsx", {
+  eager: true,
+});
+const calendarBySlug: Record<string, ComponentType<CalendarProps>> = {};
+for (const [path, mod] of Object.entries(calendars)) {
+  const slug = /themes\/([^/]+)\/Calendar\.tsx$/.exec(path)?.[1];
+  if (slug) calendarBySlug[slug] = mod.default;
+}
+
+export function calendarFor(theme: string | null | undefined): ComponentType<CalendarProps> {
+  return (theme && calendarBySlug[theme]) || DefaultCalendar;
+}
+
+export function themesWithCalendarOverride(): string[] {
+  return Object.keys(calendarBySlug);
 }

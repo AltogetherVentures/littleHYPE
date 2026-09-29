@@ -14,7 +14,8 @@ vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), u
 let habit = { id: "h1", name: "Drink water", description: null, category: "hydration", archivedAt: null, createdAt: "2026-09-01T00:00:00Z", schedule: { type: "daily" }, pendingSchedule: null, streak: { current: 2, longest: 5, unit: "days", currentDays: 2, longestDays: 5 }, today: { due: true, logged: null as string | null, week: null } };
 let failNext = false;
 const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: { status?: string } }) => {
-  if (path === "/api/today") return { date: "2026-09-30", habits: [habit], milestone: { milestone: 3, remaining: 1 } };
+  if (path === "/api/today") return { date: "2026-09-30", habits: [habit], milestone: { milestone: 3, remaining: 1 }, writtenToday: false };
+  if (path.startsWith("/api/journal")) return { entries: [], hasMore: false, days: [], today: "2026-09-30" };
   if (path.startsWith("/api/habits/h1/logs/")) {
     if (failNext) throw new Error("boom");
     const done = init?.method === "PUT" && init.body?.status === "done";

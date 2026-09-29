@@ -7,7 +7,7 @@
 -- Validates the shape of a schedule (see shared/streaks.ts). Used by a CHECK, which runs
 -- with the caller's privileges, so app_user is granted EXECUTE below.
 create function valid_schedule(s jsonb) returns boolean
-language sql immutable
+language sql immutable set search_path = public, pg_temp
 as $$
   select case s->>'type'
     when 'daily' then true
@@ -67,7 +67,7 @@ create index habit_logs_user_date_idx on habit_logs (user_id, log_date);
 -- At most 20 active habits per user (HB-8). The advisory lock serialises concurrent
 -- creates so two requests cannot both slip under the limit.
 create function enforce_active_habit_limit() returns trigger
-language plpgsql
+language plpgsql set search_path = public, pg_temp
 as $$
 begin
   if new.archived_at is null then

@@ -5,8 +5,10 @@ import { AppShell } from "../components/AppShell";
 import { homePathFor, type Me } from "../lib/me";
 import { ThemeProvider, useT, type StringKey } from "../lib/strings";
 import { useDocumentTheme } from "../lib/useDocumentTheme";
+import { EntryPage } from "./EntryPage";
 import { HabitDetail } from "./HabitDetail";
 import { HabitsPage } from "./HabitsPage";
+import { JournalPage } from "./JournalPage";
 import { Today } from "./Today";
 
 function ComingSoon({ title }: { title: StringKey }) {
@@ -45,7 +47,8 @@ export function ThemedApp({ me }: { me: Me }) {
       <AppShell theme={me.theme} me={me}>
         <Routes>
           <Route path="today" element={<Today me={me} />} />
-          <Route path="journal" element={<ComingSoon title="nav.journal" />} />
+          <Route path="journal" element={<JournalPage me={me} />} />
+          <Route path="journal/:id" element={<EntryPage me={me} />} />
           <Route path="habits" element={<HabitsPage me={me} />} />
           <Route path="habits/:id" element={<HabitDetail me={me} />} />
           <Route path="achievements" element={<ComingSoon title="nav.achievements" />} />

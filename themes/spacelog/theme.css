@@ -79,3 +79,27 @@
 [data-theme="spacelog"] input:not([type="radio"]), [data-theme="spacelog"] select, [data-theme="spacelog"] textarea { background: rgba(6, 12, 32, 0.7); border-radius: 2px; }
 [data-theme="spacelog"] .habit-card { background: linear-gradient(180deg, rgba(22, 34, 80, 0.8), rgba(12, 20, 50, 0.86)); border-color: rgba(95, 227, 232, 0.26); border-radius: 4px; }
 [data-theme="spacelog"] .stat-num { text-shadow: 0 0 22px rgba(95, 227, 232, 0.5); font-weight: 500; }
+
+/* journal: the archive, a star chart and a recorder */
+[data-theme="spacelog"] .entry-card, [data-theme="spacelog"] .journal-side { background: linear-gradient(180deg, rgba(22, 34, 80, 0.8), rgba(12, 20, 50, 0.86)); border-color: rgba(95, 227, 232, 0.26); border-radius: 4px; }
+[data-theme="spacelog"] .entry-card { border-left: 3px solid var(--color-accent); }
+[data-theme="spacelog"] .entry-date, [data-theme="spacelog"] .side-title, [data-theme="spacelog"] .save-state { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.8rem; }
+[data-theme="spacelog"] .entry-date { color: var(--color-accent); }
+[data-theme="spacelog"] .editor-text { background: repeating-linear-gradient(0deg, rgba(95, 227, 232, 0.05) 0 1px, transparent 1px 30px), rgba(6, 12, 32, 0.78); border-radius: 2px; caret-color: var(--color-accent); }
+[data-theme="spacelog"] .editor-preview { border-radius: 2px; border-color: rgba(95, 227, 232, 0.4); }
+[data-theme="spacelog"] .tool, [data-theme="spacelog"] .mood-option, [data-theme="spacelog"] .cal-star-nav button { border-radius: 0; border-color: rgba(95, 227, 232, 0.32); background: rgba(6, 12, 32, 0.7); }
+[data-theme="spacelog"] .mood-option[data-selected="true"] { box-shadow: 0 0 14px rgba(95, 227, 232, 0.4); }
+[data-theme="spacelog"] .save-state.save-saved::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 0.5rem; border-radius: 50%; background: #5fe3a8; box-shadow: 0 0 8px #5fe3a8; }
+[data-theme="spacelog"] .cal-star-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+[data-theme="spacelog"] .cal-star-nav button { min-width: 2.75rem; min-height: 2.75rem; color: var(--color-text); cursor: pointer; font-size: 1.2rem; }
+[data-theme="spacelog"] .cal-star-title { font-family: var(--font-heading); letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.85rem; color: var(--color-accent); }
+[data-theme="spacelog"] .cal-star-weekdays, [data-theme="spacelog"] .cal-star-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; }
+[data-theme="spacelog"] .cal-star-weekdays { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.2rem; }
+[data-theme="spacelog"] .cal-star-day { position: relative; aspect-ratio: 1 / 1.2; min-height: 3rem; padding: 0; border: 1px solid transparent; background: none; cursor: pointer; color: var(--color-text); font: inherit; }
+[data-theme="spacelog"] .cal-star-day svg { position: absolute; top: 6%; left: 18%; width: 64%; height: 56%; }
+[data-theme="spacelog"] .cal-star-day .star { fill: none; stroke: rgba(169, 182, 223, 0.35); stroke-width: 1; stroke-linejoin: round; }
+[data-theme="spacelog"] .cal-star-day[data-has="true"] .star { fill: var(--color-accent); stroke: #dffcff; filter: drop-shadow(0 0 5px rgba(95, 227, 232, 0.9)); }
+[data-theme="spacelog"] .cal-star-num { position: absolute; left: 0; right: 0; bottom: 3px; font-size: 0.72rem; line-height: 1; color: var(--color-text); font-variant-numeric: tabular-nums; }
+[data-theme="spacelog"] .cal-star-day[data-today="true"] { border-color: var(--color-accent); border-radius: 50%; }
+[data-theme="spacelog"] .cal-star-day[aria-pressed="true"] { background: rgba(95, 227, 232, 0.16); border: 1px dashed var(--color-accent); border-radius: 50%; }
+[data-theme="spacelog"] .cal-star-day:disabled { opacity: 0.3; cursor: default; }
