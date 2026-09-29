@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { THEME_SLUGS } from "@themes/registry";
 import type { Me } from "../lib/me";
@@ -41,6 +41,7 @@ function renderSettings() {
     </QueryClientProvider>,
   );
 }
+const Where = () => <output data-testid="where">{useLocation().pathname}</output>;
 const calls = (path: string) => apiMock.mock.calls.filter(([p]) => p === path);
 
 beforeEach(() => {
@@ -192,5 +193,31 @@ describe("privacy policy and terms", () => {
     expect(text).toContain("one-time");
     expect(text).toContain("lifetime");
     expect(text).toContain("14 days");
+  });
+});
+
+describe("admin theme switcher", () => {
+  it("is not shown to ordinary accounts", async () => {
+    renderSettings();
+    await screen.findByRole("combobox");
+    expect(screen.queryByText(translate(null, "admin.switch.heading"))).toBeNull();
+  });
+
+  it("lets an admin switch their own theme through the audited admin endpoint, then lands in the new theme", async () => {
+    const admin = { ...me, isAdmin: true };
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter initialEntries={[`/${theme}/settings`]}>
+          <Routes>
+            <Route path="/:theme/*" element={<ThemedApp me={admin} />} />
+          </Routes>
+          <Where />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+    const other = THEME_SLUGS.find((s) => s !== theme)!;
+    await userEvent.click(await screen.findByRole("button", { name: translate(other, "theme.name") }));
+    await waitFor(() => expect(apiMock).toHaveBeenCalledWith(`/api/admin/users/${admin.userId}/theme`, { method: "POST", body: { theme: other } }));
+    await waitFor(() => expect(screen.getByTestId("where").textContent).toBe(`/${other}/settings`));
   });
 });

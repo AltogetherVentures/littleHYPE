@@ -1,14 +1,15 @@
 import { useClerk } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { THEME_SLUGS } from "@themes/registry";
 import { useDownloadExport } from "../lib/account";
 import { useApi } from "../lib/api";
 import { HABITS_KEY, TODAY_KEY } from "../lib/habits";
 import { ME_KEY, type Me } from "../lib/me";
 import { PROMPT_KEY } from "../lib/prompt";
 import { useReferrals } from "../lib/sharing";
-import { useT } from "../lib/strings";
+import { translate, useT } from "../lib/strings";
 
 function timezoneChoices(current: string): string[] {
   const supported = (Intl as unknown as { supportedValuesOf?: (key: string) => string[] }).supportedValuesOf?.("timeZone") ?? [];
@@ -23,6 +24,7 @@ export function SettingsPage({ me }: { me: Me }) {
   const client = useQueryClient();
   const { signOut } = useClerk();
   const download = useDownloadExport();
+  const navigate = useNavigate();
   const referrals = useReferrals();
   const [copied, setCopied] = useState(false);
   const zones = useMemo(() => timezoneChoices(me.timezone), [me.timezone]);
@@ -47,6 +49,15 @@ export function SettingsPage({ me }: { me: Me }) {
   const remove = useMutation({
     mutationFn: () => api<{ deleted: true; signInRemoved: boolean }>("/api/account?confirm=true", { method: "DELETE" }),
     onSuccess: (result) => setDeleted({ signInRemoved: result.signInRemoved }),
+  });
+
+  // Admin accounts only (the server checks the verified admin claim again): try the other themes.
+  const switchTheme = useMutation({
+    mutationFn: (slug: string) => api(`/api/admin/users/${encodeURIComponent(me.userId)}/theme`, { method: "POST", body: { theme: slug } }).then(() => slug),
+    onSuccess: async (slug) => {
+      await client.invalidateQueries({ queryKey: ME_KEY });
+      navigate(`/${slug}/settings`, { replace: true });
+    },
   });
 
   const word = t("delete.account.word");
@@ -80,6 +91,23 @@ export function SettingsPage({ me }: { me: Me }) {
         </h2>
         <p>{t("settings.theme.body", { theme: t("theme.name") })}</p>
       </section>
+
+      {me.isAdmin && (
+        <section className="panel" aria-labelledby="set-switch">
+          <h2 id="set-switch" className="panel-title">
+            {t("admin.switch.heading")}
+          </h2>
+          <p>{t("admin.switch.body")}</p>
+          <div className="segmented" role="group" aria-labelledby="set-switch">
+            {THEME_SLUGS.map((slug) => (
+              <button key={slug} type="button" className="segment" aria-pressed={slug === me.theme} disabled={switchTheme.isPending} onClick={() => slug !== me.theme && switchTheme.mutate(slug)}>
+                {translate(slug, "theme.name")}
+              </button>
+            ))}
+          </div>
+          {switchTheme.isError && <p role="alert">{t("admin.switch.error")}</p>}
+        </section>
+      )}
 
       <section className="panel" aria-labelledby="set-tz">
         <h2 id="set-tz" className="panel-title">

@@ -330,5 +330,8 @@
   "admin.refund.error.generic": "That didn't work. Nothing was deleted.",
   "admin.actions.heading": "Recent admin actions",
   "admin.actions.empty": "Nothing yet.",
-  "settings.admin": "Admin tools"
+  "settings.admin": "Admin tools",
+  "admin.switch.heading": "Switch theme (admin only)",
+  "admin.switch.body": "For testing. Only admin accounts see this; ordinary accounts can never change their theme. Each change is recorded in the admin log.",
+  "admin.switch.error": "The theme couldn't be changed."
 }
