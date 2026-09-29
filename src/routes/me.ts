@@ -3,7 +3,8 @@ import { requireAuth } from "../auth/context";
 import { getDb } from "../db/client";
 import { withUser } from "../db/user";
 import { errorResponse, json, readJsonObject } from "../lib/http";
-import { chooseOnboardingTheme, getOrCreateMe, setTimezone } from "../profile/service";
+import { completeOnboarding } from "../profile/onboarding";
+import { chooseOnboardingTheme, getOrCreateMe, parseReminderTime, setReminderTime, setTimezone } from "../profile/service";
 
 /** The signed-in user's own account: state, timezone, and the one-time theme pick. */
 export async function handleMeRoutes(request: Request, env: Env): Promise<Response | null> {
@@ -32,6 +33,39 @@ export async function handleMeRoutes(request: Request, env: Env): Promise<Respon
         await setTimezone(tx, claims.userId, body.timezone as string);
       });
       return json({ ok: true });
+    } finally {
+      await sql.end();
+    }
+  }
+
+  if (method === "PUT" && pathname === "/api/me/reminder") {
+    const claims = await requireAuth(env, request);
+    const body = await readJsonObject(request);
+    if (!body) return errorResponse(400, "invalid_body");
+    const sql = getDb(env);
+    try {
+      const time = parseReminderTime(body.time);
+      await withUser(sql, claims, async (tx) => {
+        await getOrCreateMe(tx, claims.userId);
+        await setReminderTime(tx, claims.userId, time);
+      });
+      return json({ reminderTime: time });
+    } finally {
+      await sql.end();
+    }
+  }
+
+  if (method === "POST" && pathname === "/api/onboarding/complete") {
+    const claims = await requireAuth(env, request);
+    const body = await readJsonObject(request);
+    if (!body) return errorResponse(400, "invalid_body");
+    const sql = getDb(env);
+    try {
+      const result = await withUser(sql, claims, async (tx) => {
+        await getOrCreateMe(tx, claims.userId);
+        return completeOnboarding(tx, claims.userId, body);
+      });
+      return json(result);
     } finally {
       await sql.end();
     }

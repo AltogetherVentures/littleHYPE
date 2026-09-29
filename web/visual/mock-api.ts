@@ -120,6 +120,8 @@ export function installMockApi() {
       if (method === "PATCH") Object.assign(e, JSON.parse(String(init?.body)));
       return json({ entry: full(e) });
     }
+    if (path === "/api/prompt") return json({ date: today, promptKey: "reflect.proud_of", skipsLeft: 3, answeredBy: null });
+    if (path.startsWith("/api/onboarding")) return json({ onboarded: true, habitId: null });
     if (path === "/api/today") {
       const active = habits.filter((h) => !h.archivedAt).map((h) => view(h));
       return json({ date: today, habits: active.map((v) => v.habit), milestone: nearestMilestone(active.map((v) => v.analysis.currentDays)), writtenToday: entries.some((e) => e.date === today) });

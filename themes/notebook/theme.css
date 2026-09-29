@@ -118,3 +118,5 @@
 [data-theme="notebook"] .cal-desk-day[data-today="true"] { text-decoration: underline wavy #1d2946; text-underline-offset: 4px; }
 [data-theme="notebook"] .cal-desk-day[aria-pressed="true"] { background: #1d2946; border-color: #1d2946; color: #fffaf0; }
 [data-theme="notebook"] .cal-desk-day:disabled { opacity: 0.35; cursor: default; }
+
+[data-theme="notebook"] .prompt-text { font-family: var(--font-heading); font-size: clamp(1.6rem, 4vw, 1.9rem); line-height: 1.2; font-weight: 600; }

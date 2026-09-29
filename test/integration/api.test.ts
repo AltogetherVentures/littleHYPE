@@ -93,7 +93,7 @@ describe("GET /api/me", () => {
     const res = await call("/api/me", { as: id });
     expect(res.status).toBe(200);
     const body = (await res.json()) as { createdAt: string };
-    expect(body).toEqual({ userId: id, theme: null, timezone: "UTC", paid: false, isAdmin: false, createdAt: expect.any(String) });
+    expect(body).toEqual({ userId: id, theme: null, timezone: "UTC", paid: false, onboarded: false, reminderTime: null, isAdmin: false, createdAt: expect.any(String) });
     expect(Number.isNaN(Date.parse(body.createdAt))).toBe(false);
     expect(await sup`select 1 from profiles where user_id = ${id}`).toHaveLength(1);
     // idempotent

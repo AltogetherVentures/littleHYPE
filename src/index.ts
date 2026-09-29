@@ -5,6 +5,7 @@ import { handleAdminRoutes } from "./routes/admin";
 import { handleConfigRoutes } from "./routes/config";
 import { handleHabitRoutes } from "./routes/habits";
 import { handleJournalRoutes } from "./routes/journal";
+import { handlePromptRoutes } from "./routes/prompts";
 import { handleHealthRoutes } from "./routes/health";
 import { handleMeRoutes } from "./routes/me";
 import { handlePageRoutes } from "./routes/pages";
@@ -23,7 +24,7 @@ export interface Env {
   PUBLIC_BASE_URL: string;
 }
 
-const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handleAdminRoutes];
+const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAdminRoutes];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {

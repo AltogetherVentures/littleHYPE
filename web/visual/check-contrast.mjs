@@ -23,6 +23,7 @@ const scenes = [
     [`journal ${t}`, `scene=journal&theme=${t}`],
     [`habits ${t}`, `scene=habits&theme=${t}`],
     [`habit ${t}`, `scene=habit&theme=${t}`],
+    [`welcome ${t}`, `scene=welcome&theme=${t}`],
     [`entry ${t}`, `scene=entry&theme=${t}`],
     [`newentry ${t}`, `scene=newentry&theme=${t}`],
     [`showcase ${t}`, `scene=showcase&theme=${t}&signedout=1`],

@@ -11,7 +11,7 @@ import { ThemedApp } from "./ThemedApp";
 vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({}) }));
 
 const [theme] = THEME_SLUGS as unknown as [string];
-const me: Me = { userId: "u1", theme, timezone: "UTC", paid: true, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" };
+const me: Me = { userId: "u1", theme, timezone: "UTC", paid: true, onboarded: true, reminderTime: null, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" };
 const t = (key: Parameters<typeof translate>[1], vars?: Record<string, string>) => translate(theme, key, vars);
 
 interface Row { id: string; date: string; body: string; mood: number | null; promptKey: string | null }

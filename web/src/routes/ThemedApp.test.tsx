@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { THEME_SLUGS } from "@themes/registry";
+import { promptText } from "../lib/content";
 import { translate } from "../lib/strings";
 import type { Me } from "../lib/me";
 import { ThemedApp } from "./ThemedApp";
@@ -15,6 +16,7 @@ let habit = { id: "h1", name: "Drink water", description: null, category: "hydra
 let failNext = false;
 const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: { status?: string } }) => {
   if (path === "/api/today") return { date: "2026-09-30", habits: [habit], milestone: { milestone: 3, remaining: 1 }, writtenToday: false };
+  if (path === "/api/prompt") return { date: "2026-09-30", promptKey: "reflect.proud_of", skipsLeft: 3, answeredBy: null };
   if (path.startsWith("/api/journal")) return { entries: [], hasMore: false, days: [], today: "2026-09-30" };
   if (path.startsWith("/api/habits/h1/logs/")) {
     if (failNext) throw new Error("boom");
@@ -27,7 +29,7 @@ const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: { st
 vi.mock("../lib/api", async (orig) => ({ ...(await orig<typeof import("../lib/api")>()), useApi: () => apiMock }));
 
 const [mine, other] = THEME_SLUGS as unknown as [string, string];
-const me = (theme: string | null, paid = true): Me => ({ userId: "u1", theme, timezone: "UTC", paid, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" });
+const me = (theme: string | null, paid = true): Me => ({ userId: "u1", theme, timezone: "UTC", paid, onboarded: true, reminderTime: null, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" });
 
 function Where() {
   const l = useLocation();
@@ -95,5 +97,55 @@ describe("ThemedApp", () => {
     habit = { ...habit, today: { ...habit.today, logged: null } };
     renderAt(`/${mine}/today`, me(mine));
     expect(await screen.findByText(/1 day|One (more )?day|Just one/i)).toBeInTheDocument();
+  });
+});
+
+describe("prompt of the day on Today", () => {
+  it("shows the prompt in the theme's voice, offers to answer it and to swap it", async () => {
+    apiMock.mockClear();
+    renderAt(`/${mine}/today`, me(mine));
+    expect(await screen.findByText(promptText(mine, "reflect.proud_of"))).toBeTruthy();
+    const answer = screen.getByRole("link", { name: translate(mine, "today.prompt.answer") });
+    expect(answer.getAttribute("href")).toBe(`/${mine}/journal/new?prompt=reflect.proud_of`);
+    await userEvent.click(screen.getByRole("button", { name: new RegExp(translate(mine, "today.prompt.skip")) }));
+    await waitFor(() => expect(apiMock.mock.calls.some(([path, init]) => path === "/api/prompt/skip" && init?.method === "POST")).toBe(true));
+  });
+});
+
+describe("first-run welcome", () => {
+  const fresh = (theme: string): Me => ({ ...me(theme), onboarded: false });
+
+  it("sends a user who has not finished first-run to the welcome step, from anywhere", () => {
+    renderAt(`/${mine}/journal`, fresh(mine));
+    expect(screen.getByTestId("where").textContent).toBe(`/${mine}/welcome`);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(translate(mine, "welcome.title"));
+  });
+
+  it("finishes with the chosen habit and reminder, then lands on Today", async () => {
+    apiMock.mockClear();
+    renderAt(`/${mine}/welcome`, fresh(mine));
+    const chips = screen.getAllByRole("button").filter((b) => b.classList.contains("chip-suggestion"));
+    expect(chips).toHaveLength(8);
+    await userEvent.click(chips[0]!);
+    await userEvent.click(screen.getByRole("button", { name: translate(mine, "welcome.finish") }));
+    await waitFor(() => expect(screen.getByTestId("where").textContent).toBe(`/${mine}/today`));
+    const call = apiMock.mock.calls.find(([path]) => path === "/api/onboarding/complete")!;
+    expect(call[1]).toMatchObject({ method: "POST", body: { reminderTime: "20:00", habit: { category: "hydration", schedule: { type: "daily" } } } });
+  });
+
+  it("can be skipped entirely: no habit, and no reminder if switched off", async () => {
+    apiMock.mockClear();
+    renderAt(`/${mine}/welcome`, fresh(mine));
+    await userEvent.click(screen.getByRole("button", { name: translate(mine, "welcome.reminder.off") }));
+    await userEvent.click(screen.getByRole("button", { name: translate(mine, "welcome.finish") }));
+    await waitFor(() => expect(apiMock.mock.calls.some(([path]) => path === "/api/onboarding/complete")).toBe(true));
+    const body = apiMock.mock.calls.find(([path]) => path === "/api/onboarding/complete")![1]!.body as Record<string, unknown>;
+    expect(body.reminderTime).toBeNull();
+    expect(body.habit).toBeUndefined();
+  });
+
+  it("does not show the welcome step again once it is done", () => {
+    renderAt(`/${mine}/welcome`, me(mine));
+    expect(screen.getByTestId("where").textContent).toBe(`/${mine}/today`);
   });
 });

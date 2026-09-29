@@ -10,6 +10,7 @@ import { HabitDetail } from "./HabitDetail";
 import { HabitsPage } from "./HabitsPage";
 import { JournalPage } from "./JournalPage";
 import { Today } from "./Today";
+import { Welcome } from "./Welcome";
 
 function ComingSoon({ title }: { title: StringKey }) {
   const t = useT();
@@ -42,10 +43,15 @@ export function ThemedApp({ me }: { me: Me }) {
   });
   if (decision.action === "redirect") return <Navigate to={decision.location} replace />;
 
+  // First run: nothing else in the app until the welcome step is done or skipped (ON-4).
+  const welcomePath = `/${me.theme}/welcome`;
+  if (!me.onboarded && location.pathname !== welcomePath) return <Navigate to={welcomePath} replace />;
+
   return (
     <ThemeProvider theme={me.theme}>
       <AppShell theme={me.theme} me={me}>
         <Routes>
+          <Route path="welcome" element={<Welcome me={me} />} />
           <Route path="today" element={<Today me={me} />} />
           <Route path="journal" element={<JournalPage me={me} />} />
           <Route path="journal/:id" element={<EntryPage me={me} />} />

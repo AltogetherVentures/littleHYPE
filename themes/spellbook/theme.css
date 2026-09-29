@@ -109,3 +109,4 @@
 [data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-disc { background: #7a1f3d; border-color: #c9962e; }
 [data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-num { color: #fff3d6; }
 [data-theme="spellbook"] .cal-moon-day:disabled { opacity: 0.4; cursor: default; }
+[data-theme="spellbook"] .prompt-text { font-style: italic; font-weight: 500; }

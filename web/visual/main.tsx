@@ -29,12 +29,14 @@ const me: Me = {
   theme,
   timezone: "Europe/Dublin",
   paid: true,
+  onboarded: scene !== "welcome",
+  reminderTime: "20:00",
   isAdmin: false,
   createdAt: new Date(Date.now() - (day - 1) * 86_400_000).toISOString(),
 };
 
 const sceneRoute = (s: string) =>
-  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of" })[s] ?? "today";
+  ({ journal: "journal", habits: "habits", habit: "habits/h3", entry: "journal/e1", newentry: "journal/new?prompt=reflect.proud_of", welcome: "welcome" })[s] ?? "today";
 
 function Scene() {
   switch (scene) {

@@ -7,6 +7,8 @@ export interface Me {
   theme: string | null;
   timezone: string;
   paid: boolean;
+  onboarded: boolean;
+  reminderTime: string | null;
   isAdmin: boolean;
   createdAt: string;
 }

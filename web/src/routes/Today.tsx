@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { HabitRow } from "../components/HabitRow";
 import { artFor } from "../lib/art";
 import { flairFor } from "../lib/flair";
+import { promptText } from "../lib/content";
+import { usePrompt, useSkipPrompt } from "../lib/prompt";
 import { useSetLog, useToday } from "../lib/habits";
 import type { Me } from "../lib/me";
 import { useT } from "../lib/strings";
@@ -20,6 +22,8 @@ export function Today({ me }: { me: Me }) {
   const promptArt = artFor(me.theme, "prompt");
   const { data, isPending, isError, refetch } = useToday();
   const setLog = useSetLog();
+  const prompt = usePrompt();
+  const skip = useSkipPrompt();
 
   const habits = data?.habits ?? [];
   const due = habits.filter((h) => h.today.due);
@@ -118,11 +122,47 @@ export function Today({ me }: { me: Me }) {
             <h2 id="prompt-heading" className="panel-title">
               {t("today.prompt.heading")}
             </h2>
-            <span className="panel-tag">{t("today.tag.soon")}</span>
           </header>
           <div className="panel-body">
             {promptArt && <img className="panel-art" src={promptArt} alt="" />}
-            <p>{t("today.prompt.empty")}</p>
+            <div className="prompt-main">
+              {prompt.isPending && <p className="panel-status">{t("common.loading")}</p>}
+              {prompt.isError && (
+                <p role="alert">
+                  {t("common.error")}{" "}
+                  <button className="link-button" onClick={() => void prompt.refetch()}>
+                    {t("common.retry")}
+                  </button>
+                </p>
+              )}
+              {prompt.data && (
+                <>
+                  <p className="prompt-text">{promptText(me.theme, prompt.data.promptKey)}</p>
+                  {prompt.data.answeredBy ? (
+                    <p className="prompt-actions">
+                      <span className="prompt-answered">{t("today.prompt.answered")}</span>{" "}
+                      <Link className="link-button" to={`/${me.theme}/journal/${prompt.data.answeredBy}`}>
+                        {t("today.prompt.view")}
+                      </Link>
+                    </p>
+                  ) : (
+                    <div className="prompt-actions">
+                      <Link className="button" to={`/${me.theme}/journal/new?prompt=${prompt.data.promptKey}`}>
+                        {t("today.prompt.answer")}
+                      </Link>
+                      {prompt.data.skipsLeft > 0 ? (
+                        <button type="button" className="link-button" disabled={skip.isPending} onClick={() => skip.mutate()}>
+                          {t("today.prompt.skip")} ({prompt.data.skipsLeft === 1 ? t("today.prompt.skips.one") : t("today.prompt.skips", { n: String(prompt.data.skipsLeft) })})
+                        </button>
+                      ) : (
+                        <span className="prompt-noskips">{t("today.prompt.noskips")}</span>
+                      )}
+                    </div>
+                  )}
+                  {skip.isError && <p role="alert">{t("common.error")}</p>}
+                </>
+              )}
+            </div>
           </div>
         </section>
 

@@ -6,6 +6,10 @@ export interface MeState {
   theme: string | null;
   timezone: string;
   paid: boolean;
+  /** Whether the first-run steps (first habit, reminder time) are done or skipped (ON-4). */
+  onboarded: boolean;
+  /** "HH:MM" in the user's own timezone, or null when no reminder email is wanted. */
+  reminderTime: string | null;
   /** ISO timestamp the account was created; themes use it for "days since" style flourishes. */
   createdAt: string;
 }
@@ -22,13 +26,13 @@ export class DomainError extends Error {
 /** Creates the profile on first sight (idempotent) and returns the user's state. */
 export async function getOrCreateMe(tx: postgres.TransactionSql, userId: string): Promise<MeState> {
   await tx`insert into profiles (user_id) values (${userId}) on conflict (user_id) do nothing`;
-  const [row] = await tx<{ theme: string | null; timezone: string; paid: boolean; created_at: Date }[]>`
-    select p.theme, p.timezone, p.created_at,
+  const [row] = await tx<{ theme: string | null; timezone: string; paid: boolean; created_at: Date; onboarded: boolean; reminder: string | null }[]>`
+    select p.theme, p.timezone, p.created_at, p.onboarded_at is not null as onboarded, to_char(p.reminder_time, 'HH24:MI') as reminder,
            exists (select 1 from purchases x where x.user_id = p.user_id and x.status = 'paid') as paid
       from profiles p
      where p.user_id = ${userId}`;
   if (!row) throw new DomainError(404, "profile_not_found");
-  return { userId, theme: row.theme, timezone: row.timezone, paid: row.paid, createdAt: row.created_at.toISOString() };
+  return { userId, theme: row.theme, timezone: row.timezone, paid: row.paid, onboarded: row.onboarded, reminderTime: row.reminder, createdAt: row.created_at.toISOString() };
 }
 
 /** Just the saved theme, without creating a profile (used by page navigations). */
@@ -50,6 +54,17 @@ export function isValidTimezone(tz: unknown): tz is string {
 export async function setTimezone(tx: postgres.TransactionSql, userId: string, timezone: string): Promise<void> {
   if (!isValidTimezone(timezone)) throw new DomainError(400, "invalid_timezone");
   await tx`update profiles set timezone = ${timezone} where user_id = ${userId}`;
+}
+
+/** "HH:MM" (24-hour), or null to turn the reminder off. Anything else is refused. */
+export function parseReminderTime(value: unknown): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value !== "string" || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) throw new DomainError(400, "invalid_reminder_time");
+  return value;
+}
+
+export async function setReminderTime(tx: postgres.TransactionSql, userId: string, time: string | null): Promise<void> {
+  await tx`update profiles set reminder_time = ${time}::time where user_id = ${userId}`;
 }
 
 /** Maps the SQL functions' RAISE EXCEPTION messages to HTTP-shaped errors. */
