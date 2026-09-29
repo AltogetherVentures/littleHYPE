@@ -1,0 +1,10 @@
+{
+  "name": "Mission Failure Report",
+  "variants": [
+    "Contact lost with the {category} mission after {length} days. Last known position: somewhere near the couch.",
+    "The {category} orbit held for {length} days, then drifted. Nothing a small burn cannot fix.",
+    "Incident summary: {length} days of {category}, then an unscheduled meeting with gravity. No crew were harmed.",
+    "The {category} probe went quiet after {length} days. Mission control remains optimistic and mildly caffeinated."
+  ],
+  "restart": "Plot a new course and launch again."
+}

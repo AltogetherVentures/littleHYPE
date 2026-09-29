@@ -2,6 +2,7 @@ import type postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { withUser } from "../../src/db/user";
 import { appUser, deleteUsers, seedUser, superUser } from "./helpers";
+import { SEEDERS } from "./seeders";
 
 /**
  * The user-isolation gate (PV-1) and the theme lock (TH-2), proven against a
@@ -27,27 +28,54 @@ afterAll(async () => {
 });
 
 describe("row-level security (PV-1)", () => {
+  let tables: string[] = [];
   let a: string;
   let b: string;
+
   beforeAll(async () => {
     a = await user({ paid: true, theme: "aaa" });
     b = await user({ paid: true, theme: "bbb" });
-    await sup`insert into user_themes (user_id, theme, source) values (${a}, 'aaa', 'included'), (${b}, 'bbb', 'included')`;
-    await sup`insert into theme_changes (user_id, new_theme, changed_by) values (${a}, 'aaa', ${a}), (${b}, 'bbb', ${b})`;
+    tables = (await sup<{ relname: string }[]>`
+      select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relkind = 'r' order by c.relname`).map((r) => r.relname);
+    for (const table of tables) {
+      const seed = SEEDERS[table];
+      if (!seed) continue;
+      await seed(sup, a);
+      await seed(sup, b);
+    }
   });
 
-  for (const table of ["profiles", "purchases", "user_themes", "theme_changes"]) {
-    it(`${table}: a user sees their own rows and never another user's`, async () => {
-      const rows = await asUser(a, (tx) => tx.unsafe<{ user_id: string }[]>(`select user_id from ${table}`));
-      expect(rows.length).toBeGreaterThan(0);
-      expect(new Set(rows.map((r) => r.user_id))).toEqual(new Set([a]));
-    });
+  it("every table has a seeder here, and every seeder has a table (a new table cannot escape the gate)", () => {
+    expect(tables).toEqual(Object.keys(SEEDERS).sort());
+  });
 
-    it(`${table}: a query with no user scope returns nothing`, async () => {
-      const rows = await app.unsafe(`select user_id from ${table}`);
-      expect(rows).toHaveLength(0);
-    });
-  }
+  it("every table has row-level security enabled AND forced, and at least one policy", async () => {
+    const rows = await sup<{ relname: string; relrowsecurity: boolean; relforcerowsecurity: boolean; policies: number }[]>`
+      select c.relname, c.relrowsecurity, c.relforcerowsecurity,
+             (select count(*)::int from pg_policies p where p.schemaname = 'public' and p.tablename = c.relname) as policies
+        from pg_class c join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public' and c.relkind = 'r'`;
+    for (const r of rows) {
+      expect(r.relrowsecurity, `${r.relname} RLS enabled`).toBe(true);
+      expect(r.relforcerowsecurity, `${r.relname} RLS forced`).toBe(true);
+      expect(r.policies, `${r.relname} has a policy`).toBeGreaterThan(0);
+    }
+  });
+
+  it("every user-owned table: a user sees their own rows and never another user's", async () => {
+    for (const table of tables) {
+      const rows = await asUser(a, (tx) => tx.unsafe<{ user_id: string }[]>(`select user_id from ${table}`));
+      expect(rows.length, `${table}: user A sees something`).toBeGreaterThan(0);
+      expect(new Set(rows.map((r) => r.user_id)), `${table}: only A's rows`).toEqual(new Set([a]));
+    }
+  });
+
+  it("every table: a query with no user scope returns nothing", async () => {
+    for (const table of tables) {
+      expect(await app.unsafe(`select 1 from ${table}`), table).toHaveLength(0);
+    }
+  });
 
   it("cannot update another user's profile", async () => {
     const result = await asUser(a, (tx) => tx`update profiles set timezone = 'Europe/Dublin' where user_id = ${b}`);
@@ -66,15 +94,6 @@ describe("row-level security (PV-1)", () => {
     await expect(asUser(a, (tx) => tx`delete from profiles where user_id = ${a}`)).rejects.toThrow(/permission denied/);
   });
 
-  it("the Data API roles cannot run the theme functions either", async () => {
-    for (const role of ["anon", "authenticated"]) {
-      for (const fn of ["set_onboarding_theme(text)", "admin_set_theme(text, text)"]) {
-        const [row] = await sup`select has_function_privilege(${role}, ${fn}, 'execute') as ok`;
-        expect(row!.ok, `${role} on ${fn}`).toBe(false);
-      }
-    }
-  });
-
   it("no function in the public schema is executable by the Data API roles or PUBLIC (covers every migration, present and future)", async () => {
     const functions = await sup<{ signature: string; anon: boolean; authenticated: boolean; public: boolean }[]>`
       select p.oid::regprocedure::text as signature,
@@ -90,11 +109,13 @@ describe("row-level security (PV-1)", () => {
     expect(exposed).toEqual([]);
   });
 
-  it("the Data API roles have no access to any user table", async () => {
+  it("the Data API roles cannot read, write or delete any table", async () => {
     for (const role of ["anon", "authenticated"]) {
-      for (const table of ["profiles", "purchases", "user_themes", "theme_changes"]) {
-        const [row] = await sup`select has_table_privilege(${role}, ${table}, 'select') as ok`;
-        expect(row!.ok, `${role} on ${table}`).toBe(false);
+      for (const table of tables) {
+        for (const privilege of ["select", "insert", "update", "delete"]) {
+          const [row] = await sup`select has_table_privilege(${role}, ${table}, ${privilege}) as ok`;
+          expect(row!.ok, `${role} ${privilege} on ${table}`).toBe(false);
+        }
       }
     }
   });

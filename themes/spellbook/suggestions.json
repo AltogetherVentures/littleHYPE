@@ -1,0 +1,34 @@
+{
+  "hydration": {
+    "name": "Sip a potion of water",
+    "description": "A glass of clear water with each meal. Simple, and quietly powerful."
+  },
+  "exercise": {
+    "name": "Practise nimble footwork",
+    "description": "Stretch, stroll or dance for twenty minutes to keep your limbs spry."
+  },
+  "sleep": {
+    "name": "Draw the bed-curtains early",
+    "description": "Retire at a steady hour so tomorrow's magic has proper rest."
+  },
+  "reading": {
+    "name": "Read from a tome",
+    "description": "Fifteen minutes with a good book to feed your curiosity."
+  },
+  "mindfulness": {
+    "name": "Steady your inner flame",
+    "description": "Five quiet minutes to breathe deeply and gather your focus."
+  },
+  "screentime": {
+    "name": "Dim the enchanted glass",
+    "description": "Set the phone aside half an hour before bed and let your mind unspool."
+  },
+  "diet": {
+    "name": "Brew something green",
+    "description": "Add a portion of vegetables or fruit to today's feast."
+  },
+  "other": {
+    "name": "Daily practice session",
+    "description": "A short daily moment to check in on your studies and your spirits."
+  }
+}

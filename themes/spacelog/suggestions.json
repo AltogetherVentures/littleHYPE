@@ -1,0 +1,34 @@
+{
+  "hydration": {
+    "name": "Top up the water tanks",
+    "description": "A glass of water with each meal keeps the crew hydrated."
+  },
+  "exercise": {
+    "name": "Daily zero-g stretch",
+    "description": "Twenty minutes of movement to keep the crew in flight shape."
+  },
+  "sleep": {
+    "name": "Lights out on schedule",
+    "description": "Head for the sleep pod at a set hour and let the ship power down."
+  },
+  "reading": {
+    "name": "Study the ship's library",
+    "description": "Fifteen minutes with a book while the ship coasts."
+  },
+  "mindfulness": {
+    "name": "Five minutes of radio silence",
+    "description": "Sit still, breathe, and let the systems settle."
+  },
+  "screentime": {
+    "name": "Power down the consoles",
+    "description": "Screens off thirty minutes before the sleep cycle."
+  },
+  "diet": {
+    "name": "Stock the galley with greens",
+    "description": "One portion of fruit or veg added to today's rations."
+  },
+  "other": {
+    "name": "Daily mission check-in",
+    "description": "A short daily status report on how the mission is going."
+  }
+}

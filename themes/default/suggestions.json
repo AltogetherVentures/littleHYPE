@@ -1,0 +1,34 @@
+{
+  "hydration": {
+    "name": "Drink water",
+    "description": "Have a glass of water with each meal."
+  },
+  "exercise": {
+    "name": "Move for 20 minutes",
+    "description": "A walk, a stretch or a workout. Anything that gets you moving."
+  },
+  "sleep": {
+    "name": "Go to bed on time",
+    "description": "Head to bed at the same time each night."
+  },
+  "reading": {
+    "name": "Read for 15 minutes",
+    "description": "A few pages of a book before the day ends."
+  },
+  "mindfulness": {
+    "name": "Take five quiet minutes",
+    "description": "Sit, breathe and let your mind settle."
+  },
+  "screentime": {
+    "name": "Screens off before bed",
+    "description": "Put your phone away 30 minutes before you sleep."
+  },
+  "diet": {
+    "name": "Eat some vegetables",
+    "description": "Add one portion of fruit or vegetables to your day."
+  },
+  "other": {
+    "name": "Daily check-in",
+    "description": "Take a moment each day to note how it went."
+  }
+}

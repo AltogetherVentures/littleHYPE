@@ -1,0 +1,72 @@
+{
+  "first_entry": {
+    "name": "First Page",
+    "description": "Write your first page.",
+    "unlock": "There it is: your very first page. Lovely start."
+  },
+  "first_checkin": {
+    "name": "First Tick",
+    "description": "Tick off a habit for the first time.",
+    "unlock": "Your first tick. Small, but it counts."
+  },
+  "streak_3": {
+    "name": "Little Gold Star",
+    "description": "Tick the same habit 3 days running.",
+    "unlock": "Three days running. Here's a little star for the margin."
+  },
+  "streak_7": {
+    "name": "Week in Ink",
+    "description": "Tick the same habit 7 days running.",
+    "unlock": "A whole week. That's worth a sticker and a cup of tea."
+  },
+  "streak_14": {
+    "name": "Fortnight Bookmark",
+    "description": "Tick the same habit 14 days running.",
+    "unlock": "Two weeks of ticks. This bookmark is well earned."
+  },
+  "streak_30": {
+    "name": "Well-Worn Spine",
+    "description": "Tick the same habit 30 days running.",
+    "unlock": "Thirty days. This habit has settled into the pages."
+  },
+  "streak_60": {
+    "name": "Pressed Flower",
+    "description": "Tick the same habit 60 days running.",
+    "unlock": "Sixty days. Tucked between the pages for keeps."
+  },
+  "streak_100": {
+    "name": "Golden Bookplate",
+    "description": "Tick the same habit 100 days running.",
+    "unlock": "One hundred days. Gold-edged pages, and so well earned."
+  },
+  "entries_7": {
+    "name": "Seven Pages In",
+    "description": "Write a page on 7 different days.",
+    "unlock": "Seven pages written. Your notebook is settling in nicely."
+  },
+  "entries_30": {
+    "name": "A Whole Chapter",
+    "description": "Write a page on 30 different days.",
+    "unlock": "Thirty pages. That's a proper chapter, and it's all yours."
+  },
+  "entries_100": {
+    "name": "Well-Loved Notebook",
+    "description": "Write a page on 100 different days.",
+    "unlock": "One hundred pages. Soft corners, full pages, one well-loved notebook."
+  },
+  "prompts_10": {
+    "name": "Curious Margins",
+    "description": "Answer 10 prompts.",
+    "unlock": "Ten prompts answered. Look at all those thoughtful margins."
+  },
+  "prompts_50": {
+    "name": "Thoughtful Scribbler",
+    "description": "Answer 50 prompts.",
+    "unlock": "Fifty prompts. You've filled a lot of margins with thinking."
+  },
+  "habits_3": {
+    "name": "Tidy Little Trio",
+    "description": "Keep three habits going for 7 days each, all at once.",
+    "unlock": "Three habits all ticking along together. Such a tidy routine."
+  }
+}
