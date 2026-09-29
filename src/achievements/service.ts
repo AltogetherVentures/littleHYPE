@@ -19,7 +19,7 @@ export async function loadStats(tx: postgres.TransactionSql, userId: string, tod
            count(distinct entry_date)::int as days,
            count(distinct (entry_date, prompt_key)) filter (where prompt_key is not null)::int as prompts
       from journal_entries
-     where user_id = ${userId} and btrim(body) <> ''`;
+     where user_id = ${userId} and body ~ '[^[:space:]]'`;
   const [logs] = await tx<{ n: number }[]>`select count(*)::int as n from habit_logs where user_id = ${userId} and status = 'done'`;
   const habits = await listHabits(tx, userId, today);
   return {

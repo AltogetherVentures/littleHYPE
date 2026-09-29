@@ -19,3 +19,20 @@ export async function deleteClerkUser(env: Env, userId: string): Promise<boolean
     return false;
   }
 }
+
+/** The person's primary email address, fetched from Clerk at send time so we never store it (PV). */
+export async function getClerkEmail(env: Env, userId: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(userId)}`, { headers: { authorization: `Bearer ${env.CLERK_SECRET_KEY}` } });
+    if (!res.ok) {
+      console.error("clerk-email-lookup-failed", { userId, status: res.status });
+      return null;
+    }
+    const user = (await res.json()) as { primary_email_address_id?: string | null; email_addresses?: { id: string; email_address: string }[] };
+    const primary = user.email_addresses?.find((e) => e.id === user.primary_email_address_id) ?? user.email_addresses?.[0];
+    return primary?.email_address ?? null;
+  } catch (err) {
+    console.error("clerk-email-lookup-failed", { userId, error: err instanceof Error ? err.message : "unknown" });
+    return null;
+  }
+}

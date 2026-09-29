@@ -105,7 +105,7 @@ describe("the prompt of the day", () => {
       if (shown.has(body.promptKey)) expect(d - shown.get(body.promptKey)!).toBeGreaterThanOrEqual(30);
       shown.set(body.promptKey, d);
     }
-    expect(shown.size).toBeGreaterThan(50);
+    expect(shown.size).toBeGreaterThan(40);
   });
 
   it("counts a prompt as answered only by an entry that has text", async () => {

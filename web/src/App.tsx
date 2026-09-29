@@ -6,6 +6,7 @@ import { NotFound } from "./routes/NotFound";
 import { Onboarding } from "./routes/Onboarding";
 import { Paywall } from "./routes/Paywall";
 import { ThemeRoute } from "./routes/ThemeRoute";
+import { Unsubscribe } from "./routes/Unsubscribe";
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
       <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
       <Route path="/paywall" element={<Paywall />} />
       <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/unsubscribe" element={<Unsubscribe />} />
       <Route path="/privacy" element={<Legal kind="privacy" />} />
       <Route path="/terms" element={<Legal kind="terms" />} />
       <Route path="/:theme/*" element={<ThemeRoute />} />

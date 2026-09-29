@@ -250,5 +250,10 @@
   "legal.terms.content.heading": "Your content",
   "legal.terms.content.body": "What you write is yours. We only store and show it to you. Sharing a card is always your choice, and cards never contain journal text.",
   "legal.terms.changes.heading": "Changes",
-  "legal.terms.changes.body": "We may update these terms or the app. If we make a change that matters, we will tell you before it applies."
+  "legal.terms.changes.body": "We may update these terms or the app. If we make a change that matters, we will tell you before it applies.",
+  "privacy.unsubscribe.working": "Turning off your reminder emails...",
+  "privacy.unsubscribe.done": "You're unsubscribed. We won't send you any more reminder emails.",
+  "privacy.unsubscribe.hint": "You can turn reminders back on any time in Settings.",
+  "privacy.unsubscribe.error": "That link didn't work, so nothing was changed. You can turn reminders off in Settings after signing in.",
+  "privacy.unsubscribe.home": "Go to littleHYPE"
 }

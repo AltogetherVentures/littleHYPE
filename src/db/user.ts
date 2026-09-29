@@ -23,3 +23,17 @@ export async function withUser<T>(
     return fn(tx);
   }) as Promise<T>;
 }
+
+/**
+ * A transaction for work that is not on behalf of any user: the reminder cron and the signed
+ * unsubscribe link. It sets `app.current_role = 'system'`, which the narrow reminder_* SQL
+ * functions require. No user id is set, so ordinary tables return no rows in this scope.
+ * Only the scheduled handler and the unsubscribe route may call this.
+ */
+export async function withSystem<T>(sql: postgres.Sql, fn: (tx: postgres.TransactionSql) => Promise<T>): Promise<T> {
+  return sql.begin(async (tx) => {
+    await tx`select set_config('app.current_user_id', '', true)`;
+    await tx`select set_config('app.current_role', 'system', true)`;
+    return fn(tx);
+  }) as Promise<T>;
+}

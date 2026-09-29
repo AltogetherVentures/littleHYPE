@@ -23,7 +23,7 @@ async function state(tx: postgres.TransactionSql, userId: string, day: string): 
   if (!current) return null;
   const [answer] = await tx<{ id: string }[]>`
     select id from journal_entries
-     where user_id = ${userId} and entry_date = ${day}::date and prompt_key = ${current.prompt_key} and btrim(body) <> ''
+     where user_id = ${userId} and entry_date = ${day}::date and prompt_key = ${current.prompt_key} and body ~ '[^[:space:]]'
      order by created_at limit 1`;
   return { date: day, promptKey: current.prompt_key, skipsLeft: SKIPS_PER_DAY - (current.seq - 1), answeredBy: answer?.id ?? null };
 }

@@ -11,6 +11,8 @@ import { handlePromptRoutes } from "./routes/prompts";
 import { handleHealthRoutes } from "./routes/health";
 import { handleMeRoutes } from "./routes/me";
 import { handlePageRoutes } from "./routes/pages";
+import { handleUnsubscribeRoutes } from "./routes/unsubscribe";
+import { runReminders } from "./email/reminders";
 
 export interface Env {
   ENVIRONMENT: string;
@@ -24,9 +26,15 @@ export interface Env {
   CLERK_JWT_KEY: string;
   /** The origin the browser loads the app from; checked against the token's `azp`. */
   PUBLIC_BASE_URL: string;
+  /** Reminder emails stay off until all three of these are set (docs/setup.md). Secrets, never in wrangler.toml. */
+  RESEND_API_KEY?: string;
+  /** e.g. "littleHYPE <reminders@your-verified-domain>" */
+  RESEND_FROM?: string;
+  /** Signs unsubscribe links; any long random string. */
+  EMAIL_TOKEN_SECRET?: string;
 }
 
-const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleAdminRoutes];
+const apiHandlers = [handleHealthRoutes, handleConfigRoutes, handleMeRoutes, handleHabitRoutes, handleJournalRoutes, handlePromptRoutes, handleAchievementRoutes, handleAccountRoutes, handleUnsubscribeRoutes, handleAdminRoutes];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -44,5 +52,14 @@ export default {
       console.error("unhandled-error", err instanceof Error ? (err.stack ?? err.message) : err);
       return errorResponse(500, "internal_error");
     }
+  },
+
+  /** Cron trigger (wrangler.toml): the reminder emails, every 15 minutes. */
+  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(
+      runReminders(env).catch((err) => {
+        console.error("reminders-failed", err instanceof Error ? (err.stack ?? err.message) : err);
+      }),
+    );
   },
 } satisfies ExportedHandler<Env>;

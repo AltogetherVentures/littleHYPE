@@ -41,6 +41,9 @@ export const SEEDERS: Record<string, Seeder> = {
   prompt_history: async (sup, userId) => {
     await sup`insert into prompt_history (user_id, day, seq, prompt_key) values (${userId}, '2026-01-01', 1, 'reflect.proud_of')`;
   },
+  reminder_log: async (sup, userId) => {
+    await sup`insert into reminder_log (user_id, sent_on) values (${userId}, '2026-01-01')`;
+  },
   user_achievements: async (sup, userId) => {
     await sup`insert into user_achievements (user_id, key) values (${userId}, 'first_entry')`;
   },

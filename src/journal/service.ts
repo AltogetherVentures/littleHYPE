@@ -139,6 +139,6 @@ export async function calendarMonth(tx: postgres.TransactionSql, userId: string,
 /** Entries that hold text, for the Today screen's "written today" state (TD-2). */
 export async function writtenOn(tx: postgres.TransactionSql, userId: string, date: string): Promise<boolean> {
   const [row] = await tx<{ n: number }[]>`
-    select count(*)::int as n from journal_entries where user_id = ${userId} and entry_date = ${date}::date and btrim(body) <> ''`;
+    select count(*)::int as n from journal_entries where user_id = ${userId} and entry_date = ${date}::date and body ~ '[^[:space:]]'`;
   return (row?.n ?? 0) > 0;
 }

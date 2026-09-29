@@ -158,6 +158,16 @@ describe("finding entries", () => {
   });
 });
 
+describe("what counts as written", () => {
+  it("is text, not whitespace: spaces, tabs and blank lines do not make a day 'written today'", async () => {
+    const u = await user();
+    await write(u, { body: " \n\t \r\n\n " });
+    expect((await api("/api/today", { as: u })).body.writtenToday).toBe(false);
+    await write(u, { body: "\n\nreal words\n" });
+    expect((await api("/api/today", { as: u })).body.writtenToday).toBe(true);
+  });
+});
+
 describe("privacy", () => {
   it("keeps every entry to its owner: read, edit, delete, list and search", async () => {
     const alice = await user();

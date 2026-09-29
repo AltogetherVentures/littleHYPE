@@ -44,6 +44,12 @@ SwIDAQAB
 # The one real secret - never put it here. Set with:
 #   wrangler secret put CLERK_SECRET_KEY --env staging
 
+# Reminder emails: the scheduled handler runs every 15 minutes and does nothing (and says
+# so in the logs) until RESEND_API_KEY, RESEND_FROM and EMAIL_TOKEN_SECRET are set:
+#   wrangler secret put RESEND_API_KEY --env staging   (and the other two)
+[env.staging.triggers]
+crons = ["*/15 * * * *"]
+
 [[env.staging.hyperdrive]]
 binding = "HYPERDRIVE"
 # Points at the *staging* Supabase project, connecting directly (port 5432) as
@@ -79,6 +85,9 @@ CLERK_PUBLISHABLE_KEY = "REPLACE_WITH_PRODUCTION_CLERK_PUBLISHABLE_KEY"
 PUBLIC_BASE_URL = "REPLACE_WITH_PRODUCTION_URL"
 CLERK_JWT_KEY = "REPLACE_WITH_PRODUCTION_CLERK_JWT_PUBLIC_KEY"
 #   wrangler secret put CLERK_SECRET_KEY --env production
+
+[env.production.triggers]
+crons = ["*/15 * * * *"]
 
 [[env.production.hyperdrive]]
 binding = "HYPERDRIVE"
