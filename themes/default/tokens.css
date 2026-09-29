@@ -1,5 +1,7 @@
-/* Neutral littleHYPE branding: signed-out pages, sign in, paywall, billing. */
-:root {
+/* Neutral littleHYPE branding: signed-out pages, sign in, paywall, billing.
+   :where() gives this block zero specificity, so a theme's [data-theme] block
+   always wins on <html> no matter which stylesheet the bundler emits first. */
+:where(:root) {
   --color-bg: #ffffff;
   --color-surface: #f4f5f8;
   --color-text: #14171f;

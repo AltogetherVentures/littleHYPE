@@ -16,6 +16,10 @@ compatibility_flags = ["nodejs_compat"]
 # ----------------------------------------------------------------- staging --
 [env.staging]
 name = "littlehype-staging"
+# Explicit, so wrangler does not guess: the workers.dev address is on, and
+# per-version preview URLs (extra public hostnames onto the same database) are off.
+workers_dev = true
+preview_urls = false
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
@@ -63,6 +67,10 @@ run_worker_first = ["/*", "!/assets/*", "!/favicon.svg"]
 # -------------------------------------------------------------- production --
 [env.production]
 name = "littlehype-production"
+# Explicit, so wrangler does not guess: the workers.dev address is on, and
+# per-version preview URLs (extra public hostnames onto the same database) are off.
+workers_dev = true
+preview_urls = false
 
 [env.production.vars]
 ENVIRONMENT = "production"

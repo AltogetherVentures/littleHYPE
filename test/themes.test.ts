@@ -20,6 +20,14 @@ describe("theme folders (TH-12, NF-6)", () => {
     expect(folders.sort()).toEqual([...THEME_SLUGS].sort());
   });
 
+  it("keeps the neutral defaults at zero specificity so a theme can never lose to them", () => {
+    // :root and [data-theme] are equally specific; the bundler decides which
+    // comes later. A plain :root here made every theme silently invisible.
+    const css = readFileSync(path.join(themesDir, "default", "tokens.css"), "utf8");
+    const selectors = [...css.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/([^{}]+)\{/g)].map((m) => m[1]!.trim());
+    expect(selectors).toEqual([":where(:root)"]);
+  });
+
   it("scopes each theme's tokens to its own data-theme block", () => {
     for (const slug of THEME_SLUGS) {
       const css = readFileSync(path.join(themesDir, slug, "tokens.css"), "utf8");
