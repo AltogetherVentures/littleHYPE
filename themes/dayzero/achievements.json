@@ -1,0 +1,72 @@
+{
+  "first_entry": {
+    "name": "Log Started",
+    "description": "Save your first survival log.",
+    "unlock": "First log secured. Someone should know you were here."
+  },
+  "first_checkin": {
+    "name": "First Task Secured",
+    "description": "Secure a survival task for the first time.",
+    "unlock": "First task secured. Day one is going better than most."
+  },
+  "streak_3": {
+    "name": "Three Days Alive",
+    "description": "Survive 3 days in a row on any survival task.",
+    "unlock": "Three days survived. Statistically, you are doing brilliantly."
+  },
+  "streak_7": {
+    "name": "One Week Survivor",
+    "description": "Survive 7 days in a row on any survival task.",
+    "unlock": "A full week. The cockroaches are starting to respect you."
+  },
+  "streak_14": {
+    "name": "Fortnight Holdout",
+    "description": "Survive 14 days in a row on any survival task.",
+    "unlock": "Two weeks survived. You have outlasted the tinned peaches."
+  },
+  "streak_30": {
+    "name": "Seasoned Scavenger",
+    "description": "Survive 30 days in a row on any survival task.",
+    "unlock": "Thirty days. You have a reputation now, mostly for not dying."
+  },
+  "streak_60": {
+    "name": "Hardened Survivor",
+    "description": "Survive 60 days in a row on any survival task.",
+    "unlock": "Sixty days. Other survivors are starting to ask you for advice."
+  },
+  "streak_100": {
+    "name": "Last One Standing",
+    "description": "Survive 100 days in a row on any survival task.",
+    "unlock": "One hundred days survived. Honestly, the rest of us are a bit jealous."
+  },
+  "entries_7": {
+    "name": "Survivor's Diary",
+    "description": "Write a survival log on 7 different days.",
+    "unlock": "Seven logs written. If the worst happens, there is a record."
+  },
+  "entries_30": {
+    "name": "Chronicler of the End",
+    "description": "Write a survival log on 30 different days.",
+    "unlock": "Thirty logs. Future archaeologists will have plenty to work with."
+  },
+  "entries_100": {
+    "name": "Last Archivist",
+    "description": "Write a survival log on 100 different days.",
+    "unlock": "One hundred logs. Whoever finds these will need a very large shelf."
+  },
+  "prompts_10": {
+    "name": "Radio Regular",
+    "description": "Answer 10 radio questions.",
+    "unlock": "Ten radio questions answered. Someone out there is listening."
+  },
+  "prompts_50": {
+    "name": "Voice on the Airwaves",
+    "description": "Answer 50 radio questions.",
+    "unlock": "Fifty answered. You are basically a broadcaster now. Nobody is complaining."
+  },
+  "habits_3": {
+    "name": "Three Fronts Held",
+    "description": "Hold a 7-day streak on three survival tasks at once.",
+    "unlock": "Three tasks, seven days, no incidents. Suspiciously competent."
+  }
+}

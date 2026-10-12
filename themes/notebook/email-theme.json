@@ -1,0 +1,12 @@
+{
+  "background": "#f6f0e1",
+  "card": "#fffaf0",
+  "text": "#1d2946",
+  "muted": "#545a6b",
+  "accent": "#b3261e",
+  "accentText": "#ffffff",
+  "border": "#d6cbb0",
+  "headingFont": "'Segoe Print', 'Comic Sans MS', cursive",
+  "bodyFont": "Georgia, 'Times New Roman', serif",
+  "headingTransform": "none"
+}

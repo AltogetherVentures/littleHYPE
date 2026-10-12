@@ -1,0 +1,14 @@
+/* SpellBook: aged parchment, deep burgundy, forest green, candlelit gold. */
+[data-theme="spellbook"] {
+  --color-bg: #f0e4c8;
+  --color-surface: #f8eed8;
+  --color-text: #3a1322;
+  --color-muted: #64463a;
+  --color-accent: #7a1f3d;
+  --color-accent-contrast: #fff6e2;
+  --color-border: #c6ae80;
+  --radius: 10px;
+  --font-heading: "Cinzel", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --shadow: 0 2px 6px rgb(58 19 34 / 18%);
+}
