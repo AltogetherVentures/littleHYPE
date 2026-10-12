@@ -21,6 +21,7 @@ const scenes = [
   ...THEME_SLUGS.flatMap((t) => [
     [`today ${t}`, `scene=today&theme=${t}`],
     [`journal ${t}`, `scene=journal&theme=${t}`],
+    [`journal-empty ${t}`, `scene=journal&empty=1&theme=${t}`],
     [`habits ${t}`, `scene=habits&theme=${t}`],
     [`habit ${t}`, `scene=habit&theme=${t}`],
     [`welcome ${t}`, `scene=welcome&theme=${t}`],
