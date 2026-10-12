@@ -3,7 +3,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { JournalWeek } from "../components/JournalWeek";
 import { MoodFace } from "../components/MoodPicker";
 import { dayLabel, monthOf, shiftMonth } from "../lib/calendar";
+import { examplePage, promptText } from "../lib/content";
 import { plainExcerpt } from "../lib/format";
+import { Markdown } from "../lib/markdown";
 import { useCalendar, useEntries } from "../lib/journal";
 import type { Me } from "../lib/me";
 import { calendarFor } from "../lib/overrides";
@@ -95,6 +97,7 @@ export function JournalPage({ me }: { me: Me }) {
           {entries.isPending && <p className="status">{t("common.loading")}</p>}
           {entries.isError && <p role="alert">{t("common.error")}</p>}
           {entries.data && rows.length === 0 && <p className="empty-note">{filtered ? t("journal.search.empty") : t("journal.empty")}</p>}
+          {entries.data && rows.length === 0 && !filtered && <ExampleCard theme={me.theme} />}
 
           <ul className="entry-list">
             {rows.map((e) => (
@@ -136,5 +139,39 @@ export function JournalPage({ me }: { me: Me }) {
         </aside>
       </div>
     </div>
+  );
+}
+
+/**
+ * Shown only while the journal is empty: one sample page in the theme's voice, framed as
+ * an answer to a prompt, so a new person sees what a page can look like. It is content, not
+ * an entry: never saved, never counted, gone the moment they write their own.
+ */
+function ExampleCard({ theme }: { theme: string | null }) {
+  const t = useT();
+  const example = examplePage(theme);
+  return (
+    <section className="example-page" aria-labelledby="example-heading">
+      <p id="example-heading" className="example-label">
+        {t("journal.example.label")}
+      </p>
+      <div className="entry-card example-card" data-mood={example.mood}>
+        <span className="entry-edge" aria-hidden="true" />
+        <p className="entry-prompt example-prompt">
+          <span className="entry-prompt-label">{t("journal.example.answering")}</span> {promptText(theme, example.promptKey)}
+        </p>
+        <div className="entry-body">
+          <Markdown text={example.body} />
+        </div>
+        <span className="entry-mood" data-mood={example.mood} title={t(`journal.mood.${example.mood}` as StringKey)}>
+          <MoodFace mood={example.mood} />
+          <span className="sr-only">{t(`journal.mood.${example.mood}` as StringKey)}</span>
+        </span>
+      </div>
+      <p className="example-note">{t("journal.example.note")}</p>
+      <Link className="button" to={`/${theme}/journal/new?prompt=${example.promptKey}`}>
+        {t("journal.example.cta")}
+      </Link>
+    </section>
   );
 }

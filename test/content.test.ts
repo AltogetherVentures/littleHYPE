@@ -25,7 +25,7 @@ function expectKeys(actual: object, expected: readonly string[], label: string) 
 }
 
 describe.each(folders)("theme content: %s", (folder) => {
-  const all = ["prompts.json", "achievements.json", "titles.json", "break-cards.json", "suggestions.json", "email.json"].flatMap((f) => strings(read(folder, f)).map((s) => [f, s] as const));
+  const all = ["prompts.json", "achievements.json", "titles.json", "break-cards.json", "suggestions.json", "email.json", "example.json"].flatMap((f) => strings(read(folder, f)).map((s) => [f, s] as const));
 
   it("uses no emoji, no franchise references and no money or privacy talk", () => {
     for (const [file, text] of all) {
@@ -34,6 +34,16 @@ describe.each(folders)("theme content: %s", (folder) => {
       for (const term of FRANCHISE) expect(lower.includes(term), `${folder}/${file}: franchise term "${term}" in "${text}"`).toBe(false);
       for (const term of BANNED) expect(lower.includes(term), `${folder}/${file}: banned "${term}" in "${text}"`).toBe(false);
     }
+  });
+
+  it("example page: answers a real prompt, has a mood, and shows the formatting people can use", () => {
+    const e = read(folder, "example.json") as { promptKey: string; mood: number; body: string };
+    expect(PROMPT_KEYS).toContain(e.promptKey);
+    expect(e.mood).toBeGreaterThanOrEqual(1);
+    expect(e.mood).toBeLessThanOrEqual(5);
+    expect(e.body.length).toBeGreaterThan(120);
+    expect(e.body.length).toBeLessThan(900);
+    for (const mark of ["## ", "**", "- ", "> "]) expect(e.body, `${folder}: example shows ${JSON.stringify(mark)}`).toContain(mark);
   });
 
   it("prompts: exactly the 60 keys, one short question each", () => {

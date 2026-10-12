@@ -97,7 +97,8 @@ export function installMockApi() {
     if (path === "/api/journal" && method === "GET") {
       const q = url.searchParams.get("q")?.toLowerCase();
       const date = url.searchParams.get("date");
-      const rows = entries
+      // ?empty=1 shows the journal as a new person sees it (the example page).
+      const rows = (new URLSearchParams(window.location.search).has("empty") ? [] : entries)
         .filter((e) => (!q || e.body.toLowerCase().includes(q)) && (!date || e.date === date))
         .sort((a, b) => b.date.localeCompare(a.date));
       const offset = Number(url.searchParams.get("offset") ?? 0);

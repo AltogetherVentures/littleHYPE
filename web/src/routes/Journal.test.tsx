@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { THEME_SLUGS } from "@themes/registry";
 import type { Me } from "../lib/me";
 import { translate } from "../lib/strings";
+import { examplePage, promptText } from "../lib/content";
 import { ThemedApp } from "./ThemedApp";
 
 vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({}) }));
@@ -69,6 +70,8 @@ const saveState = () => document.querySelector(".save-state")?.textContent;
 const writes = () => calls.filter((c) => c.method !== "GET");
 
 beforeEach(() => {
+  // The page opens on the real current month, and the mock calendar lives in September 2026.
+  vi.useFakeTimers({ now: new Date("2026-09-30T12:00:00Z"), toFake: ["Date"] });
   rows = [
     { id: "a", date: "2026-09-12", body: "walked by the river", mood: 4, promptKey: null },
     { id: "b", date: "2026-09-10", body: "quiet day with tea", mood: null, promptKey: null },
@@ -76,7 +79,10 @@ beforeEach(() => {
   calls = [];
   failSaves = false;
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 describe("journal list", () => {
   it("shows entries newest first with the theme's own wording, and searches", async () => {
@@ -97,6 +103,20 @@ describe("journal list", () => {
     rows = [];
     renderAt(`/${theme}/journal`);
     expect(await screen.findByText(t("journal.empty"))).toBeTruthy();
+  });
+
+  it("shows one example page while the journal is empty, and never once something is written", async () => {
+    renderAt(`/${theme}/journal`);
+    await screen.findByText("walked by the river");
+    expect(screen.queryByRole("region", { name: t("journal.example.label") })).toBeNull();
+    cleanup();
+    rows = [];
+    renderAt(`/${theme}/journal`);
+    const example = await screen.findByRole("region", { name: t("journal.example.label") });
+    expect(within(example).getByText(promptText(theme, examplePage(theme).promptKey))).toBeTruthy();
+    expect(within(example).getByRole("link", { name: t("journal.example.cta") }).getAttribute("href")).toBe(`/${theme}/journal/new?prompt=${examplePage(theme).promptKey}`);
+    // Nothing was written on the person's behalf.
+    expect(writes()).toEqual([]);
   });
 
   it("filters to a day picked on the calendar and clears again", async () => {

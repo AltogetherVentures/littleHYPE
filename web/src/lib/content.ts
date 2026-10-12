@@ -17,6 +17,12 @@ export interface BreakCardCopy {
   variants: string[];
   restart: string;
 }
+/** The one sample page shown while the journal is empty; never saved (docs/content-brief.md). */
+export interface ExamplePage {
+  promptKey: PromptKey;
+  mood: number;
+  body: string;
+}
 export interface Suggestion {
   name: string;
   description: string;
@@ -35,6 +41,7 @@ const prompts = bySlug(import.meta.glob<Record<PromptKey, string>>("../../../the
 const achievements = bySlug(import.meta.glob<Record<AchievementKey, AchievementCopy>>("../../../themes/*/achievements.json", { eager: true, import: "default" }));
 const titles = bySlug(import.meta.glob<Record<string, string>>("../../../themes/*/titles.json", { eager: true, import: "default" }));
 const breakCards = bySlug(import.meta.glob<BreakCardCopy>("../../../themes/*/break-cards.json", { eager: true, import: "default" }));
+const examples = bySlug(import.meta.glob<ExamplePage>("../../../themes/*/example.json", { eager: true, import: "default" }));
 const suggestions = bySlug(import.meta.glob<Record<HabitCategory, Suggestion>>("../../../themes/*/suggestions.json", { eager: true, import: "default" }));
 
 const pick = <T>(table: Record<string, T>, theme: string | null | undefined): T => ((theme && table[theme]) || table["default"]) as T;
@@ -44,8 +51,9 @@ export const achievementCopy = (theme: string | null | undefined, key: Achieveme
 export const titleText = (theme: string | null | undefined, key: string, streak: number): string =>
   (pick(titles, theme)[key] ?? pick(titles, null)[key] ?? "").replace(/\{streak\}/g, String(streak));
 export const breakCardCopy = (theme: string | null | undefined): BreakCardCopy => pick(breakCards, theme);
+export const examplePage = (theme: string | null | undefined): ExamplePage => pick(examples, theme);
 export const suggestionFor = (theme: string | null | undefined, category: HabitCategory): Suggestion => pick(suggestions, theme)[category] ?? pick(suggestions, null)[category];
 
 export function contentSlugs() {
-  return { prompts: Object.keys(prompts), achievements: Object.keys(achievements), titles: Object.keys(titles), breakCards: Object.keys(breakCards), suggestions: Object.keys(suggestions) };
+  return { prompts: Object.keys(prompts), achievements: Object.keys(achievements), titles: Object.keys(titles), breakCards: Object.keys(breakCards), suggestions: Object.keys(suggestions), examples: Object.keys(examples) };
 }

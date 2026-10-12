@@ -101,7 +101,7 @@
 [data-theme="dayzero"] .entry-body h2, [data-theme="dayzero"] .entry-body h3, [data-theme="dayzero"] .entry-body h4 { text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
 [data-theme="dayzero"] .cal-wall-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
 [data-theme="dayzero"] .cal-wall-head button { min-width: 2.75rem; min-height: 2.75rem; color: var(--color-text); font-size: 1.2rem; cursor: pointer; }
-[data-theme="dayzero"] .cal-wall-title { font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: 0.1em; text-transform: uppercase; color: #ff7a1a; }
+[data-theme="dayzero"] .cal-wall-title { font-family: var(--font-heading); font-size: 1.2rem; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; color: #ff7a1a; }
 [data-theme="dayzero"] .cal-wall-weekdays, [data-theme="dayzero"] .cal-wall-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 [data-theme="dayzero"] .cal-wall-weekdays { text-align: center; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted); padding-bottom: 0.2rem; }
 [data-theme="dayzero"] .cal-wall-grid { border-top: 1px solid #4c4f49; border-left: 1px solid #4c4f49; }

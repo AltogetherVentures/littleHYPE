@@ -433,6 +433,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
   .journal-page[data-month-open="true"] .journal-layout { display: flex; flex-direction: column-reverse; }
 }
 
+/* the example page shown while the journal is empty */
+.example-page { display: grid; gap: 0.75rem; justify-items: start; margin: 0.5rem 0 1.5rem; }
+.example-label { margin: 0; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); }
+.example-card { display: block; width: 100%; padding: 1.1rem 3.4rem 1.1rem 1.4rem; opacity: 0.88; cursor: default; }
+.example-card:hover { transform: none; }
+.example-card .entry-body { font-size: 1rem; line-height: 1.6; }
+.example-card .entry-body > :last-child { margin-bottom: 0; }
+.example-prompt { margin: 0 0 0.9rem; font-size: 0.92rem; }
+.example-note { margin: 0; color: var(--color-muted); font-size: 0.92rem; max-width: 40rem; }
+
 /* month calendar (neutral); themes replace it via themes/<slug>/Calendar.tsx */
 .cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
 .cal-nav button { font: inherit; min-width: 2.75rem; min-height: 2.75rem; border: 1.5px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); color: var(--color-text); cursor: pointer; font-size: 1.2rem; }
