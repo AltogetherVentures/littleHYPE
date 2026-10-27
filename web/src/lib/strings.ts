@@ -20,8 +20,18 @@ for (const [path, table] of Object.entries(modules)) {
  */
 export const NEUTRAL_KEY = /^(billing|paywall|privacy|delete|refund|export|legal|auth)\./;
 
+/**
+ * Wayfinding: the words people navigate by or press (tabs, page titles, buttons,
+ * save state, the rest/undo actions). These stay plain in every theme so nobody has
+ * to decode "Sanctum" or "Inscribe a ritual" to find Settings or add a habit. The
+ * theme's voice lives in greetings, headings, prompts, badges, titles and the small
+ * lines around them, which are read rather than looked up. Enforced by strings.test.ts.
+ */
+export const WAYFINDING_KEY =
+  /^(nav\.|habits\.add$|habits\.back$|habit\.action\.|habit\.state\.|habit\.edit$|today\.notdue\.heading$|today\.cta$|today\.cta\.again$|journal\.new$|journal\.editor\.title$|journal\.editor\.back$|journal\.search\.|journal\.save\.|journal\.example\.cta$|today\.prompt\.answer$|today\.prompt\.skip$|today\.prompt\.skips|today\.prompt\.view$|achievements\.unlock\.dismiss$)/;
+
 export function translate(theme: string | null | undefined, key: StringKey, vars?: Record<string, string>): string {
-  const themed = theme && !NEUTRAL_KEY.test(key) ? themeTables[theme]?.[key] : undefined;
+  const themed = theme && !NEUTRAL_KEY.test(key) && !WAYFINDING_KEY.test(key) ? themeTables[theme]?.[key] : undefined;
   const raw = themed ?? defaultTable[key];
   return raw.replace(/\{(\w+)\}/g, (whole, name: string) => vars?.[name] ?? whole);
 }

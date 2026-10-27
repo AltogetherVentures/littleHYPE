@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { THEME_SLUGS } from "@themes/registry";
-import { NEUTRAL_KEY, defaultKeys, tableFor, themeSlugsWithTables, translate } from "./strings";
+import { NEUTRAL_KEY, WAYFINDING_KEY, defaultKeys, tableFor, themeSlugsWithTables, translate } from "./strings";
 
 describe("string tables (TH-10, TH-13, NF-7)", () => {
   it("loads a table for every registered theme", () => {
@@ -20,6 +20,16 @@ describe("string tables (TH-10, TH-13, NF-7)", () => {
     for (const slug of THEME_SLUGS) {
       const overridden = Object.keys(tableFor(slug) ?? {}).filter((k) => NEUTRAL_KEY.test(k));
       expect(overridden, slug).toEqual([]);
+    }
+  });
+
+  it("never lets a theme rename the tabs, page titles or buttons people find their way by", () => {
+    for (const slug of THEME_SLUGS) {
+      const overridden = Object.keys(tableFor(slug) ?? {}).filter((k) => WAYFINDING_KEY.test(k));
+      expect(overridden, slug).toEqual([]);
+      for (const key of ["nav.settings", "nav.journal", "habits.add", "journal.new", "habit.action.skip"] as const) {
+        expect(translate(slug, key)).toBe(translate(null, key));
+      }
     }
   });
 

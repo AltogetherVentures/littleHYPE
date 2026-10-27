@@ -16,6 +16,8 @@ The contract for the words a theme supplies. A new theme needs a folder `themes/
 
 ## Vocabulary (use it, do not invent alternatives)
 
+The table below is for **flavour text**: greetings, panel headings, prompts, badge names, titles, unlock lines, emails, cards. It is **not** for wayfinding. The tabs (Today, Journal, Habits, Badges, Settings), page titles, buttons ("New entry", "Add a habit", "Write about this"), the save state and the rest/undo actions are the same plain words in every theme, so nobody has to decode a word to find their way around. `WAYFINDING_KEY` in `web/src/lib/strings.ts` lists the keys and a test refuses a theme that defines one.
+
 | Concept | Space Log | NoteBook | SpellBook | Day Zero |
 |---|---|---|---|---|
 | Journal entry | Log entry | Page | Scroll | Survival log |
