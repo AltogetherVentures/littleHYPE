@@ -1,0 +1,14 @@
+/* Space Log: deep navy, cyan and soft violet, HUD lines. Exploration, not conflict. */
+[data-theme="spacelog"] {
+  --color-bg: #080f24;
+  --color-surface: #111b3b;
+  --color-text: #e8edff;
+  --color-muted: #a9b6df;
+  --color-accent: #5fe3e8;
+  --color-accent-contrast: #04121f;
+  --color-border: #2b3c72;
+  --radius: 4px;
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --shadow: 0 0 0 1px rgb(95 227 232 / 25%), 0 0 18px rgb(95 227 232 / 12%);
+}

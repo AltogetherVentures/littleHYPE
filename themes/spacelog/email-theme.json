@@ -1,0 +1,12 @@
+{
+  "background": "#080f24",
+  "card": "#111b3b",
+  "text": "#e8edff",
+  "muted": "#a9b6df",
+  "accent": "#5fe3e8",
+  "accentText": "#04121f",
+  "border": "#2b3c72",
+  "headingFont": "'Trebuchet MS', Arial, sans-serif",
+  "bodyFont": "Arial, Helvetica, sans-serif",
+  "headingTransform": "uppercase"
+}

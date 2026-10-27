@@ -1,0 +1,10 @@
+{
+  "name": "Streak ended",
+  "variants": [
+    "Your {category} streak ended after {length} days. That is a real achievement, and it still counts.",
+    "{length} days of {category}, then one missed day. The {length} days are still yours.",
+    "Your {category} streak has ended at {length} days. Every streak starts with a single day.",
+    "{category} took a day off after {length} days. It happens to everyone."
+  ],
+  "restart": "Start a new streak today."
+}
