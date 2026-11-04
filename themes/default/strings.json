@@ -17,7 +17,7 @@
   "picker.choose": "Choose {name}",
   "picker.choosing": "Setting up...",
   "picker.pick": "Pick a world to continue",
-  "billing.pickerNote": "This is the theme included with your purchase. It is locked to your account and cannot be changed later.",
+  "billing.pickerNote": "All four worlds are included with your purchase. Pick one to start in; you can switch to another at any time from Settings.",
   "showcase.cta": "Get started with {name}",
   "showcase.vocab.heading": "How it speaks",
   "vocab.entry": "Entry",
@@ -211,7 +211,7 @@
   "achievements.unlock.dismiss": "Continue",
   "settings.intro": "Your account, your timezone and your data.",
   "settings.theme.heading": "Your theme",
-  "settings.theme.body": "{theme} came with your purchase and is locked to your account.",
+  "settings.theme.body": "All four worlds are included. Switch whenever you like: everything you have written, every habit and every badge comes with you, and you can switch back just as easily.",
   "settings.timezone.heading": "Timezone",
   "settings.timezone.body": "Each day starts and ends at midnight in this timezone.",
   "settings.timezone.label": "Timezone",
@@ -259,7 +259,7 @@
   "legal.privacy.cookies.body": "We use only the cookies needed to keep you signed in. There are no advertising or tracking cookies.",
   "legal.terms.title": "Terms of use",
   "legal.terms.what.heading": "What you're buying",
-  "legal.terms.what.body": "littleHYPE is a one-time purchase that gives one person lifetime access to the app and the theme they choose at sign-up. It is not a subscription. The theme is locked to your account.",
+  "legal.terms.what.body": "littleHYPE is a one-time purchase that gives one person lifetime access to the app and all of its included themes. It is not a subscription. You can switch between the included themes at any time.",
   "legal.terms.refund.heading": "Refunds",
   "legal.terms.refund.body": "You can ask for a refund within 14 days of purchase. A refund removes your access and permanently deletes all of your data, and you will be warned before it is processed.",
   "legal.terms.use.heading": "Using the app",
@@ -348,7 +348,5 @@
   "admin.actions.heading": "Recent admin actions",
   "admin.actions.empty": "Nothing yet.",
   "settings.admin": "Admin tools",
-  "admin.switch.heading": "Switch theme (admin only)",
-  "admin.switch.body": "For testing. Only admin accounts see this; ordinary accounts can never change their theme. Each change is recorded in the admin log.",
-  "admin.switch.error": "The theme couldn't be changed."
+  "settings.theme.error": "The theme couldn't be changed. Please try again."
 }

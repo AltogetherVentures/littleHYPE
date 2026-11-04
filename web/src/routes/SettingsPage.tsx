@@ -54,7 +54,7 @@ export function SettingsPage({ me }: { me: Me }) {
 
   // Admin accounts only (the server checks the verified admin claim again): try the other themes.
   const switchTheme = useMutation({
-    mutationFn: (slug: string) => api(`/api/admin/users/${encodeURIComponent(me.userId)}/theme`, { method: "POST", body: { theme: slug } }).then(() => slug),
+    mutationFn: (slug: string) => api(`/api/me/theme`, { method: "POST", body: { theme: slug } }).then(() => slug),
     onSuccess: async (slug) => {
       await client.invalidateQueries({ queryKey: ME_KEY });
       navigate(`/${slug}/settings`, { replace: true });
@@ -91,15 +91,7 @@ export function SettingsPage({ me }: { me: Me }) {
           {t("settings.theme.heading")}
         </h2>
         <p>{t("settings.theme.body", { theme: t("theme.name") })}</p>
-      </section>
-
-      {me.isAdmin && (
-        <section className="panel" aria-labelledby="set-switch">
-          <h2 id="set-switch" className="panel-title">
-            {t("admin.switch.heading")}
-          </h2>
-          <p>{t("admin.switch.body")}</p>
-          <div className="switch-tiles" role="group" aria-labelledby="set-switch">
+        <div className="switch-tiles" role="group" aria-labelledby="set-theme">
             {THEME_SLUGS.map((slug) => (
               <button key={slug} type="button" className="switch-tile" data-theme={slug} aria-label={translate(slug, "theme.name")} aria-pressed={slug === me.theme} disabled={switchTheme.isPending} onClick={() => slug !== me.theme && switchTheme.mutate(slug)}>
                 {artFor(slug, "hero") && <img className="switch-tile-art" src={artFor(slug, "hero")} alt="" />}
@@ -108,9 +100,8 @@ export function SettingsPage({ me }: { me: Me }) {
               </button>
             ))}
           </div>
-          {switchTheme.isError && <p role="alert">{t("admin.switch.error")}</p>}
-        </section>
-      )}
+        {switchTheme.isError && <p role="alert">{t("settings.theme.error")}</p>}
+      </section>
 
       <section className="panel" aria-labelledby="set-tz">
         <h2 id="set-tz" className="panel-title">

@@ -81,7 +81,7 @@ There is no checkout yet, so you mark yourself as having paid by hand. This is f
 6. Check the locks:
    - Edit the URL to a different theme (e.g. change `/spacelog/journal` to `/dayzero/journal`). You are sent back to your own theme with the rest of the path kept.
    - View the page source: `<html ... data-theme="...">` is already present before any script runs.
-   - Try to choose a theme again: not possible from the UI, and the API returns 409.
+   - Settings shows all four worlds; switching moves you to the same page in the new theme with everything you wrote still there. (The first-pick endpoint itself is still one-time: a second `POST /api/onboarding/theme` returns 409; later changes go through `POST /api/me/theme`.)
 
 To re-run the picker for the same user, delete the account's rows in the SQL editor (`delete from profiles where user_id = 'user_XXXXXXXX';` removes its purchases, themes and audit rows too) and sign in again.
 

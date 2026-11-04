@@ -196,20 +196,13 @@ describe("privacy policy and terms", () => {
   });
 });
 
-describe("admin theme switcher", () => {
-  it("is not shown to ordinary accounts", async () => {
-    renderSettings();
-    await screen.findByRole("combobox");
-    expect(screen.queryByText(translate(null, "admin.switch.heading"))).toBeNull();
-  });
-
-  it("lets an admin switch their own theme through the audited admin endpoint, then lands in the new theme", async () => {
-    const admin = { ...me, isAdmin: true };
+describe("switching theme", () => {
+  it("lets anyone move between the included themes, through their own audited endpoint, and lands in the new theme", async () => {
     render(
       <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
         <MemoryRouter initialEntries={[`/${theme}/settings`]}>
           <Routes>
-            <Route path="/:theme/*" element={<ThemedApp me={admin} />} />
+            <Route path="/:theme/*" element={<ThemedApp me={me} />} />
           </Routes>
           <Where />
         </MemoryRouter>
@@ -218,8 +211,9 @@ describe("admin theme switcher", () => {
     const other = THEME_SLUGS.find((s) => s !== theme)!;
     // Each tile shows the world it leads to, not just a name.
     for (const slug of THEME_SLUGS) expect(await screen.findByText(translate(slug, "theme.tagline"))).toBeTruthy();
-    await userEvent.click(await screen.findByRole("button", { name: translate(other, "theme.name") }));
-    await waitFor(() => expect(apiMock).toHaveBeenCalledWith(`/api/admin/users/${admin.userId}/theme`, { method: "POST", body: { theme: other } }));
+    expect(screen.getByRole("button", { name: translate(theme, "theme.name") }).getAttribute("aria-pressed")).toBe("true");
+    await userEvent.click(screen.getByRole("button", { name: translate(other, "theme.name") }));
+    await waitFor(() => expect(apiMock).toHaveBeenCalledWith("/api/me/theme", { method: "POST", body: { theme: other } }));
     await waitFor(() => expect(screen.getByTestId("where").textContent).toBe(`/${other}/settings`));
   });
 });

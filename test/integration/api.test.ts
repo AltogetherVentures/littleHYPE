@@ -139,6 +139,44 @@ describe("POST /api/onboarding/theme", () => {
   });
 });
 
+describe("POST /api/me/theme: switching between the included themes", () => {
+  it("moves a paid account to another theme, records it, and keeps everything written", async () => {
+    const id = await user({ paid: true });
+    expect((await call("/api/onboarding/theme", { as: id, method: "POST", body: { theme: themeA } })).status).toBe(200);
+    const entry = await call("/api/journal", { as: id, method: "POST", body: { body: "Written before the switch" } });
+    expect(entry.status).toBe(201);
+
+    const switched = await call("/api/me/theme", { as: id, method: "POST", body: { theme: themeB } });
+    expect(switched.status).toBe(200);
+    expect(await switched.json()).toEqual({ theme: themeB });
+    expect((await meOf(id)).theme).toBe(themeB);
+    const list = (await (await call("/api/journal", { as: id })).json()) as { entries: { excerpt: string }[] };
+    expect(list.entries.map((e) => e.excerpt)).toEqual(["Written before the switch"]);
+    const changes = await sup`select old_theme, new_theme, changed_by from theme_changes where user_id = ${id} order by id`;
+    expect(changes).toEqual([
+      { old_theme: null, new_theme: themeA, changed_by: id },
+      { old_theme: themeA, new_theme: themeB, changed_by: id },
+    ]);
+
+    // and straight back again
+    expect((await call("/api/me/theme", { as: id, method: "POST", body: { theme: themeA } })).status).toBe(200);
+    expect((await meOf(id)).theme).toBe(themeA);
+  });
+
+  it("refuses an unknown theme, an account that has not picked yet, and an unpaid account", async () => {
+    const paid = await user({ paid: true });
+    expect((await call("/api/me/theme", { as: paid, method: "POST", body: { theme: themeA } })).status).toBe(409);
+    expect((await call("/api/onboarding/theme", { as: paid, method: "POST", body: { theme: themeA } })).status).toBe(200);
+    expect((await call("/api/me/theme", { as: paid, method: "POST", body: { theme: "nosuchtheme" } })).status).toBe(400);
+    expect((await call("/api/me/theme", { as: paid, method: "POST", body: {} })).status).toBe(400);
+    expect((await meOf(paid)).theme).toBe(themeA);
+
+    const unpaid = await user();
+    expect((await call("/api/me/theme", { as: unpaid, method: "POST", body: { theme: themeA } })).status).toBe(409);
+    expect((await meOf(unpaid)).theme).toBeNull();
+  });
+});
+
 describe("PUT /api/me/timezone (ON-3, TD-4)", () => {
   it("stores a valid IANA timezone and rejects junk", async () => {
     const id = await user();

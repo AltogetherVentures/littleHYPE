@@ -1,6 +1,6 @@
 # littleHYPE
 
-One journaling and habit-tracking web app wrapped in a choice of immersive themes (Space Log, NoteBook, SpellBook, Day Zero at launch). One-time $49 purchase. The theme is chosen once at onboarding and locked to the account.
+One journaling and habit-tracking web app wrapped in a choice of immersive themes (Space Log, NoteBook, SpellBook, Day Zero at launch). One-time $49 purchase that includes all four themes: a person picks one at onboarding and may switch between them at any time in Settings (changed from the original PRD, which locked the theme; the PRD memo needs the same note).
 
 **Source of truth:** the PRD is Fieldwerks memo `o4f7ilyjre` ("littleHYPE PRD: Themed Journaling and Habit Tracking"). If this file and the PRD disagree, the PRD wins. Requirement ids (TH-2, PV-1, ...) in code comments refer to it.
 
@@ -51,7 +51,7 @@ Class names are shared, so when a base rule and a theme rule tie on specificity 
 
 - **Application code never names a theme.** `src/`, `shared/` and `web/src/` may not contain a theme slug or display name; the active theme comes from the profile and valid names from `themes/registry.ts`. Adding a theme is files under `themes/<slug>/` plus one line in the registry. `test/theme-isolation.test.ts` enforces this (NF-6).
 - **The profile is the single source of truth for theme.** The URL is corrected to match it, in the Worker before first paint and mirrored in the SPA using the same `shared/theme-routing.ts` function.
-- **`profiles.theme` is write-protected by the database** (column grants + SECURITY DEFINER functions `set_onboarding_theme` / `admin_set_theme`). Never add a direct write path. Every change writes `theme_changes`.
+- **`profiles.theme` is write-protected by the database** (column grants + SECURITY DEFINER functions `set_onboarding_theme` for the first pick, `switch_theme` for the person's own later switches, `admin_set_theme` for admins). Never add a direct write path. Every change writes `theme_changes`. Entries, habits and badges are never tied to a theme, so switching moves nothing but the presentation.
 - **Isolation is enforced in Postgres.** Every user table has FORCE ROW LEVEL SECURITY keyed on `app.current_user_id`, set per transaction by `withUser`. Every query on user data goes through `withUser`. `test/integration/user-isolation.test.ts` is a CI gate.
 - **Money, privacy, deletion and data-loss copy is never theme voice** (TH-13). Keys under `billing.`, `paywall.`, `privacy.`, `delete.`, `refund.`, `export.`, `legal.`, `auth.` live only in `themes/default/strings.json`; a test fails if a theme defines one.
 - **Every UI string goes through `t()`** with a key that exists in the default table (typed as `StringKey`, so a typo fails typecheck).

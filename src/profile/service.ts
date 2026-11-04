@@ -75,6 +75,8 @@ function mapThemeError(err: unknown): never {
       throw new DomainError(402, "payment_required");
     case "theme_already_chosen":
       throw new DomainError(409, "theme_already_chosen");
+    case "theme_required":
+      throw new DomainError(409, "theme_required");
     case "invalid_theme":
       throw new DomainError(400, "invalid_theme");
     case "admin_required":
@@ -95,6 +97,21 @@ export async function chooseOnboardingTheme(tx: postgres.TransactionSql, theme: 
     return row!.set_onboarding_theme;
   } catch (err) {
     return mapThemeError(err);
+  }
+}
+
+/**
+ * A paid account moving between the included themes, any time. Entries, habits and
+ * badges are not tied to a theme, so nothing moves but the presentation; the database
+ * requires a paid purchase and records the change in theme_changes.
+ */
+export async function switchTheme(tx: postgres.TransactionSql, theme: unknown): Promise<string> {
+  if (!isThemeSlug(theme)) throw new DomainError(400, "invalid_theme");
+  try {
+    const [row] = await tx<{ switch_theme: string }[]>`select switch_theme(${theme})`;
+    return row!.switch_theme;
+  } catch (err) {
+    mapThemeError(err);
   }
 }
 
