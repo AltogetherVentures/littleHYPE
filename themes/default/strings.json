@@ -11,7 +11,7 @@
   "common.error": "Something went wrong. Please try again.",
   "common.retry": "Try again",
   "paywall.heading": "Complete your purchase to continue",
-  "paywall.body": "littleHYPE is a one-time purchase of $49 USD for lifetime access, not a subscription. Once your payment is confirmed you choose your theme.",
+  "paywall.body": "littleHYPE is a one-time purchase: pay once, keep it for life, all four worlds included. Once your payment is confirmed you choose your theme.",
   "picker.heading": "Choose your world",
   "picker.intro": "Pick the theme you want to journal in. Each one has its own look, language and rituals.",
   "picker.choose": "Choose {name}",
@@ -348,5 +348,13 @@
   "admin.actions.heading": "Recent admin actions",
   "admin.actions.empty": "Nothing yet.",
   "settings.admin": "Admin tools",
-  "settings.theme.error": "The theme couldn't be changed. Please try again."
+  "settings.theme.error": "The theme couldn't be changed. Please try again.",
+  "paywall.plan.lifetime": "Lifetime",
+  "paywall.plan.lifetime.price": "$49",
+  "paywall.plan.lifetime.sub": "one payment, yours for good",
+  "paywall.plan.lifetime.tag": "Best value",
+  "paywall.plan.monthly": "Monthly",
+  "paywall.plan.monthly.price": "$14 / month",
+  "paywall.plan.monthly.sub": "$168 a year, for as long as you subscribe",
+  "paywall.plan.monthly.tag": "Coming soon"
 }

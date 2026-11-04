@@ -27,6 +27,9 @@ ENVIRONMENT = "staging"
 CLERK_PUBLISHABLE_KEY = "pk_test_cGxlYXNlZC1wYXJha2VldC0yNDU0LmNsZXJrLmFjY291bnRzLmRldiQ"
 # The origin browsers load the app from, e.g. https://littlehype-staging.<your-subdomain>.workers.dev
 PUBLIC_BASE_URL = "https://littlehype-staging.alan-eoin-oneill.workers.dev"
+# Stripe: the one-time lifetime price (not secret). The secret key and webhook signing
+# secret are Worker secrets (docs/setup.md Part 9).
+STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
 # Clerk's JWT *public* key (PEM), used to verify session tokens without calling
 # Clerk. It is a public key, so it is safe to commit; the production instance has
 # a different one.

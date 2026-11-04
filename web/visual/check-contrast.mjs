@@ -35,6 +35,7 @@ const scenes = [
     [`showcase ${t}`, `scene=showcase&theme=${t}&signedout=1`],
   ]),
   ["picker", "scene=picker&theme=x"],
+  ["paywall", "scene=paywall&theme=x"],
   ["privacy", "scene=privacy&signedout=1&theme=x"],
   ["landing", "scene=landing&signedout=1&theme=x"],
 ];

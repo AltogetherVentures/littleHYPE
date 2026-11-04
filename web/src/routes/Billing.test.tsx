@@ -59,7 +59,11 @@ describe("paywall", () => {
   it("states the price plainly and sends the buyer to Stripe's checkout", async () => {
     renderPage(<Paywall />, "/paywall");
     expect(await screen.findByText(t("paywall.body"))).toBeTruthy();
-    expect(t("paywall.body")).toContain("$49");
+    // Both prices are shown; only lifetime can be bought, monthly is marked coming soon.
+    expect(screen.getByText(t("paywall.plan.lifetime.price"))).toBeTruthy();
+    expect(screen.getByText(t("paywall.plan.monthly.price"))).toBeTruthy();
+    expect(screen.getByText(t("paywall.plan.monthly.tag"))).toBeTruthy();
+    expect(screen.getAllByRole("button")).toHaveLength(1);
     await userEvent.click(screen.getByRole("button", { name: t("paywall.buy") }));
     await waitFor(() => expect(assign).toHaveBeenCalledWith("https://checkout.stripe.test/pay"));
     expect(apiMock).toHaveBeenCalledWith("/api/checkout", { method: "POST" });

@@ -94,6 +94,9 @@ export function installMockApi() {
     const method = (init?.method ?? "GET").toUpperCase();
     const path = url.pathname;
 
+    // The paywall scene: an account that has signed up but not paid yet.
+    if (path === "/api/me") return json({ userId: "gallery", theme: null, timezone: "Europe/Dublin", paid: false, onboarded: false, reminderTime: null, isAdmin: false, createdAt: new Date().toISOString() });
+
     if (path === "/api/journal" && method === "GET") {
       const q = url.searchParams.get("q")?.toLowerCase();
       const date = url.searchParams.get("date");
