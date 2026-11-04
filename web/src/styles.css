@@ -325,7 +325,7 @@ img { max-width: 100%; }
 .week-strip { display: inline-flex; gap: 0.35rem; margin-top: 0.45rem; }
 .week-day { display: grid; justify-items: center; gap: 0.15rem; }
 .week-strip .cell { width: 0.85rem; height: 0.85rem; margin: 0; }
-.week-letter { font-size: 0.62rem; line-height: 1; font-weight: 600; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.04em; }
+.week-letter { font-size: 0.72rem; line-height: 1.25; padding: 0 1px; font-weight: 600; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.04em; }
 .week-day[data-state="open"] .week-letter { color: var(--color-text); font-weight: 700; }
 .habit-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .habit-name { font-weight: 700; overflow-wrap: anywhere; }
