@@ -34,7 +34,9 @@ export async function createCheckoutSession(env: Env, input: { userId: string; e
       body: form,
     });
     if (!res.ok) {
-      console.error("stripe-checkout-failed", { status: res.status });
+      // Stripe's own reason (a bad price id, a key from the other mode, Tax not set up), never the key.
+      const body = (await res.json().catch(() => ({}))) as { error?: { type?: string; code?: string; message?: string; param?: string } };
+      console.error("stripe-checkout-failed", { status: res.status, type: body.error?.type, code: body.error?.code, param: body.error?.param, message: body.error?.message });
       return null;
     }
     const session = (await res.json()) as { url?: string | null };
