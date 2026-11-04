@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { HabitRow } from "../components/HabitRow";
+import { Loading } from "../components/Busy";
 import { artFor } from "../lib/art";
 import { flairFor } from "../lib/flair";
 import { ShareDialog } from "../components/ShareDialog";
@@ -82,7 +83,7 @@ export function Today({ me }: { me: Me }) {
             </div>
           )}
 
-          {isPending && <p className="panel-status">{t("common.loading")}</p>}
+          {isPending && <Loading className="panel-status" />}
           {isError && (
             <p className="panel-status" role="alert">
               {t("common.error")}{" "}
@@ -141,7 +142,7 @@ export function Today({ me }: { me: Me }) {
           <div className="panel-body">
             {promptArt && <img className="panel-art" src={promptArt} alt="" />}
             <div className="prompt-main">
-              {prompt.isPending && <p className="panel-status">{t("common.loading")}</p>}
+              {prompt.isPending && <Loading className="panel-status" />}
               {prompt.isError && (
                 <p role="alert">
                   {t("common.error")}{" "}

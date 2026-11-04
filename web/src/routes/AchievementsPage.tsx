@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { progressUnitOf, tierOf } from "@shared/achievement-tiers";
 import { AchievementEmblem } from "../components/AchievementEmblem";
+import { Loading } from "../components/Busy";
 import { achievementCopy } from "../lib/content";
 import { useAchievements, type AchievementView } from "../lib/achievements";
 import type { Me } from "../lib/me";
@@ -47,7 +48,7 @@ export function AchievementsPage({ me }: { me: Me }) {
         {data && <p className="collection-count">{t("achievements.count", { n: String(unlocked), total: String(items.length) })}</p>}
       </header>
 
-      {isPending && <p className="status">{t("common.loading")}</p>}
+      {isPending && <Loading />}
       {isError && (
         <p role="alert">
           {t("common.error")}{" "}

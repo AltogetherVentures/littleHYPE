@@ -2,6 +2,7 @@ import { HABIT_CATEGORIES } from "@shared/categories";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CategoryGlyph } from "../components/CategoryGlyph";
+import { Loading } from "../components/Busy";
 import { HabitForm, type HabitFormValues } from "../components/HabitControls";
 import { streakLabel } from "../components/HabitRow";
 import { WeekStrip } from "../components/WeekStrip";
@@ -70,7 +71,7 @@ export function HabitsPage({ me }: { me: Me }) {
         </section>
       )}
 
-      {isPending && <p className="status">{t("common.loading")}</p>}
+      {isPending && <Loading />}
       {isError && <p role="alert">{t("common.error")}</p>}
       {data && active.length === 0 && !adding && <p className="empty-note">{t("habits.empty")}</p>}
 

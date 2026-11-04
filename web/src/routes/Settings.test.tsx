@@ -3,8 +3,8 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { THEME_SLUGS } from "@themes/registry";
 import type { Me } from "../lib/me";
+import { THEME_SLUGS } from "@themes/registry";
 import { translate } from "../lib/strings";
 import { Legal } from "./Legal";
 import { ThemedApp } from "./ThemedApp";
@@ -216,6 +216,8 @@ describe("admin theme switcher", () => {
       </QueryClientProvider>,
     );
     const other = THEME_SLUGS.find((s) => s !== theme)!;
+    // Each tile shows the world it leads to, not just a name.
+    for (const slug of THEME_SLUGS) expect(await screen.findByText(translate(slug, "theme.tagline"))).toBeTruthy();
     await userEvent.click(await screen.findByRole("button", { name: translate(other, "theme.name") }));
     await waitFor(() => expect(apiMock).toHaveBeenCalledWith(`/api/admin/users/${admin.userId}/theme`, { method: "POST", body: { theme: other } }));
     await waitFor(() => expect(screen.getByTestId("where").textContent).toBe(`/${other}/settings`));

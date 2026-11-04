@@ -19,6 +19,7 @@ interface Row { id: string; date: string; body: string; mood: number | null; pro
 let rows: Row[];
 let calls: { path: string; method: string; body?: unknown }[];
 let failSaves = false;
+let hangList = false;
 
 const full = (r: Row) => ({ ...r, createdAt: "2026-09-30T00:00:00Z", updatedAt: "2026-09-30T00:00:00Z" });
 const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: Record<string, unknown> }) => {
@@ -26,6 +27,7 @@ const apiMock = vi.fn(async (path: string, init?: { method?: string; body?: Reco
   calls.push({ path, method, body: init?.body });
   const url = new URL(path, "http://x");
   if (url.pathname === "/api/journal" && method === "GET") {
+    if (hangList) return new Promise(() => {});
     const q = url.searchParams.get("q");
     const date = url.searchParams.get("date");
     const list = rows.filter((r) => (!q || r.body.includes(q)) && (!date || r.date === date));
@@ -78,6 +80,7 @@ beforeEach(() => {
   ];
   calls = [];
   failSaves = false;
+  hangList = false;
 });
 afterEach(() => {
   cleanup();
@@ -195,6 +198,28 @@ describe("entry editor", () => {
       });
       await waitFor(() => expect(writes()).toHaveLength(2));
       expect(writes()[1]).toMatchObject({ path: "/api/journal/id3", method: "PATCH", body: { body: "First words and more" } });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("shows a just-saved entry in the list at once, before the server has been asked again", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      renderAt(`/${theme}/journal`);
+      await screen.findByText("walked by the river");
+      await userEvent.click(screen.getByRole("link", { name: t("journal.new") }));
+      const box = await screen.findByRole("textbox", { name: t("journal.editor.label") });
+      fireEvent.change(box, { target: { value: "Fresh words tonight" } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(900);
+      });
+      await waitFor(() => expect(writes()).toHaveLength(1));
+      // The server's list is slow (never answers here): what shows must come from the cache.
+      hangList = true;
+      await userEvent.click(screen.getByRole("link", { name: new RegExp(t("journal.editor.back")) }));
+      expect(await screen.findByText("Fresh words tonight")).toBeTruthy();
+      expect(screen.getByText("walked by the river")).toBeTruthy();
     } finally {
       vi.useRealTimers();
     }

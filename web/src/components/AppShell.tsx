@@ -4,6 +4,7 @@ import type { Me } from "../lib/me";
 import { headerFor } from "../lib/overrides";
 import type { HeaderProps, NavItem } from "../lib/overrides-types";
 import { useT, type StringKey } from "../lib/strings";
+import { BusyBar } from "./Busy";
 import { icons } from "./icons";
 import { TabBar } from "./TabBar";
 
@@ -41,6 +42,7 @@ export function AppShell({ theme, me, children }: { theme: string; me: Me; child
         createdAt={me.createdAt}
         timezone={me.timezone}
       />
+      <BusyBar />
       <main id="main">{children}</main>
       <TabBar items={items} />
     </div>

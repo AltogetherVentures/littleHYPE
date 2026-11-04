@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { THEME_SLUGS } from "@themes/registry";
 import { useDownloadExport } from "../lib/account";
+import { artFor } from "../lib/art";
 import { useApi } from "../lib/api";
 import { HABITS_KEY, TODAY_KEY } from "../lib/habits";
 import { ME_KEY, type Me } from "../lib/me";
@@ -98,10 +99,12 @@ export function SettingsPage({ me }: { me: Me }) {
             {t("admin.switch.heading")}
           </h2>
           <p>{t("admin.switch.body")}</p>
-          <div className="segmented" role="group" aria-labelledby="set-switch">
+          <div className="switch-tiles" role="group" aria-labelledby="set-switch">
             {THEME_SLUGS.map((slug) => (
-              <button key={slug} type="button" className="segment" aria-pressed={slug === me.theme} disabled={switchTheme.isPending} onClick={() => slug !== me.theme && switchTheme.mutate(slug)}>
-                {translate(slug, "theme.name")}
+              <button key={slug} type="button" className="switch-tile" data-theme={slug} aria-label={translate(slug, "theme.name")} aria-pressed={slug === me.theme} disabled={switchTheme.isPending} onClick={() => slug !== me.theme && switchTheme.mutate(slug)}>
+                {artFor(slug, "hero") && <img className="switch-tile-art" src={artFor(slug, "hero")} alt="" />}
+                <span className="switch-tile-name">{translate(slug, "theme.name")}</span>
+                <span className="switch-tile-tag">{translate(slug, "theme.tagline")}</span>
               </button>
             ))}
           </div>

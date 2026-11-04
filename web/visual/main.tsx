@@ -19,7 +19,7 @@ installMockApi();
 
 /**
  * Design gallery: the real screens with sample data.
- *   ?scene=today|journal|picker|showcase|landing|paywall   &theme=<slug>   &empty=1 (journal with no entries)
+ *   ?scene=today|journal|picker|showcase|landing|paywall   &theme=<slug>   &empty=1 (journal with no entries)   &admin=1 (admin-only panels)
  * Not shipped: it exists so every theme can be reviewed without signing in.
  */
 const params = new URLSearchParams(window.location.search);
@@ -34,7 +34,7 @@ const me: Me = {
   paid: true,
   onboarded: scene !== "welcome",
   reminderTime: "20:00",
-  isAdmin: false,
+  isAdmin: params.has("admin"),
   createdAt: new Date(Date.now() - (day - 1) * 86_400_000).toISOString(),
 };
 

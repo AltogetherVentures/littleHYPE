@@ -3,6 +3,7 @@ import { PROMPT_KEYS } from "@shared/prompt-keys";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { MoodPicker } from "../components/MoodPicker";
+import { Loading } from "../components/Busy";
 import { Autosaver, type SaveStatus } from "../lib/autosave";
 import { dayLabel } from "../lib/calendar";
 import { promptText } from "../lib/content";
@@ -32,7 +33,7 @@ export function EntryPage({ me }: { me: Me }) {
   const isNew = id === "new";
   const query = useEntry(isNew ? null : id);
 
-  if (!isNew && query.isPending) return <p className="status">{t("common.loading")}</p>;
+  if (!isNew && query.isPending) return <Loading />;
   if (!isNew && (query.isError || !query.data)) {
     return (
       <div className="entry-page">

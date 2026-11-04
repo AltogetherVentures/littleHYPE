@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { JournalWeek } from "../components/JournalWeek";
+import { Loading } from "../components/Busy";
 import { MoodFace } from "../components/MoodPicker";
 import { dayLabel, monthOf, shiftMonth } from "../lib/calendar";
 import { examplePage, promptText } from "../lib/content";
@@ -94,7 +95,7 @@ export function JournalPage({ me }: { me: Me }) {
             </p>
           )}
 
-          {entries.isPending && <p className="status">{t("common.loading")}</p>}
+          {entries.isPending && <Loading />}
           {entries.isError && <p role="alert">{t("common.error")}</p>}
           {entries.data && rows.length === 0 && <p className="empty-note">{filtered ? t("journal.search.empty") : t("journal.empty")}</p>}
           {entries.data && rows.length === 0 && !filtered && <ExampleCard theme={me.theme} />}

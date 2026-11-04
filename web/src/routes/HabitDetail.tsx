@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { HabitForm, ScheduleEditor } from "../components/HabitControls";
+import { Loading } from "../components/Busy";
 import { HabitGrid } from "../components/HabitGrid";
 import { errorCode, useHabitHistory, useHabitMutations } from "../lib/habits";
 import type { Me } from "../lib/me";
@@ -17,7 +18,7 @@ export function HabitDetail({ me }: { me: Me }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
 
-  if (isPending) return <p className="status">{t("common.loading")}</p>;
+  if (isPending) return <Loading />;
   if (isError || !data) {
     return (
       <p role="alert" className="status">
