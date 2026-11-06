@@ -41,6 +41,11 @@ function sitemap(origin: string): Response {
 /** Everything that is not an API route: static files, or the SPA shell with theme routing. */
 export async function handlePageRoutes(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
+  // One address: www goes to the apex, permanently.
+  if (url.hostname.startsWith("www.")) {
+    url.hostname = url.hostname.slice(4);
+    return Response.redirect(url.toString(), 301);
+  }
   if (url.pathname === "/sitemap.xml") return sitemap(url.origin);
   if (url.pathname === "/robots.txt") return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${url.origin}/sitemap.xml\n`, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" } });
   if ((request.method !== "GET" && request.method !== "HEAD") || isAssetPath(url.pathname)) {

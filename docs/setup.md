@@ -106,7 +106,7 @@ Repeat Parts 1 to 5 with:
 - filling the `[env.production]` placeholders,
 - `npm run deploy:production` (always manual).
 
-**Domain:** `littlehype.com` currently serves the existing static site (now in `marketing/`). The production route in `wrangler.toml` is deliberately commented out. Decide where the app lives (for example `app.littlehype.com`, or move the apex) before enabling it.
+**Domain:** everything lives at `littlehype.com` (`[[env.production.routes]]` in `wrangler.toml`, custom domains for the apex and `www`). Before the first production deploy, delete the old site's DNS record for `littlehype.com` in Cloudflare DNS; wrangler then creates the Worker's own record. The Stripe webhook for production points at `https://littlehype.com/api/stripe/webhook`.
 
 ---
 

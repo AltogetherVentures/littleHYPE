@@ -85,7 +85,9 @@ preview_urls = false
 ENVIRONMENT = "production"
 # Clerk *production* instance (pk_live_...): separate keys, users and JWT key from staging.
 CLERK_PUBLISHABLE_KEY = "REPLACE_WITH_PRODUCTION_CLERK_PUBLISHABLE_KEY"
-PUBLIC_BASE_URL = "REPLACE_WITH_PRODUCTION_URL"
+PUBLIC_BASE_URL = "https://littlehype.com"
+# Stripe live price (lifetime); the secret key and webhook secret are Worker secrets.
+STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
 CLERK_JWT_KEY = "REPLACE_WITH_PRODUCTION_CLERK_JWT_PUBLIC_KEY"
 #   wrangler secret put CLERK_SECRET_KEY --env production
 
@@ -97,12 +99,14 @@ binding = "HYPERDRIVE"
 # The *production* Supabase project. Must not be the staging id.
 id = "REPLACE_WITH_PRODUCTION_HYPERDRIVE_ID"
 
-# The apex domain is deliberately not routed yet: littlehype.com currently
-# serves the existing marketing site (marketing/). Attach a custom domain here
-# only when you are ready to move it, e.g.
-# [[env.production.routes]]
-# pattern = "app.littlehype.com"
-# custom_domain = true
+# The whole site (marketing pages and app) lives at the apex. Cloudflare creates
+# the DNS record on deploy; any old record for littlehype.com must be removed first.
+[[env.production.routes]]
+pattern = "littlehype.com"
+custom_domain = true
+[[env.production.routes]]
+pattern = "www.littlehype.com"
+custom_domain = true
 
 [env.production.assets]
 directory = "./web/dist"
