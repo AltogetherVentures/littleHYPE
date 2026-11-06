@@ -84,7 +84,7 @@ preview_urls = false
 [env.production.vars]
 ENVIRONMENT = "production"
 # Clerk *production* instance (pk_live_...): separate keys, users and JWT key from staging.
-CLERK_PUBLISHABLE_KEY = "REPLACE_WITH_PRODUCTION_CLERK_PUBLISHABLE_KEY"
+CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsubGl0dGxlaHlwZS5jb20k"
 PUBLIC_BASE_URL = "https://littlehype.com"
 # Stripe live price (lifetime); the secret key and webhook secret are Worker secrets.
 STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
