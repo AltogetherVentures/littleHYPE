@@ -9,7 +9,7 @@ Everything in the PRD MVP is built and tested. These are the steps that need an 
 - [ ] **Production Supabase** (US region, its own `app_user` password), **production Hyperdrive** (a different id from staging), production Worker secrets (Part 8).
 
 ## Decisions
-- [ ] **Where the app lives.** `littlehype.com` currently serves the old static site (`marketing/`). Choose `app.littlehype.com` or move the apex, then enable the commented-out production route in `wrangler.toml`.
+- [x] **Where the app lives.** Decided: everything (marketing pages and app) at `littlehype.com`. When production is set up, point the apex at the Worker and enable the commented-out production route in `wrangler.toml`; the old static site is retired.
 - [ ] **Add-on themes and credits**: referral credits are stored but not redeemable until add-on themes exist (PRD PY-6).
 
 ## People

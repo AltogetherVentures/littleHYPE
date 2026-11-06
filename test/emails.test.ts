@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { EMAILS } from "../themes/emails";
 import { renderReminder } from "../src/email/render";
 import { signUnsubscribe, verifyUnsubscribe } from "../src/email/token";
+import { META_THEMES } from "../themes/meta";
 import { THEME_SLUGS } from "../themes/registry";
 
 const luminance = (hex: string) => {
@@ -97,5 +98,11 @@ describe("unsubscribe tokens", () => {
 
   it("are stable, so an old email still works", async () => {
     expect(await signUnsubscribe(secret, "user_1")).toBe(await signUnsubscribe(secret, "user_1"));
+  });
+});
+
+describe("themes/meta.ts", () => {
+  it("has page meta for exactly the registered themes", () => {
+    expect([...META_THEMES].sort()).toEqual([...THEME_SLUGS].sort());
   });
 });

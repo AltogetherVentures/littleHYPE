@@ -31,9 +31,18 @@ async function resolveSessionTheme(env: Env, request: Request): Promise<string |
   }
 }
 
+/** The marketing pages, for search engines. */
+function sitemap(origin: string): Response {
+  const urls = ["/", ...THEME_SLUGS.map((s) => `/${s}`), "/privacy", "/terms"];
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${origin}${u}</loc></url>`).join("\n")}\n</urlset>\n`;
+  return new Response(body, { headers: { "content-type": "application/xml; charset=utf-8", "cache-control": "public, max-age=3600" } });
+}
+
 /** Everything that is not an API route: static files, or the SPA shell with theme routing. */
 export async function handlePageRoutes(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
+  if (url.pathname === "/sitemap.xml") return sitemap(url.origin);
+  if (url.pathname === "/robots.txt") return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${url.origin}/sitemap.xml\n`, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" } });
   if ((request.method !== "GET" && request.method !== "HEAD") || isAssetPath(url.pathname)) {
     return env.ASSETS.fetch(request);
   }

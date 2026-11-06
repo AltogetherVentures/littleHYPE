@@ -5,6 +5,8 @@ import { defineConfig } from "vite";
 // Builds the design gallery (visual/) with Clerk stubbed out. `npm run visual`.
 export default defineConfig({
   root: path.resolve(import.meta.dirname, "visual"),
+  // The app's static files (the marketing pages' screenshots live there).
+  publicDir: path.resolve(import.meta.dirname, "public"),
   plugins: [react()],
   resolve: {
     alias: {

@@ -28,7 +28,7 @@ themes/      registry.ts + one folder per theme (see "Design system" below); ema
              theme's email/share-card files by name for the Worker (test/emails.test.ts keeps them in step)
 supabase/migrations/   Plain SQL, applied BY HAND to both projects
 test/        Unit tests; test/integration needs Postgres (scripts/setup-test-db.sh)
-marketing/   The pre-existing static brand site (standalone, not built by CI, not part of the Worker)
+web/public/worlds/   Real app screens for the marketing pages (regenerate with scripts/shoot-worlds.mjs after a design change)
 ```
 
 ## Design system: what a theme is
@@ -46,6 +46,10 @@ A theme is a distinct world, not a colour swap (PRD "Theme briefs"). Each `theme
 Class names are shared, so when a base rule and a theme rule tie on specificity the later stylesheet wins and the bundler decides the order: give theme selectors more specificity (`.hdr-x .hdr-x-nav a`, `[data-theme="x"] .panel`), never rely on order.
 
 **Review designs in a browser, not by reading CSS.** `npm run visual` serves a gallery of the real screens with sample data and Clerk stubbed out (`http://127.0.0.1:4173/?scene=today|journal|picker|showcase|landing&theme=<slug>`; add `&signedout=1` for signed-out screens). `npm run visual:contrast` then measures WCAG AA contrast from real rendered pixels (axe cannot see text over gradients and textures). Do both for every theme at desktop and phone width before shipping a design change (TH-14, NF-4).
+
+## Marketing pages
+
+The home page (`/`, `web/src/routes/Landing.tsx`) and one product page per theme (`/<slug>`, `web/src/routes/Showcase.tsx`, fully in that theme) live in the app; the old standalone site in `marketing/` was retired (git history has it). Their screens are real app screenshots in `web/public/worlds/`, rendered from the design gallery by `scripts/shoot-worlds.mjs`: rerun it after a design change so the pages never drift from the product. The Worker writes each page's title, description and share image into `<head>` (`themes/meta.ts`, `src/shell.ts`) and serves `/sitemap.xml` and `/robots.txt`. Copy is under `landing.*` / `world.*` (neutral; the world page's voice comes from `theme.*`, the vocabulary, the sample page and badge copy). The tone is bold about the boring apps, never about the people who use them.
 
 ## Non-negotiable rules
 

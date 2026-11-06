@@ -2,6 +2,7 @@ import { useState } from "react";
 import { THEME_SLUGS } from "@themes/registry";
 import { artFor } from "../lib/art";
 import { translate, useT } from "../lib/strings";
+import { rememberedWorld } from "../lib/world";
 
 interface Props {
   busy: boolean;
@@ -16,7 +17,8 @@ interface Props {
  */
 export function ThemePicker({ busy, error, onChoose }: Props) {
   const t = useT();
-  const [selected, setSelected] = useState<string | null>(null);
+  // Pre-select the world they were reading about before they signed up, if any.
+  const [selected, setSelected] = useState<string | null>(() => rememberedWorld(THEME_SLUGS));
 
   return (
     <section className="picker">
