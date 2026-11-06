@@ -1,0 +1,172 @@
+/* SpellBook: aged parchment, a leather book edge with gold trim and a wax seal, inked scroll
+   panels and candlelit glow. */
+[data-theme="spellbook"] body {
+  background:
+    radial-gradient(1000px 640px at 50% 0%, #f8edd2, transparent 70%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(122, 31, 61, 0.16) 100%),
+    var(--color-bg);
+  background-attachment: fixed;
+}
+[data-theme="spellbook"] body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.27 0 0 0 0 0.08 0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E"); mix-blend-mode: multiply; opacity: 0.55; }
+[data-theme="spellbook"] #root { position: relative; z-index: 1; }
+
+/* header: leather edge, gold trim, wax seal */
+.hdr-spell { position: sticky; top: 0; z-index: 40; background: linear-gradient(180deg, #86224a, #4f0f27); box-shadow: 0 6px 16px rgba(58, 19, 34, 0.35); }
+.hdr-spell::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.8 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E"); mix-blend-mode: multiply; opacity: 0.5; }
+.hdr-spell-bar { position: relative; display: flex; align-items: center; gap: 1.1rem; max-width: 72rem; margin: 0 auto; padding: 0.55rem 16px 0.6rem; }
+.hdr-spell-seal { flex: none; margin-bottom: -22px; position: relative; z-index: 3; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.45)); }
+.hdr-spell-brand { font-family: var(--font-heading); font-size: 1.45rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #f3d58a; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4); }
+.hdr-spell-nav { flex: 1; flex-wrap: nowrap; min-width: 0; gap: 0.1rem 0.3rem; margin-left: 0.5rem; }
+.hdr-spell .hdr-spell-nav a { white-space: nowrap; padding: 0.4rem 0.55rem; color: #f1e2bd; text-decoration: none; font-family: var(--font-heading); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; border: 0; border-bottom: 2px solid transparent; transition: color 0.2s, text-shadow 0.2s; }
+.hdr-spell .hdr-spell-nav a:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 215, 106, 0.7); }
+.hdr-spell .hdr-spell-nav a[aria-current="page"] { color: #ffd76a; border-bottom-color: #ffd76a; text-shadow: 0 0 12px rgba(255, 215, 106, 0.6); }
+.hdr-spell-right { display: flex; align-items: center; gap: 1rem; color: #f1e2bd; font-family: var(--font-heading); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.hdr-spell-status { color: #ffd76a; animation: sp-candle 3.2s ease-in-out infinite; }
+@keyframes sp-candle { 0%, 100% { opacity: 0.75; } 40% { opacity: 1; } 55% { opacity: 0.85; } 70% { opacity: 1; } }
+.hdr-spell-out { background: none; border: 1px solid rgba(243, 213, 138, 0.55); color: #f3d58a; font: inherit; letter-spacing: 0.12em; padding: 0.35rem 0.75rem; cursor: pointer; border-radius: 2px; }
+.hdr-spell-out:hover { background: rgba(243, 213, 138, 0.14); }
+.hdr-spell-trim { position: relative; height: 7px; border-top: 3px double #c9962e; background: repeating-linear-gradient(90deg, rgba(201, 150, 46, 0.7) 0 10px, transparent 10px 15px); }
+@media (max-width: 1100px) { .hdr-spell-status { display: none; } }
+@media (max-width: 719px) { .hdr-spell-status { display: none; } .hdr-spell-bar { justify-content: space-between; } .hdr-spell-right { margin-left: auto; } }
+
+/* scrolls and panels */
+[data-theme="spellbook"] .panel,
+[data-theme="spellbook"] .hero,
+[data-theme="spellbook"] .vocab-item,
+[data-theme="spellbook"] .gate-card {
+  background: linear-gradient(180deg, #fbf3de, #f4e7c8);
+  border: 1px solid #c6ae80; border-radius: 6px;
+  box-shadow: 0 0 0 4px #f4e7c8, 0 0 0 5px #c6ae80, 0 14px 26px -12px rgba(58, 19, 34, 0.4);
+}
+[data-theme="spellbook"] .hero,
+[data-theme="spellbook"] .today-grid { margin-left: 5px; margin-right: 5px; }
+[data-theme="spellbook"] .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(420px 220px at 12% 8%, rgba(255, 215, 106, 0.35), transparent 70%); animation: sp-candle 4.4s ease-in-out infinite; }
+[data-theme="spellbook"] .hero-eyebrow { font-family: var(--font-heading); color: #8a5a20; letter-spacing: 0.16em; font-size: 0.8rem; }
+[data-theme="spellbook"] .hero-title,
+[data-theme="spellbook"] .showcase-hero h1 { font-weight: 600; letter-spacing: 0.03em; color: #4a0f25; }
+[data-theme="spellbook"] .hero-title::first-letter { color: #7a1f3d; font-size: 1.18em; }
+[data-theme="spellbook"] .hero-greeting { font-style: italic; color: #64463a; }
+[data-theme="spellbook"] .hero-art { border-radius: 14px; box-shadow: 0 14px 28px -12px rgba(58, 19, 34, 0.55); }
+[data-theme="spellbook"] .panel-title { font-weight: 600; letter-spacing: 0.08em; color: #4a0f25; }
+[data-theme="spellbook"] .panel-title::before { content: "\2766"; margin-right: 0.55rem; color: #c9962e; }
+[data-theme="spellbook"] .panel-tag { background: #7a1f3d; border-color: #7a1f3d; color: #fff3d6; font-family: var(--font-heading); letter-spacing: 0.1em; }
+[data-theme="spellbook"] .streak-num { font-family: var(--font-heading); font-weight: 700; color: #7a1f3d; text-shadow: 0 2px 0 #f0d896, 0 0 18px rgba(255, 215, 106, 0.5); }
+[data-theme="spellbook"] .today-note { font-size: 1.15rem; color: #64463a; }
+[data-theme="spellbook"] .button { position: relative; overflow: hidden; background: linear-gradient(180deg, #92284f, #6a1631); border: 1px solid #c9962e; border-radius: 3px; color: #fff3d6; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; box-shadow: inset 0 0 0 2px rgba(243, 213, 138, 0.18), 0 6px 14px -6px rgba(58, 19, 34, 0.6); }
+[data-theme="spellbook"] .button::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 235, 170, 0.55) 50%, transparent 65%) no-repeat -120% 0 / 60% 100%; transition: background-position 0.7s ease; }
+[data-theme="spellbook"] .button:hover:not(:disabled)::after { background-position: 220% 0; }
+[data-theme="spellbook"] .tabbar { background: linear-gradient(180deg, #86224a, #4f0f27); border-top: 3px double #c9962e; }
+[data-theme="spellbook"] .tab { color: #f1e2bd; }
+[data-theme="spellbook"] .tab[aria-current="page"] { color: #ffd76a; text-shadow: 0 0 10px rgba(255, 215, 106, 0.6); }
+[data-theme="spellbook"] .tab-label { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.06em; }
+.theme-card[data-theme="spellbook"], .world-card[data-theme="spellbook"] { background: linear-gradient(180deg, #fbf3de, #f0e0bb); border: 1px solid #c6ae80; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80, 0 14px 24px -12px rgba(58, 19, 34, 0.45); border-radius: 6px; }
+.theme-card[data-theme="spellbook"] .theme-card-art, .world-card[data-theme="spellbook"] .world-card-art { padding: 8px 8px 0; }
+.theme-card[data-theme="spellbook"] .theme-card-name, .world-card[data-theme="spellbook"] .world-card-name { font-weight: 600; letter-spacing: 0.06em; color: #4a0f25; }
+
+/* habits: rune sigil checks, moon-phase history */
+[data-theme="spellbook"] .habit-row { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 4px; }
+[data-theme="spellbook"] .habit-row[data-state="done"] { border-color: #7a1f3d; box-shadow: inset 0 0 0 1px rgba(122, 31, 61, 0.25), 0 0 16px rgba(255, 215, 106, 0.35); }
+[data-theme="spellbook"] .check { border: 2px solid #7a1f3d; background: radial-gradient(circle, #fff6df 0 55%, #f0dcaa 100%); box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e; }
+[data-theme="spellbook"] .check[aria-pressed="true"] { background: radial-gradient(circle, #ffe9a8, #d9a83a); color: #4a0f25; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e, 0 0 20px rgba(255, 215, 106, 0.8); }
+[data-theme="spellbook"] .habit-name { font-family: var(--font-heading); font-weight: 600; letter-spacing: 0.04em; }
+[data-theme="spellbook"] .cell { border-radius: 50%; width: 1.35rem; height: 1.35rem; background: #2b0f22; border: 1.5px solid #c9962e; opacity: 0.35; }
+[data-theme="spellbook"] .cell[data-state="done"] { background: radial-gradient(circle at 35% 35%, #fff3c8, #e8b84a); opacity: 1; box-shadow: 0 0 8px rgba(255, 215, 106, 0.85); }
+[data-theme="spellbook"] .cell[data-state="skipped"] { background: linear-gradient(90deg, #f5e6b8 50%, #2b0f22 50%); opacity: 0.85; border: 1.5px solid #c9962e; }
+[data-theme="spellbook"] .cell[data-state="missed"] { background: #2b0f22; opacity: 0.9; border-color: #7a1f3d; }
+[data-theme="spellbook"] .cell[data-state="open"] { background: transparent; opacity: 1; border-color: #7a1f3d; }
+[data-theme="spellbook"] .habit-card { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80; margin: 4px; }
+[data-theme="spellbook"] .habit-card-name { font-weight: 600; letter-spacing: 0.04em; color: #4a0f25; }
+[data-theme="spellbook"] .segment[data-selected="true"], [data-theme="spellbook"] .chip[aria-pressed="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .stat-num { font-weight: 700; color: #7a1f3d; }
+[data-theme="spellbook"] .confirm { background: #fbf3de; border: 2px double #7a1f3d; }
+
+/* journal: scrolls, an illuminated page and a lunar calendar */
+[data-theme="spellbook"] .entry-card, [data-theme="spellbook"] .journal-side { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80; margin: 4px; }
+[data-theme="spellbook"] .entry-date { letter-spacing: 0.04em; color: #4a0f25; font-weight: 600; }
+[data-theme="spellbook"] .side-title { text-transform: uppercase; letter-spacing: 0.14em; color: #4a0f25; }
+[data-theme="spellbook"] .entry-mood { color: #7a1f3d; }
+[data-theme="spellbook"] .editor-text { border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f8eed8, 0 0 0 4px #c6ae80; margin: 4px 0; background: linear-gradient(180deg, #fbf3de, #f4e7c8); font-size: 1.25rem; line-height: 1.75; caret-color: #7a1f3d; }
+[data-theme="spellbook"] .editor-preview { border: 1px dashed #c6ae80; border-radius: 6px; background: #fbf3de; }
+[data-theme="spellbook"] .entry-body > p:first-child::first-letter { font-family: var(--font-heading); font-size: 3.1rem; float: left; line-height: 0.9; padding: 0.1rem 0.4rem 0 0; color: #7a1f3d; }
+[data-theme="spellbook"] .tool, [data-theme="spellbook"] .mood-option { border-radius: 6px; border-color: #c6ae80; background: #fbf3de; }
+[data-theme="spellbook"] .tool { font-family: var(--font-heading); }
+[data-theme="spellbook"] .mood-option[data-selected="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .segment[aria-pressed="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .save-state { font-style: italic; }
+[data-theme="spellbook"] .save-state.save-saved::before { content: "\2726"; margin-right: 0.4rem; color: #a7761a; }
+[data-theme="spellbook"] .cal-moon { text-align: center; }
+[data-theme="spellbook"] .cal-moon-head { display: flex; align-items: center; justify-content: space-between; }
+[data-theme="spellbook"] .cal-moon-head button { min-width: 2.75rem; min-height: 2.75rem; border: 1px solid #c6ae80; border-radius: 50%; background: #fbf3de; color: #4a0f25; font-size: 1.3rem; cursor: pointer; }
+[data-theme="spellbook"] .cal-moon-title { font-family: var(--font-heading); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.95rem; color: #4a0f25; }
+[data-theme="spellbook"] .cal-moon-rule { color: #7d5510; letter-spacing: 0.5em; font-size: 0.7rem; margin: 0.25rem 0 0.4rem; }
+[data-theme="spellbook"] .cal-moon-weekdays, [data-theme="spellbook"] .cal-moon-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+[data-theme="spellbook"] .cal-moon-weekdays { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+[data-theme="spellbook"] .cal-moon-day { position: relative; aspect-ratio: 1; min-height: 2.5rem; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: #3a1322; }
+[data-theme="spellbook"] .cal-moon-disc { position: absolute; inset: 12%; border-radius: 50%; border: 1.5px solid #c9962e; background: rgba(43, 15, 34, 0.1); }
+[data-theme="spellbook"] .cal-moon-num { position: relative; font-family: var(--font-heading); font-size: 0.9rem; font-variant-numeric: lining-nums; }
+[data-theme="spellbook"] .cal-moon-day[data-has="true"] .cal-moon-disc { background: radial-gradient(circle at 35% 32%, #fff0b3, #e7b940 60%, #b98a22); box-shadow: 0 0 8px rgba(201, 150, 46, 0.7); }
+[data-theme="spellbook"] .cal-moon-day[data-today="true"] .cal-moon-disc { border-color: #7a1f3d; border-width: 2.5px; }
+[data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-disc { background: #7a1f3d; border-color: #c9962e; }
+[data-theme="spellbook"] .cal-moon-day[aria-pressed="true"] .cal-moon-num { color: #fff3d6; }
+[data-theme="spellbook"] .cal-moon-day:disabled { opacity: 0.4; cursor: default; }
+[data-theme="spellbook"] .prompt-text { font-style: italic; font-weight: 500; }
+
+/* achievements: spells learned, and a rune circle that draws itself */
+[data-theme="spellbook"] .badge { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c6ae80; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c6ae80; margin: 4px; }
+[data-theme="spellbook"] .badge-emblem { width: 4.8rem; height: 4.8rem; border: 0; border-radius: 0; clip-path: polygon(50% 0, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%); background: radial-gradient(circle at 35% 30%, #f6d97a, #b98a22); color: #4a0f25; }
+[data-theme="spellbook"] .badge[data-unlocked="false"] .badge-emblem { background: repeating-linear-gradient(45deg, #d8c9a4 0 5px, #e6d9b8 5px 10px); color: #6a5641; }
+[data-theme="spellbook"] .badge-name { letter-spacing: 0.05em; color: #4a0f25; font-size: 1.15rem; }
+[data-theme="spellbook"] .badge-status { color: #6b1a36; }
+[data-theme="spellbook"] .bar { background: #e2d2a8; border: 1px solid #c6ae80; }
+[data-theme="spellbook"] .bar > span { background: linear-gradient(90deg, #b98a22, #f0c65a); }
+[data-theme="spellbook"] .unlock-spell { background: radial-gradient(circle at 50% 40%, rgba(122, 31, 61, 0.55), rgba(20, 6, 16, 0.94) 72%); }
+[data-theme="spellbook"] .unlock-spell .unlock-card { background: linear-gradient(180deg, #fbf3de, #f0e0bb); border: 1px solid #c6ae80; box-shadow: 0 0 0 4px #f4e7c8, 0 0 0 5px #c6ae80, 0 20px 60px rgba(0, 0, 0, 0.5); }
+[data-theme="spellbook"] .unlock-spell h2 { color: #4a0f25; letter-spacing: 0.06em; }
+[data-theme="spellbook"] .unlock-kicker { color: #7d5510; }
+[data-theme="spellbook"] .unlock-circle { position: relative; display: inline-grid; place-items: center; width: 9rem; height: 9rem; margin: 0.4rem 0; }
+[data-theme="spellbook"] .unlock-circle svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #b98a22; stroke-width: 1.2; stroke-dasharray: 340; stroke-dashoffset: 340; animation: sp-draw 1.6s ease-out forwards, sp-turn 30s linear 1.6s infinite; }
+@keyframes sp-draw { to { stroke-dashoffset: 0; } }
+@keyframes sp-turn { to { transform: rotate(360deg); } }
+[data-theme="spellbook"] .unlock-glyph { position: relative; display: grid; place-items: center; width: 4.6rem; height: 4.6rem; border-radius: 50%; color: #4a0f25; background: radial-gradient(circle at 35% 30%, #fff0b3, #e7b940); box-shadow: 0 0 26px rgba(231, 185, 64, 0.8); animation: sp-pop 0.7s 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.5) both; }
+@keyframes sp-pop { from { transform: scale(0); opacity: 0; } to { transform: none; opacity: 1; } }
+[data-theme="spellbook"] .unlock-sparks i { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; background: #e7b940; border-radius: 50%; opacity: 0; animation: sp-spark 2.2s ease-out 1.1s infinite; }
+[data-theme="spellbook"] .unlock-sparks i:nth-child(1) { --dx: -60px; --dy: -70px; }
+[data-theme="spellbook"] .unlock-sparks i:nth-child(2) { --dx: 66px; --dy: -50px; animation-delay: 1.4s; }
+[data-theme="spellbook"] .unlock-sparks i:nth-child(3) { --dx: -20px; --dy: -90px; animation-delay: 1.7s; }
+[data-theme="spellbook"] .unlock-sparks i:nth-child(4) { --dx: 40px; --dy: -84px; animation-delay: 2s; }
+[data-theme="spellbook"] .unlock-sparks i:nth-child(5) { --dx: 0; --dy: -100px; animation-delay: 1.2s; }
+@keyframes sp-spark { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+
+/* sharing */
+[data-theme="spellbook"] .break-scrim, [data-theme="spellbook"] .share-scrim { background: radial-gradient(circle at 50% 40%, rgba(122, 31, 61, 0.5), rgba(20, 6, 16, 0.94) 72%); }
+[data-theme="spellbook"] .break-card, [data-theme="spellbook"] .share-card { background: linear-gradient(180deg, #fbf3de, #f0e0bb); border: 1px solid #c6ae80; box-shadow: 0 0 0 4px #f4e7c8, 0 0 0 5px #c6ae80, 0 20px 60px rgba(0, 0, 0, 0.5); }
+[data-theme="spellbook"] .break-card h2 { font-family: var(--font-body); font-style: italic; font-weight: 500; font-size: 1.4rem; text-transform: none; letter-spacing: 0; color: #4a0f25; }
+[data-theme="spellbook"] .break-card .unlock-kicker { color: #7d5510; }
+[data-theme="spellbook"] .title-text { color: #4a0f25; letter-spacing: 0.04em; font-size: 1.3rem; }
+
+/* check-in moment: gold sparks fly off the sigil */
+[data-theme="spellbook"] .check-burst { border-color: #f6d97a; box-shadow: 0 0 22px rgba(255, 215, 106, 0.9); }
+[data-theme="spellbook"] .check-burst::before, [data-theme="spellbook"] .check-burst::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #f6d97a; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; }
+[data-theme="spellbook"] .habit-row[data-celebrate="true"] .check-burst::before { --dx: -30px; --dy: -34px; animation: sp-spark 0.8s ease-out forwards; }
+[data-theme="spellbook"] .habit-row[data-celebrate="true"] .check-burst::after { --dx: 32px; --dy: -26px; animation: sp-spark 0.8s ease-out 0.08s forwards; }
+[data-theme="spellbook"] .habit-count { font-family: var(--font-heading); border-color: #c9962e; color: #7a1f3d; background: #fbf3de; }
+[data-theme="spellbook"] .habit-count[data-complete="true"] { background: #7a1f3d; border-color: #c9962e; color: #fff3d6; }
+[data-theme="spellbook"] .habit-progress { background: #e6d5ad; }
+[data-theme="spellbook"] .habit-progress > span { background: linear-gradient(90deg, #c9962e, #f6d97a); }
+[data-theme="spellbook"] .week-strip .cell { width: 0.85rem; height: 0.85rem; }
+
+/* achievements: the spell within your grasp */
+[data-theme="spellbook"] .badge-next { background: linear-gradient(180deg, #fbf3de, #f4e7c8); border: 1px solid #c9962e; border-radius: 6px; box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #c9962e, 0 0 26px rgba(255, 215, 106, 0.35); margin: 4px 4px 1.4rem; }
+[data-theme="spellbook"] .badge-next-kicker { font-family: var(--font-heading); letter-spacing: 0.16em; color: #8a5a20; }
+[data-theme="spellbook"] .badge-next .badge-togo { color: #7a1f3d; }
+[data-theme="spellbook"] .badge[data-next="true"] { box-shadow: 0 0 0 3px #f4e7c8, 0 0 0 4px #7a1f3d; }
+
+/* journal: this week on a phone, seven small runes */
+[data-theme="spellbook"] .journal-week-day { border-radius: 6px; border-color: #c6ae80; background: linear-gradient(180deg, #fbf3de, #f4e7c8); }
+[data-theme="spellbook"] .journal-week-day[data-has="true"] .journal-week-dot { box-shadow: 0 0 6px rgba(255, 215, 106, 0.8); }
+[data-theme="spellbook"] .journal-week-day[aria-pressed="true"] { background: #7a1f3d; color: #fff3d6; border-color: #c9962e; }
+
+/* editor: a small wax seal in the corner of the scroll */
+[data-theme="spellbook"] .editor-surface::after { content: ""; position: absolute; right: 0.6rem; bottom: 0.6rem; width: 26px; height: 26px; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #b8304f, #6b1a36 70%); box-shadow: 0 2px 4px rgba(58, 19, 34, 0.35), inset 0 0 0 5px rgba(255, 215, 106, 0.25); opacity: 0.85; }
+[data-theme="spellbook"] .tool { border-color: #c6ae80; background: #fbf3de; border-radius: 6px; }
+[data-theme="spellbook"] .tool-label { font-family: var(--font-heading); color: #8a5a20; }

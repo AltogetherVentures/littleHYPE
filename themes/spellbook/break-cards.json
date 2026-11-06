@@ -1,0 +1,10 @@
+{
+  "name": "Spell Backfired",
+  "variants": [
+    "Your {category} ritual fizzled after {length} days. Eyebrows mostly intact.",
+    "The {category} enchantment held for {length} days, then hiccupped. Even archmages sneeze mid-incantation.",
+    "After {length} days, your {category} spell ended in a small puff of purple smoke. Very dignified, all things considered.",
+    "Professor's note: {length} days of {category} is proper magic. Cauldrons boil over; it is what they are for."
+  ],
+  "restart": "Chalk a fresh circle and cast again."
+}

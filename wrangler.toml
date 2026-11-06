@@ -1,0 +1,125 @@
+name = "littlehype"
+main = "src/index.ts"
+compatibility_date = "2026-07-14"
+compatibility_flags = ["nodejs_compat"]
+
+# ---------------------------------------------------------------------------
+# No top-level [vars]/[[hyperdrive]] block: every deploy targets `--env staging`
+# or `--env production`. Values marked REPLACE_WITH_* must be filled in from the
+# steps in docs/setup.md before the first deploy; scripts/check-deploy-config.sh
+# refuses to deploy while any remain.
+#
+# The Cloudflare account is taken from the CLOUDFLARE_ACCOUNT_ID environment
+# variable (or `wrangler login`), so it is not hard-coded here.
+# ---------------------------------------------------------------------------
+
+# ----------------------------------------------------------------- staging --
+[env.staging]
+name = "littlehype-staging"
+# Explicit, so wrangler does not guess: the workers.dev address is on, and
+# per-version preview URLs (extra public hostnames onto the same database) are off.
+workers_dev = true
+preview_urls = false
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+# Publishable keys are not secrets. Clerk *development* instance (pk_test_...).
+CLERK_PUBLISHABLE_KEY = "pk_test_cGxlYXNlZC1wYXJha2VldC0yNDU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+# The origin browsers load the app from, e.g. https://littlehype-staging.<your-subdomain>.workers.dev
+PUBLIC_BASE_URL = "https://littlehype-staging.alan-eoin-oneill.workers.dev"
+# Stripe: the one-time lifetime price (not secret). The secret key and webhook signing
+# secret are Worker secrets (docs/setup.md Part 9).
+STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
+# Clerk's JWT *public* key (PEM), used to verify session tokens without calling
+# Clerk. It is a public key, so it is safe to commit; the production instance has
+# a different one.
+CLERK_JWT_KEY = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IM+0+vG+vNGKwmydiJz
+vYbyGlxmlKHu9mvlIuzh+78G107R5lXq7wqI3S16o68l/NToUJlte9vAPqjVJGRW
+WhEG9ljd7zuTrHNZDT0Z/nitUEQe+S6YAbx+e+lNHT9WbsKWCa+c5ANsXj2BkgYQ
+j0fBGj2u8NhlhOM95zHq2h7yWfyCcfK7vLJcN7/V1chV97Sq41I0rB6DbDGHkVnn
+Yb/NPSyzSqcql6NAZQAbSGwlCZgDNFYZ50cdbpBRXkUJZli1OBPHZWPDput9jIl4
+zbcE1Lw9SH1/XSMlalaYSIE8FHYIFe9MppEwRRyxKGmmpNU3yHLTaa6PUcLoW4ZO
+SwIDAQAB
+-----END PUBLIC KEY-----
+'''
+# The one real secret - never put it here. Set with:
+#   wrangler secret put CLERK_SECRET_KEY --env staging
+
+# Reminder emails: the scheduled handler runs every 15 minutes and does nothing (and says
+# so in the logs) until RESEND_API_KEY, RESEND_FROM and EMAIL_TOKEN_SECRET are set:
+#   wrangler secret put RESEND_API_KEY --env staging   (and the other two)
+[env.staging.triggers]
+crons = ["*/15 * * * *"]
+
+[[env.staging.hyperdrive]]
+binding = "HYPERDRIVE"
+# Points at the *staging* Supabase project, connecting directly (port 5432) as
+# app_user rather than through Supabase's pooler: Hyperdrive does its own edge
+# pooling. Nothing in git records which database this id targets, so verify with
+#   wrangler hyperdrive get <id>
+id = "573831598ea444a18c0f2a2540bb950f"
+# Lets `wrangler dev` use a local Postgres instead of Hyperdrive (docs/setup.md).
+# Set WRANGLER_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE in .dev.vars.
+
+# The SPA is built into web/dist and served as static assets. The Worker runs
+# first for every path except the build's own /assets/*, because page
+# navigations need the theme redirect and the data-theme attribute before first
+# paint (see src/routes/pages.ts). Unknown paths fall back to index.html.
+[env.staging.assets]
+directory = "./web/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/*", "!/assets/*", "!/favicon.svg"]
+
+# -------------------------------------------------------------- production --
+[env.production]
+name = "littlehype-production"
+# Explicit, so wrangler does not guess: the workers.dev address is on, and
+# per-version preview URLs (extra public hostnames onto the same database) are off.
+workers_dev = true
+preview_urls = false
+
+[env.production.vars]
+ENVIRONMENT = "production"
+# Clerk *production* instance (pk_live_...): separate keys, users and JWT key from staging.
+CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsubGl0dGxlaHlwZS5jb20k"
+PUBLIC_BASE_URL = "https://littlehype.com"
+# Stripe live price (lifetime); the secret key and webhook secret are Worker secrets.
+STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
+CLERK_JWT_KEY = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqSPYDIYvCOiDgzWu3peR
+pJJV1VNYNXXT+/PdvnbK3bUFQhhfgEJFdhNSlH+XWf+Tfyb6ymqfpVgPhpQiRG3g
+EuCp8BZxFZzipqYBbmXmfzz/jaNCcV9KWjRqGF0bKBQg5qz5jvhe79+t/UlcmHa0
+6Ua9XmKIYRV/HV04XVHRpkPv3XjZwCi9dgMja7VbF02GaQE9ZyGeiPL6oT/TkkR7
+jS71v4+mXXEwiJyVF3npxQ05rwzkQ1R/bHrA7pAwBb9G9kWW2C6LJph2Kn53mPx4
+GLz+r5kjVQGR/c8I2hLa2hd9ow7qpov0t+uvrewGsi7EidSLrekWzMrKpjeMDj7R
+YQIDAQAB
+-----END PUBLIC KEY-----
+'''
+#   wrangler secret put CLERK_SECRET_KEY --env production
+
+[env.production.triggers]
+crons = ["*/15 * * * *"]
+
+[[env.production.hyperdrive]]
+binding = "HYPERDRIVE"
+# The *production* Supabase project. Must not be the staging id.
+id = "509d97b0299643d399853f743d763596"
+
+# The whole site (marketing pages and app) lives at the apex. Cloudflare creates
+# the DNS record on deploy; any old record for littlehype.com must be removed first.
+[[env.production.routes]]
+pattern = "littlehype.com"
+custom_domain = true
+[[env.production.routes]]
+pattern = "www.littlehype.com"
+custom_domain = true
+
+[env.production.assets]
+directory = "./web/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/*", "!/assets/*", "!/favicon.svg"]
