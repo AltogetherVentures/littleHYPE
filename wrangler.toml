@@ -88,7 +88,17 @@ CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsubGl0dGxlaHlwZS5jb20k"
 PUBLIC_BASE_URL = "https://littlehype.com"
 # Stripe live price (lifetime); the secret key and webhook secret are Worker secrets.
 STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
-CLERK_JWT_KEY = "REPLACE_WITH_PRODUCTION_CLERK_JWT_PUBLIC_KEY"
+CLERK_JWT_KEY = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqSPYDIYvCOiDgzWu3peR
+pJJV1VNYNXXT+/PdvnbK3bUFQhhfgEJFdhNSlH+XWf+Tfyb6ymqfpVgPhpQiRG3g
+EuCp8BZxFZzipqYBbmXmfzz/jaNCcV9KWjRqGF0bKBQg5qz5jvhe79+t/UlcmHa0
+6Ua9XmKIYRV/HV04XVHRpkPv3XjZwCi9dgMja7VbF02GaQE9ZyGeiPL6oT/TkkR7
+jS71v4+mXXEwiJyVF3npxQ05rwzkQ1R/bHrA7pAwBb9G9kWW2C6LJph2Kn53mPx4
+GLz+r5kjVQGR/c8I2hLa2hd9ow7qpov0t+uvrewGsi7EidSLrekWzMrKpjeMDj7R
+YQIDAQAB
+-----END PUBLIC KEY-----
+'''
 #   wrangler secret put CLERK_SECRET_KEY --env production
 
 [env.production.triggers]
