@@ -107,7 +107,7 @@ crons = ["*/15 * * * *"]
 [[env.production.hyperdrive]]
 binding = "HYPERDRIVE"
 # The *production* Supabase project. Must not be the staging id.
-id = "REPLACE_WITH_PRODUCTION_HYPERDRIVE_ID"
+id = "509d97b0299643d399853f743d763596"
 
 # The whole site (marketing pages and app) lives at the apex. Cloudflare creates
 # the DNS record on deploy; any old record for littlehype.com must be removed first.
