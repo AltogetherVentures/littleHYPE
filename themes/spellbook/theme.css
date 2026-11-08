@@ -170,3 +170,13 @@
 [data-theme="spellbook"] .editor-surface::after { content: ""; position: absolute; right: 0.6rem; bottom: 0.6rem; width: 26px; height: 26px; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #b8304f, #6b1a36 70%); box-shadow: 0 2px 4px rgba(58, 19, 34, 0.35), inset 0 0 0 5px rgba(255, 215, 106, 0.25); opacity: 0.85; }
 [data-theme="spellbook"] .tool { border-color: #c6ae80; background: #fbf3de; border-radius: 6px; }
 [data-theme="spellbook"] .tool-label { font-family: var(--font-heading); color: #8a5a20; }
+
+/* The home page's bands (.world-band carries data-theme): the same sky, paper or concrete as
+   the app's page, but painted on one section instead of the whole viewport. */
+[data-theme="spellbook"].world-band {
+  background:
+    radial-gradient(1000px 640px at 50% 0%, #f8edd2, transparent 70%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(122, 31, 61, 0.16) 100%),
+    var(--color-bg);
+}
+[data-theme="spellbook"].world-band::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.27 0 0 0 0 0.08 0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E"); mix-blend-mode: multiply; opacity: 0.55; }
