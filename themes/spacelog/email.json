@@ -1,0 +1,9 @@
+{
+  "subject": "Incoming transmission from mission control",
+  "preheader": "Your log is waiting. A few quiet minutes will keep the mission on course.",
+  "heading": "Incoming transmission",
+  "body": "Mission control has not received today's log. Complete your objectives and record an entry when ready.",
+  "cta": "Open the log",
+  "footer": "You are receiving this because transmissions are switched on for your mission.",
+  "unsubscribe": "Stop transmissions"
+}

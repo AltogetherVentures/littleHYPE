@@ -1,0 +1,10 @@
+{
+  "name": "Cause of Death",
+  "variants": [
+    "Here lies the {category} streak. Survived {length} days. Taken by the horde on a rainy Tuesday.",
+    "Cause of death: a very comfortable sofa. The {category} streak lasted {length} days.",
+    "The {category} streak made it {length} days. Official cause of death: \"just five more minutes\".",
+    "{length} days of {category}, then the snooze button struck. Tragic, and frankly understandable."
+  ],
+  "restart": "Dust yourself off. Day one starts now."
+}

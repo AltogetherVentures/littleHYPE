@@ -1,0 +1,34 @@
+{
+  "hydration": {
+    "name": "Purify the water",
+    "description": "A glass of water with each meal. Still the best supply in the bunker."
+  },
+  "exercise": {
+    "name": "Outrun something",
+    "description": "Twenty minutes of movement. Pursuit optional."
+  },
+  "sleep": {
+    "name": "Bunker bedtime",
+    "description": "Head to bed at a set time. Sleep is the one supply that recharges itself."
+  },
+  "reading": {
+    "name": "Scavenge a few pages",
+    "description": "Read for fifteen minutes. The last library will not read itself."
+  },
+  "mindfulness": {
+    "name": "Five minutes of quiet",
+    "description": "Sit still, breathe slowly, ignore the distant noises."
+  },
+  "screentime": {
+    "name": "Conserve the battery",
+    "description": "Put the phone down half an hour before bed. Nothing new out there anyway."
+  },
+  "diet": {
+    "name": "Eat something green",
+    "description": "One portion of vegetables. Fresh beats tinned, and the peaches agree."
+  },
+  "other": {
+    "name": "Daily radio check",
+    "description": "Check in once a day to confirm you are still here."
+  }
+}

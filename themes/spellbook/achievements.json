@@ -1,0 +1,72 @@
+{
+  "first_entry": {
+    "name": "First Scroll",
+    "description": "Save your first scroll.",
+    "unlock": "Your first scroll is sealed. Every archmage began with one."
+  },
+  "first_checkin": {
+    "name": "First Casting",
+    "description": "Cast a ritual for the first time.",
+    "unlock": "A first casting! The air still crackles, apprentice."
+  },
+  "streak_3": {
+    "name": "Threefold Charm",
+    "description": "Hold an enchantment on any ritual for 3 days.",
+    "unlock": "Three days of casting. The enchantment takes hold."
+  },
+  "streak_7": {
+    "name": "Sevenfold Seal",
+    "description": "Hold an enchantment on any ritual for 7 days.",
+    "unlock": "A full week of casting. The seal holds, apprentice."
+  },
+  "streak_14": {
+    "name": "Fortnight Ward",
+    "description": "Hold an enchantment on any ritual for 14 days.",
+    "unlock": "Two weeks unbroken. Your ward could turn away a stiff breeze."
+  },
+  "streak_30": {
+    "name": "Moonlit Adept",
+    "description": "Hold an enchantment on any ritual for 30 days.",
+    "unlock": "A full moon's worth of practice. The professors are talking about you."
+  },
+  "streak_60": {
+    "name": "Runemaster",
+    "description": "Hold an enchantment on any ritual for 60 days.",
+    "unlock": "Sixty days of enchantment. Even the old tomes are impressed."
+  },
+  "streak_100": {
+    "name": "Grand Enchanter",
+    "description": "Hold an enchantment on any ritual for 100 days.",
+    "unlock": "One hundred days. Your enchantment could outlast the tower itself."
+  },
+  "entries_7": {
+    "name": "Scroll Scribe",
+    "description": "Write a scroll on 7 different days.",
+    "unlock": "Seven scrolls filed. The archive welcomes you."
+  },
+  "entries_30": {
+    "name": "Keeper of Scrolls",
+    "description": "Write a scroll on 30 different days.",
+    "unlock": "Thirty scrolls on the shelf. The library makes room for you."
+  },
+  "entries_100": {
+    "name": "Grand Archivist",
+    "description": "Write a scroll on 100 different days.",
+    "unlock": "A hundred scrolls. They will name a reading room after you."
+  },
+  "prompts_10": {
+    "name": "Riddle Solver",
+    "description": "Answer 10 riddles.",
+    "unlock": "Ten riddles answered. Sharp thinking, apprentice."
+  },
+  "prompts_50": {
+    "name": "Riddle Sage",
+    "description": "Answer 50 riddles.",
+    "unlock": "Fifty riddles answered. Few in the academy can say the same."
+  },
+  "habits_3": {
+    "name": "Triple Enchanter",
+    "description": "Hold a 7-day enchantment on three rituals at once.",
+    "unlock": "Three enchantments woven at once. Most elegant weaving."
+  }
+}

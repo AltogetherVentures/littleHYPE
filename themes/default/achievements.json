@@ -1,0 +1,72 @@
+{
+  "first_entry": {
+    "name": "First Entry",
+    "description": "Save your first journal entry.",
+    "unlock": "Your first entry is saved. Well done."
+  },
+  "first_checkin": {
+    "name": "First Check-in",
+    "description": "Check in on a habit for the first time.",
+    "unlock": "First check-in done. A good start."
+  },
+  "streak_3": {
+    "name": "3-Day Streak",
+    "description": "Keep a habit going for 3 days in a row.",
+    "unlock": "Three days in a row. Keep it going."
+  },
+  "streak_7": {
+    "name": "7-Day Streak",
+    "description": "Keep a habit going for 7 days in a row.",
+    "unlock": "A full week in a row. Nicely done."
+  },
+  "streak_14": {
+    "name": "14-Day Streak",
+    "description": "Keep a habit going for 14 days in a row.",
+    "unlock": "Two weeks in a row. That is real consistency."
+  },
+  "streak_30": {
+    "name": "30-Day Streak",
+    "description": "Keep a habit going for 30 days in a row.",
+    "unlock": "Thirty days in a row. This habit is well established."
+  },
+  "streak_60": {
+    "name": "60-Day Streak",
+    "description": "Keep a habit going for 60 days in a row.",
+    "unlock": "Sixty days in a row. Impressive commitment."
+  },
+  "streak_100": {
+    "name": "100-Day Streak",
+    "description": "Keep a habit going for 100 days in a row.",
+    "unlock": "One hundred days in a row. Outstanding."
+  },
+  "entries_7": {
+    "name": "7 Days Written",
+    "description": "Write a journal entry on 7 different days.",
+    "unlock": "Entries on seven different days. A routine is forming."
+  },
+  "entries_30": {
+    "name": "30 Days Written",
+    "description": "Write a journal entry on 30 different days.",
+    "unlock": "Entries on thirty different days. Journaling is now a habit."
+  },
+  "entries_100": {
+    "name": "100 Days Written",
+    "description": "Write a journal entry on 100 different days.",
+    "unlock": "Entries on one hundred different days. A remarkable record."
+  },
+  "prompts_10": {
+    "name": "10 Prompts Answered",
+    "description": "Answer 10 journal prompts.",
+    "unlock": "Ten prompts answered. Good thinking."
+  },
+  "prompts_50": {
+    "name": "50 Prompts Answered",
+    "description": "Answer 50 journal prompts.",
+    "unlock": "Fifty prompts answered. That is a lot of reflection."
+  },
+  "habits_3": {
+    "name": "Three at Once",
+    "description": "Hold a 7-day streak on three habits at the same time.",
+    "unlock": "Three habits on a 7-day streak at once. Excellent balance."
+  }
+}
