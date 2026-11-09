@@ -1,4 +1,4 @@
-import { useClerk } from "@clerk/clerk-react";
+import { useAuth } from "../lib/auth";
 import type { ReactNode } from "react";
 import type { Me } from "../lib/me";
 import { headerFor } from "../lib/overrides";
@@ -23,7 +23,7 @@ const NAV: { to: string; label: StringKey; icon: keyof typeof icons }[] = [
  */
 export function AppShell({ theme, me, children }: { theme: string; me: Me; children: ReactNode }) {
   const t = useT();
-  const { signOut } = useClerk();
+  const { signOut } = useAuth();
   const Header = headerFor(theme);
 
   const items: NavItem[] = NAV.map(({ to, label, icon }) => ({
@@ -38,7 +38,7 @@ export function AppShell({ theme, me, children }: { theme: string; me: Me; child
       <Header
         items={items}
         t={headerT}
-        onSignOut={() => void signOut({ redirectUrl: "/" })}
+        onSignOut={() => void signOut()}
         createdAt={me.createdAt}
         timezone={me.timezone}
       />

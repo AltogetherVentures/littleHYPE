@@ -9,7 +9,7 @@ import { translate } from "../lib/strings";
 import { CheckoutSuccess } from "./CheckoutSuccess";
 import { Paywall } from "./Paywall";
 
-vi.mock("@clerk/clerk-react", () => ({ useAuth: () => ({ isLoaded: true, isSignedIn: true }), useClerk: () => ({}) }));
+vi.mock("../lib/auth", () => ({ useAuth: () => ({ isLoaded: true, isSignedIn: true }) }));
 
 let me: Me;
 let checkoutError: ApiError | null;

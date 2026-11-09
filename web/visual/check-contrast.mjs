@@ -38,6 +38,8 @@ const scenes = [
   ["paywall", "scene=paywall&theme=x"],
   ["privacy", "scene=privacy&signedout=1&theme=x"],
   ["landing", "scene=landing&signedout=1&theme=x"],
+  ["signin", "scene=signin&signedout=1&theme=x"],
+  ["signup", "scene=signup&signedout=1&theme=x"],
 ];
 
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH, args: ["--no-sandbox"] } : {});

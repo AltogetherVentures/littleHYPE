@@ -1,5 +1,5 @@
 import type { Env } from "../index";
-import { verifyClerkRequest, type AuthClaims } from "./clerk";
+import { verifyRequest, type AuthClaims } from "./supabase";
 
 export class AuthError extends Error {
   constructor(
@@ -12,7 +12,7 @@ export class AuthError extends Error {
 
 /** Requires a signed-in user, or throws a 401 AuthError. */
 export async function requireAuth(env: Env, request: Request): Promise<AuthClaims> {
-  const claims = await verifyClerkRequest(env, request);
+  const claims = await verifyRequest(env, request);
   if (!claims) throw new AuthError(401, "unauthenticated");
   return claims;
 }

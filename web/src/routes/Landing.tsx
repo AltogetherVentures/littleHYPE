@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "../lib/auth";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import type { AchievementKey } from "@shared/achievement-defs";

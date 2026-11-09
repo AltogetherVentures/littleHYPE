@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "../lib/auth";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useMe, type Me } from "../lib/me";

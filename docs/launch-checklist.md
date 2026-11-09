@@ -5,7 +5,7 @@ Everything in the PRD MVP is built and tested. These are the steps that need an 
 ## Accounts and keys
 - [ ] **Stripe**: account, $49 one-time price, webhook endpoint, secret key, signing secret, Stripe Tax (Setup Part 9). Then a $5 coupon and promotion code for referrals (Part 11).
 - [ ] **Resend**: verified sending domain and API key (Part 10).
-- [ ] **Clerk production instance**: production keys, your domain's DNS records, session-token claim `{ "metadata": "{{user.public_metadata}}" }`, admin metadata on your user, and Clerk's own "delete account" switched **off** (Part 12).
+- [ ] **Production sign-in** (Supabase Auth on the production project): Confirm email on, Google provider with your own OAuth client, Site URL and redirect URLs, asymmetric JWT signing keys, custom SMTP through Resend, and the admin role on your user (Setup Part 3).
 - [ ] **Production Supabase** (US region, its own `app_user` password), **production Hyperdrive** (a different id from staging), production Worker secrets (Part 8).
 
 ## Decisions

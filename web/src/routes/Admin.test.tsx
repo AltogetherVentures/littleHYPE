@@ -8,7 +8,7 @@ import type { Me } from "../lib/me";
 import { translate } from "../lib/strings";
 import { AdminPage } from "./AdminPage";
 
-vi.mock("@clerk/clerk-react", () => ({ useAuth: () => ({ isLoaded: true, isSignedIn: true }) }));
+vi.mock("../lib/auth", () => ({ useAuth: () => ({ isLoaded: true, isSignedIn: true }) }));
 
 let me: Me;
 let purchase: { status: string; amount: number; currency: string; paidAt: string; paymentIntent: string | null; refundEligible: boolean } | null;

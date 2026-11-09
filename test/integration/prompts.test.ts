@@ -3,10 +3,10 @@ import worker, { type Env } from "../../src/index";
 import { PROMPT_KEYS } from "../../shared/prompt-keys";
 import { deleteUsers, requireEnv, seedUser, superUser } from "./helpers";
 
-vi.mock("../../src/auth/clerk", () => ({
-  verifyClerkRequest: vi.fn(async (_env: unknown, request: Request) => {
+vi.mock("../../src/auth/supabase", () => ({
+  verifyRequest: vi.fn(async (_env: unknown, request: Request) => {
     const userId = request.headers.get("x-test-user");
-    return userId ? { userId, isAdmin: false } : null;
+    return userId ? { userId, isAdmin: false, email: null } : null;
   }),
 }));
 
@@ -14,9 +14,9 @@ const env = (): Env => ({
   ENVIRONMENT: "test",
   HYPERDRIVE: { connectionString: requireEnv("PG_APP_URL") } as Hyperdrive,
   ASSETS: { fetch: async () => new Response("asset") } as unknown as Fetcher,
-  CLERK_PUBLISHABLE_KEY: "pk_test_abc",
-  CLERK_SECRET_KEY: "sk_test_abc",
-  CLERK_JWT_KEY: "unused",
+  SUPABASE_URL: "https://test.supabase.co",
+  SUPABASE_ANON_KEY: "anon_test",
+  SUPABASE_SERVICE_ROLE_KEY: "service_test",
   PUBLIC_BASE_URL: "http://localhost",
 });
 

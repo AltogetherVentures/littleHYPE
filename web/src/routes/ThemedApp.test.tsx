@@ -9,7 +9,7 @@ import { translate } from "../lib/strings";
 import type { Me } from "../lib/me";
 import { ThemedApp } from "./ThemedApp";
 
-vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({}) }));
+vi.mock("../lib/auth", () => ({ useAuth: () => ({ signOut: vi.fn() }) }));
 
 // A tiny in-memory API: one daily habit that can be checked in, undone and refused.
 let habit = { id: "h1", name: "Drink water", description: null, category: "hydration", archivedAt: null, createdAt: "2026-09-01T00:00:00Z", schedule: { type: "daily" }, pendingSchedule: null, streak: { current: 2, longest: 5, unit: "days", currentDays: 2, longestDays: 5 }, today: { due: true, logged: null as string | null, week: null }, week: [{ date: "2026-09-28", state: "done" }, { date: "2026-09-29", state: "done" }, { date: "2026-09-30", state: "open" }, { date: "2026-10-01", state: "future" }, { date: "2026-10-02", state: "future" }, { date: "2026-10-03", state: "future" }, { date: "2026-10-04", state: "future" }] };

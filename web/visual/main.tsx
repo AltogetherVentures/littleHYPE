@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemePicker } from "../src/components/ThemePicker";
 import type { Me } from "../src/lib/me";
+import { AuthPage } from "../src/routes/AuthPage";
 import { Landing } from "../src/routes/Landing";
 import { Legal } from "../src/routes/Legal";
 import { Paywall } from "../src/routes/Paywall";
@@ -19,7 +20,7 @@ installMockApi();
 
 /**
  * Design gallery: the real screens with sample data.
- *   ?scene=today|journal|picker|showcase|landing|paywall   &theme=<slug>   &empty=1 (journal with no entries)   &admin=1 (admin-only panels)
+ *   ?scene=today|journal|picker|showcase|landing|signin|signup|paywall   &theme=<slug>   &empty=1 (journal with no entries)   &admin=1 (admin-only panels)
  * Not shipped: it exists so every theme can be reviewed without signing in.
  */
 const params = new URLSearchParams(window.location.search);
@@ -53,6 +54,10 @@ function Scene() {
       return <Showcase slug={theme} />;
     case "landing":
       return <Landing />;
+    case "signin":
+      return <AuthPage mode="sign-in" />;
+    case "signup":
+      return <AuthPage mode="sign-up" />;
     case "share":
       return (
         <ThemeProvider theme={theme}>

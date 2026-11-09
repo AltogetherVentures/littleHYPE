@@ -1,5 +1,5 @@
 import type { Env } from "../index";
-import { getClerkEmail } from "../auth/clerk-admin";
+import { getAuthUserEmail } from "../auth/supabase-admin";
 import { getDb } from "../db/client";
 import { withSystem } from "../db/user";
 import { emailConfig, sendViaResend } from "./resend";
@@ -37,7 +37,7 @@ export async function runReminders(env: Env, now: Date = new Date()): Promise<Re
       if (!claimed) continue;
       const release = () => withSystem(sql, (tx) => tx`select release_reminder(${person.user_id}, ${person.local_day}::date)`);
 
-      const address = await getClerkEmail(env, person.user_id);
+      const address = await getAuthUserEmail(env, person.user_id);
       const token = await signUnsubscribe(config.tokenSecret, person.user_id);
       const query = `u=${encodeURIComponent(person.user_id)}&t=${token}`;
       const email = renderReminder({ theme: person.theme, openUrl: `${env.PUBLIC_BASE_URL}/${person.theme}/today`, unsubscribeUrl: `${env.PUBLIC_BASE_URL}/unsubscribe?${query}` });

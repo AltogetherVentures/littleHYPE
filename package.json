@@ -22,7 +22,7 @@
     "test:integration": "vitest run test/integration --no-file-parallelism"
   },
   "dependencies": {
-    "@clerk/backend": "^2.33.6",
+    "jose": "^6.2.16",
     "postgres": "^3.4.9"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "./auth";
 import { useCallback } from "react";
 
 export class ApiError extends Error {
@@ -12,7 +12,7 @@ export class ApiError extends Error {
 
 export type ApiFn = <T>(path: string, init?: { method?: string; body?: unknown }) => Promise<T>;
 
-/** fetch wrapper that attaches the Clerk session token and throws ApiError on non-2xx. */
+/** fetch wrapper that attaches the session token and throws ApiError on non-2xx. */
 export function useApi(): ApiFn {
   const { getToken } = useAuth();
   return useCallback<ApiFn>(

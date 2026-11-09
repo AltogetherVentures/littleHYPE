@@ -23,29 +23,17 @@ preview_urls = false
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
-# Publishable keys are not secrets. Clerk *development* instance (pk_test_...).
-CLERK_PUBLISHABLE_KEY = "pk_test_cGxlYXNlZC1wYXJha2VldC0yNDU0LmNsZXJrLmFjY291bnRzLmRldiQ"
+# The staging Supabase project: the Worker verifies sign-in tokens against its JWKS, and the
+# browser talks to it to sign in. Neither value is a secret.
+SUPABASE_URL = "https://dufbnvtyniskptjnlkpx.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_TcnQsT4DoF09D8P_bgO5sg_rv4RUFAC"
 # The origin browsers load the app from, e.g. https://littlehype-staging.<your-subdomain>.workers.dev
 PUBLIC_BASE_URL = "https://littlehype-staging.alan-eoin-oneill.workers.dev"
 # Stripe: the one-time lifetime price (not secret). The secret key and webhook signing
 # secret are Worker secrets (docs/setup.md Part 9).
 STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
-# Clerk's JWT *public* key (PEM), used to verify session tokens without calling
-# Clerk. It is a public key, so it is safe to commit; the production instance has
-# a different one.
-CLERK_JWT_KEY = '''
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IM+0+vG+vNGKwmydiJz
-vYbyGlxmlKHu9mvlIuzh+78G107R5lXq7wqI3S16o68l/NToUJlte9vAPqjVJGRW
-WhEG9ljd7zuTrHNZDT0Z/nitUEQe+S6YAbx+e+lNHT9WbsKWCa+c5ANsXj2BkgYQ
-j0fBGj2u8NhlhOM95zHq2h7yWfyCcfK7vLJcN7/V1chV97Sq41I0rB6DbDGHkVnn
-Yb/NPSyzSqcql6NAZQAbSGwlCZgDNFYZ50cdbpBRXkUJZli1OBPHZWPDput9jIl4
-zbcE1Lw9SH1/XSMlalaYSIE8FHYIFe9MppEwRRyxKGmmpNU3yHLTaa6PUcLoW4ZO
-SwIDAQAB
------END PUBLIC KEY-----
-'''
 # The one real secret - never put it here. Set with:
-#   wrangler secret put CLERK_SECRET_KEY --env staging
+#   wrangler secret put SUPABASE_SERVICE_ROLE_KEY --env staging
 
 # Reminder emails: the scheduled handler runs every 15 minutes and does nothing (and says
 # so in the logs) until RESEND_API_KEY, RESEND_FROM and EMAIL_TOKEN_SECRET are set:
@@ -83,23 +71,13 @@ preview_urls = false
 
 [env.production.vars]
 ENVIRONMENT = "production"
-# Clerk *production* instance (pk_live_...): separate keys, users and JWT key from staging.
-CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsubGl0dGxlaHlwZS5jb20k"
+# The production Supabase project (separate users from staging).
+SUPABASE_URL = "https://firzzvrmngehlszirkce.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_gDsSVpEiF4EgF5GlhVU6FQ_Lfjcut38"
 PUBLIC_BASE_URL = "https://littlehype.com"
 # Stripe live price (lifetime); the secret key and webhook secret are Worker secrets.
 STRIPE_PRICE_ID = "price_1TEGRpJ6UWubGDsEmz2RDL9F"
-CLERK_JWT_KEY = '''
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqSPYDIYvCOiDgzWu3peR
-pJJV1VNYNXXT+/PdvnbK3bUFQhhfgEJFdhNSlH+XWf+Tfyb6ymqfpVgPhpQiRG3g
-EuCp8BZxFZzipqYBbmXmfzz/jaNCcV9KWjRqGF0bKBQg5qz5jvhe79+t/UlcmHa0
-6Ua9XmKIYRV/HV04XVHRpkPv3XjZwCi9dgMja7VbF02GaQE9ZyGeiPL6oT/TkkR7
-jS71v4+mXXEwiJyVF3npxQ05rwzkQ1R/bHrA7pAwBb9G9kWW2C6LJph2Kn53mPx4
-GLz+r5kjVQGR/c8I2hLa2hd9ow7qpov0t+uvrewGsi7EidSLrekWzMrKpjeMDj7R
-YQIDAQAB
------END PUBLIC KEY-----
-'''
-#   wrangler secret put CLERK_SECRET_KEY --env production
+#   wrangler secret put SUPABASE_SERVICE_ROLE_KEY --env production
 
 [env.production.triggers]
 crons = ["*/15 * * * *"]

@@ -11,7 +11,7 @@ import { ThemedApp } from "./ThemedApp";
 
 const signOut = vi.fn();
 const getToken = vi.fn(async () => "tok");
-vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut }), useAuth: () => ({ getToken }) }));
+vi.mock("../lib/auth", () => ({ useAuth: () => ({ signOut, getToken }) }));
 
 const [theme] = THEME_SLUGS as unknown as [string];
 const me: Me = { userId: "u1", theme, timezone: "Europe/Dublin", paid: true, onboarded: true, reminderTime: "20:00", isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" };
@@ -147,7 +147,7 @@ describe("account deletion", () => {
     expect(screen.queryByText(t("delete.account.signin"))).toBeNull();
     expect(signOut).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole("button", { name: t("delete.account.close") }));
-    expect(signOut).toHaveBeenCalledWith({ redirectUrl: "/" });
+    expect(signOut).toHaveBeenCalledTimes(1);
   });
 
   it("says so when the sign-in itself could not be removed", async () => {
@@ -178,7 +178,7 @@ describe("privacy policy and terms", () => {
     expect(screen.getByRole("note").textContent).toBe(translate(null, "legal.draft"));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(translate(null, "legal.privacy.title"));
     const text = document.body.textContent ?? "";
-    for (const provider of ["Cloudflare", "Supabase", "Clerk", "Stripe", "Resend"]) expect(text).toContain(provider);
+    for (const provider of ["Cloudflare", "Supabase", "Stripe", "Resend"]) expect(text).toContain(provider);
     expect(text).toContain("United States");
     expect(text).toContain("30 days");
   });

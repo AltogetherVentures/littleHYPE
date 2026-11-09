@@ -1,5 +1,5 @@
 import type { Env } from "../index";
-import { verifyClerkRequest } from "../auth/clerk";
+import { verifyRequest } from "../auth/supabase";
 import { getDb } from "../db/client";
 import { withUser } from "../db/user";
 import { getSavedTheme } from "../profile/service";
@@ -15,7 +15,7 @@ import { THEME_SLUGS, isThemeSlug } from "../../themes/registry";
  */
 async function resolveSessionTheme(env: Env, request: Request): Promise<string | null> {
   try {
-    const claims = await verifyClerkRequest(env, request);
+    const claims = await verifyRequest(env, request);
     if (!claims) return null;
     const sql = getDb(env);
     try {

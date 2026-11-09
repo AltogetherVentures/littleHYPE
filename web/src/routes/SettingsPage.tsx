@@ -1,4 +1,4 @@
-import { useClerk } from "@clerk/clerk-react";
+import { useAuth } from "../lib/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ export function SettingsPage({ me }: { me: Me }) {
   const t = useT();
   const api = useApi();
   const client = useQueryClient();
-  const { signOut } = useClerk();
+  const { signOut } = useAuth();
   const download = useDownloadExport();
   const navigate = useNavigate();
   const referrals = useReferrals();
@@ -69,7 +69,7 @@ export function SettingsPage({ me }: { me: Me }) {
         <section className="panel" role="alert">
           <p>{t("delete.account.done")}</p>
           {!deleted.signInRemoved && <p>{t("delete.account.signin")}</p>}
-          <button className="button" onClick={() => void signOut({ redirectUrl: "/" })}>
+          <button className="button" onClick={() => void signOut()}>
             {t("delete.account.close")}
           </button>
         </section>
@@ -217,7 +217,7 @@ export function SettingsPage({ me }: { me: Me }) {
           <Link to="/privacy">{t("settings.links.privacy")}</Link>
           <Link to="/terms">{t("settings.links.terms")}</Link>
           {me.isAdmin && <Link to="/admin">{t("settings.admin")}</Link>}
-          <button className="link-button" onClick={() => void signOut({ redirectUrl: "/" })}>
+          <button className="link-button" onClick={() => void signOut()}>
             {t("settings.signout")}
           </button>
         </p>

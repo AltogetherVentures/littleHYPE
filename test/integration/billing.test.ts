@@ -3,10 +3,10 @@ import worker, { type Env } from "../../src/index";
 import { signStripePayload } from "../../src/billing/signature";
 import { appUser, deleteUsers, requireEnv, seedUser, superUser } from "./helpers";
 
-vi.mock("../../src/auth/clerk", () => ({
-  verifyClerkRequest: vi.fn(async (_env: unknown, request: Request) => {
+vi.mock("../../src/auth/supabase", () => ({
+  verifyRequest: vi.fn(async (_env: unknown, request: Request) => {
     const userId = request.headers.get("x-test-user");
-    return userId ? { userId, isAdmin: false } : null;
+    return userId ? { userId, isAdmin: false, email: "buyer@mail.test" } : null;
   }),
 }));
 
@@ -15,9 +15,9 @@ const env = (over: Partial<Env> = {}): Env => ({
   ENVIRONMENT: "test",
   HYPERDRIVE: { connectionString: requireEnv("PG_APP_URL") } as Hyperdrive,
   ASSETS: { fetch: async () => new Response("asset") } as unknown as Fetcher,
-  CLERK_PUBLISHABLE_KEY: "pk_test_abc",
-  CLERK_SECRET_KEY: "sk_test_abc",
-  CLERK_JWT_KEY: "unused",
+  SUPABASE_URL: "https://test.supabase.co",
+  SUPABASE_ANON_KEY: "anon_test",
+  SUPABASE_SERVICE_ROLE_KEY: "service_test",
   PUBLIC_BASE_URL: "https://app.example",
   STRIPE_SECRET_KEY: "sk_test_stripe",
   STRIPE_WEBHOOK_SECRET: WEBHOOK_SECRET,
@@ -46,7 +46,6 @@ let stripeCalls: { url: string; body: URLSearchParams; headers: Record<string, s
 let stripeStatus = 200;
 const fetchMock = vi.fn(async (url: string | URL, init?: RequestInit) => {
   const u = String(url);
-  if (u.startsWith("https://api.clerk.com/")) return Response.json({ primary_email_address_id: "e", email_addresses: [{ id: "e", email_address: "buyer@mail.test" }] });
   if (u === "https://api.stripe.com/v1/checkout/sessions") {
     stripeCalls.push({ url: u, body: new URLSearchParams(String(init!.body)), headers: init!.headers as Record<string, string> });
     return stripeStatus === 200 ? Response.json({ id: "cs_1", url: "https://checkout.stripe.test/c/pay/cs_1" }) : new Response("bad", { status: stripeStatus });

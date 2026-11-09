@@ -10,7 +10,7 @@ import type { Me } from "../lib/me";
 import { translate } from "../lib/strings";
 import { ThemedApp } from "./ThemedApp";
 
-vi.mock("@clerk/clerk-react", () => ({ useClerk: () => ({ signOut: vi.fn() }), useAuth: () => ({ getToken: async () => "tok" }) }));
+vi.mock("../lib/auth", () => ({ useAuth: () => ({ signOut: vi.fn(), getToken: async () => "tok" }) }));
 
 const [theme] = THEME_SLUGS as unknown as [string];
 const me: Me = { userId: "u1", theme, timezone: "UTC", paid: true, onboarded: true, reminderTime: null, isAdmin: false, createdAt: "2026-01-01T00:00:00.000Z" };

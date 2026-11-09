@@ -28,6 +28,17 @@ img { max-width: 100%; }
 .page-narrow { max-width: 36rem; }
 .page-wide { max-width: 72rem; }
 .auth { display: flex; justify-content: center; }
+.auth-card { width: min(26rem, 100%); }
+.auth-card h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.auth-mark { margin: 0 0 0.75rem; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); font-weight: 700; }
+.auth-intro { color: var(--color-muted); }
+.auth-form .button { width: 100%; justify-content: center; }
+.auth-or { margin: 0; text-align: center; color: var(--color-muted); font-size: 0.9rem; }
+.auth-form .button-google { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); display: inline-flex; align-items: center; gap: 0.6rem; }
+.auth-error { margin: 0; padding: 0.7rem 0.9rem; border-radius: var(--radius); background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface)); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.95rem; }
+.auth-notice { padding: 0.9rem 1rem; border-radius: var(--radius); background: var(--color-bg); border: 1px solid var(--color-border); }
+.auth-links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; margin: 1.25rem 0 0; font-size: 0.95rem; }
+.auth-legal { margin: 1rem 0 0; font-size: 0.85rem; color: var(--color-muted); }
 .status { padding: 3rem 16px; text-align: center; }
 /* "working" signals: the bar under the header and the inline spinner */
 .busy-bar { position: sticky; top: 0; z-index: 39; height: 3px; margin-bottom: -3px; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 0.2s ease; }

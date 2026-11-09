@@ -1,7 +1,7 @@
 import type { Env } from "../index";
 import { buildExport, journalMarkdown } from "../account/export";
 import { requireAuth } from "../auth/context";
-import { deleteClerkUser } from "../auth/clerk-admin";
+import { deleteAuthUser } from "../auth/supabase-admin";
 import { getDb } from "../db/client";
 import { withUser } from "../db/user";
 import { errorResponse, json } from "../lib/http";
@@ -50,6 +50,6 @@ export async function handleAccountRoutes(request: Request, env: Env): Promise<R
   } finally {
     await sql.end();
   }
-  const signInRemoved = await deleteClerkUser(env, claims.userId);
+  const signInRemoved = await deleteAuthUser(env, claims.userId);
   return json({ deleted: true, signInRemoved });
 }

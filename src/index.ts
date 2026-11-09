@@ -22,12 +22,15 @@ export interface Env {
   HYPERDRIVE: Hyperdrive;
   /** Static assets binding: the built SPA (web/dist). */
   ASSETS: Fetcher;
-  /** Safe to embed client-side (served via GET /api/config) - not a secret. */
-  CLERK_PUBLISHABLE_KEY: string;
-  CLERK_SECRET_KEY: string;
-  /** PEM public key for networkless JWT verification (see auth/clerk.ts). */
-  CLERK_JWT_KEY: string;
-  /** The origin the browser loads the app from; checked against the token's `azp`. */
+  /** The Supabase project that holds both the data and the sign-ins; also the token issuer (auth/supabase.ts). */
+  SUPABASE_URL: string;
+  /** Publishable key for the browser's auth client (served via GET /api/config) - not a secret. */
+  SUPABASE_ANON_KEY: string;
+  /** Service-role key, a Worker secret: deleting sign-ins, reading emails, the admin search. Never sent to the browser. */
+  SUPABASE_SERVICE_ROLE_KEY: string;
+  /** Only for a project still signing tokens with the legacy shared secret (HS256); unset with asymmetric signing keys. */
+  SUPABASE_JWT_SECRET?: string;
+  /** The origin the browser loads the app from. */
   PUBLIC_BASE_URL: string;
   /** Reminder emails stay off until all three of these are set (docs/setup.md). Secrets, never in wrangler.toml. */
   RESEND_API_KEY?: string;

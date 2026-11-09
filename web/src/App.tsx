@@ -16,6 +16,8 @@ export function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/sign-in/*" element={<AuthPage mode="sign-in" />} />
       <Route path="/sign-up/*" element={<AuthPage mode="sign-up" />} />
+      <Route path="/forgot-password" element={<AuthPage mode="forgot" />} />
+      <Route path="/reset-password" element={<AuthPage mode="reset" />} />
       <Route path="/checkout/success" element={<CheckoutSuccess />} />
       <Route path="/paywall" element={<Paywall />} />
       <Route path="/onboarding" element={<Onboarding />} />

@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "../lib/auth";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import { isThemeSlug } from "@themes/registry";
 import { MeGate } from "../components/MeGate";

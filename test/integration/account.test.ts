@@ -2,10 +2,10 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vites
 import worker, { type Env } from "../../src/index";
 import { appUser, deleteUsers, requireEnv, seedUser, superUser } from "./helpers";
 
-vi.mock("../../src/auth/clerk", () => ({
-  verifyClerkRequest: vi.fn(async (_env: unknown, request: Request) => {
+vi.mock("../../src/auth/supabase", () => ({
+  verifyRequest: vi.fn(async (_env: unknown, request: Request) => {
     const userId = request.headers.get("x-test-user");
-    return userId ? { userId, isAdmin: false } : null;
+    return userId ? { userId, isAdmin: false, email: null } : null;
   }),
 }));
 
@@ -13,9 +13,9 @@ const env = (): Env => ({
   ENVIRONMENT: "test",
   HYPERDRIVE: { connectionString: requireEnv("PG_APP_URL") } as Hyperdrive,
   ASSETS: { fetch: async () => new Response("asset") } as unknown as Fetcher,
-  CLERK_PUBLISHABLE_KEY: "pk_test_abc",
-  CLERK_SECRET_KEY: "sk_test_abc",
-  CLERK_JWT_KEY: "unused",
+  SUPABASE_URL: "https://test.supabase.co",
+  SUPABASE_ANON_KEY: "anon_test",
+  SUPABASE_SERVICE_ROLE_KEY: "service_test",
   PUBLIC_BASE_URL: "http://localhost",
 });
 
@@ -161,11 +161,11 @@ describe("account deletion", () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0]!;
-    expect(url).toBe(`https://api.clerk.com/v1/users/${a}`);
-    expect(init).toMatchObject({ method: "DELETE", headers: { authorization: "Bearer sk_test_abc" } });
+    expect(url).toBe(`https://test.supabase.co/auth/v1/admin/users/${a}`);
+    expect(init).toMatchObject({ method: "DELETE", headers: { authorization: "Bearer service_test" } });
   });
 
-  it("still deletes the data when Clerk cannot be reached, and says the sign-in needs removing", async () => {
+  it("still deletes the data when the auth service cannot be reached, and says the sign-in needs removing", async () => {
     const u = await user();
     await populate(u, "carol");
     fetchMock.mockResolvedValue(new Response("nope", { status: 500 }));
@@ -173,7 +173,7 @@ describe("account deletion", () => {
     const res = await api("/api/account?confirm=true", { as: u, method: "DELETE" });
     expect(res.body).toEqual({ deleted: true, signInRemoved: false });
     expect(Object.values(await counts(u)).every((n) => n === 0)).toBe(true);
-    expect(err.mock.calls.some((c) => c[0] === "clerk-delete-failed")).toBe(true);
+    expect(err.mock.calls.some((c) => c[0] === "signin-delete-failed")).toBe(true);
     // the log line names the user and status, never any journal text
     expect(JSON.stringify(err.mock.calls)).not.toContain("secret thoughts");
     err.mockRestore();

@@ -1,5 +1,5 @@
 import type { Env } from "../index";
-import { getClerkUser, deleteClerkUser, searchClerkUsers } from "../auth/clerk-admin";
+import { deleteAuthUser, getAuthUser, searchAuthUsers } from "../auth/supabase-admin";
 import { requireAdmin } from "../auth/context";
 import { adminDeleteAccount, adminRecentActions, adminSummary, adminThemeHistory } from "../admin/service";
 import { refundPaymentIntent, stripeConfigured } from "../billing/stripe";
@@ -15,6 +15,8 @@ import { adminSetTheme } from "../profile/service";
  * checked twice: the Worker requires a verified admin claim, and the database functions
  * refuse to run without it.
  */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function handleAdminRoutes(request: Request, env: Env): Promise<Response | null> {
   const url = new URL(request.url);
   const { pathname } = url;
@@ -43,7 +45,7 @@ export async function handleAdminRoutes(request: Request, env: Env): Promise<Res
     if (method === "GET" && pathname === "/api/admin/users") {
       const q = (url.searchParams.get("q") ?? "").trim();
       if (q.length < 2 || q.length > 100) return errorResponse(400, "invalid_query");
-      const found = /^user_[A-Za-z0-9]+$/.test(q) ? [await getClerkUser(env, q)].filter((u) => u !== null) : await searchClerkUsers(env, q);
+      const found = UUID.test(q) ? [await getAuthUser(env, q)].filter((u) => u !== null) : await searchAuthUsers(env, q);
       if (found === null) return errorResponse(502, "directory_unavailable");
       const users = await withUser(sql, claims, async (tx) => Promise.all(found.map(async (u) => ({ ...u, summary: await adminSummary(tx, u.id) }))));
       return json({ users });
@@ -53,8 +55,8 @@ export async function handleAdminRoutes(request: Request, env: Env): Promise<Res
       const id = one.userId!;
       const [summary, history] = await withUser(sql, claims, async (tx) => [await adminSummary(tx, id), await adminThemeHistory(tx, id)] as const);
       if (!summary) return errorResponse(404, "user_not_found");
-      const clerk = await getClerkUser(env, id);
-      return json({ summary, history, email: clerk?.email ?? null, name: clerk?.name ?? null });
+      const signIn = await getAuthUser(env, id);
+      return json({ summary, history, email: signIn?.email ?? null, name: signIn?.name ?? null });
     }
 
     if (method === "POST" && refund) {
@@ -77,7 +79,7 @@ export async function handleAdminRoutes(request: Request, env: Env): Promise<Res
         await withSystem(sql, async (tx) => tx`select mark_purchase_refunded(${purchase.paymentIntent})`);
       }
       await withUser(sql, claims, (tx) => adminDeleteAccount(tx, id, { refunded, hadPurchase: purchase !== null, amount: purchase?.amount ?? null, currency: purchase?.currency ?? null }));
-      const signInRemoved = await deleteClerkUser(env, id);
+      const signInRemoved = await deleteAuthUser(env, id);
       return json({ deleted: true, refunded, signInRemoved });
     }
     return errorResponse(404, "not_found");

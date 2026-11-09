@@ -6,16 +6,16 @@ One journaling and habit-tracking web app wrapped in a choice of immersive theme
 
 ## Hard rule: reNudge is read-only
 
-littleHYPE deliberately uses the same stack as reNudge (`AltogetherVentures/renudge`). reNudge may be **read** for patterns. Never edit, commit to, push to, open PRs/issues against, or touch the live infrastructure (Supabase, Cloudflare Workers/Hyperdrive, Clerk, Resend) of reNudge from work on littleHYPE. littleHYPE has its own of each.
+littleHYPE deliberately uses the same stack as reNudge (`AltogetherVentures/renudge`). reNudge may be **read** for patterns. Never edit, commit to, push to, open PRs/issues against, or touch the live infrastructure (Supabase, Cloudflare Workers/Hyperdrive, Clerk, Resend) of reNudge from work on littleHYPE. littleHYPE has its own of each. (reNudge uses Clerk for sign-in; littleHYPE moved to Supabase Auth, so that is one place the stacks differ.)
 
 ## Stack
 
 - **Compute:** Cloudflare Workers (`src/`), with the built SPA served as static assets.
 - **Frontend:** React 19 + Vite + React Router 7 + TanStack Query (`web/`). Styling is plain CSS over theme tokens.
-- **Auth:** Clerk (users, not organizations). Admin = `metadata.role === "admin"` in the session token.
+- **Auth:** Supabase Auth, in the same project as the data (`web/src/lib/auth.tsx` in the SPA; `src/auth/supabase.ts` verifies tokens against the project JWKS, or `SUPABASE_JWT_SECRET` for a legacy HS256 project). Admin = `app_metadata.role === "admin"` in the token (server-set; never `user_metadata`). The SPA mirrors its access token into the `lh_session` cookie so the Worker can theme a page before first paint. The service-role key is a Worker secret used only to delete sign-ins, read an email at send time and search the directory for admins.
 - **Database:** Supabase Postgres via Hyperdrive, connecting as the restricted `app_user` role.
 - **Payments:** Stripe Checkout + signature-verified webhook (`src/billing/`). **Email:** Resend, sent from the Worker cron (`*/15 * * * *`, `src/email/`). Both stay off until their secrets are set.
-- **Environments:** `staging` and `production`, each with its own Supabase project, Hyperdrive config and Clerk instance.
+- **Environments:** `staging` and `production`, each with its own Supabase project (data and sign-ins), Hyperdrive config and Worker secrets.
 
 ## Layout
 
@@ -45,7 +45,7 @@ A theme is a distinct world, not a colour swap (PRD "Theme briefs"). Each `theme
 
 Class names are shared, so when a base rule and a theme rule tie on specificity the later stylesheet wins and the bundler decides the order: give theme selectors more specificity (`.hdr-x .hdr-x-nav a`, `[data-theme="x"] .panel`), never rely on order.
 
-**Review designs in a browser, not by reading CSS.** `npm run visual` serves a gallery of the real screens with sample data and Clerk stubbed out (`http://127.0.0.1:4173/?scene=today|journal|picker|showcase|landing&theme=<slug>`; add `&signedout=1` for signed-out screens). `npm run visual:contrast` then measures WCAG AA contrast from real rendered pixels (axe cannot see text over gradients and textures). Do both for every theme at desktop and phone width before shipping a design change (TH-14, NF-4).
+**Review designs in a browser, not by reading CSS.** `npm run visual` serves a gallery of the real screens with sample data and sign-in stubbed out (`http://127.0.0.1:4173/?scene=today|journal|picker|showcase|landing&theme=<slug>`; add `&signedout=1` for signed-out screens). `npm run visual:contrast` then measures WCAG AA contrast from real rendered pixels (axe cannot see text over gradients and textures). Do both for every theme at desktop and phone width before shipping a design change (TH-14, NF-4).
 
 ## Marketing pages
 
@@ -91,6 +91,6 @@ npm run deploy:staging     # after docs/setup.md
 The whole PRD MVP is built. What is verified where:
 
 - **Tested (unit, component, integration against real Postgres; contrast checked from rendered pixels):** themes and routing, accounts and the theme lock, habits and streaks, journal (autosave, Markdown-lite, search, calendar), daily prompts, onboarding, achievements, settings, export, self-serve deletion, titles, streak-break cards, share cards, referrals and credits, reminder emails, admin tools, Stripe checkout/webhook/refund logic.
-- **Not verified against live services (needs the keys in `docs/setup.md` Parts 9 to 12):** Stripe (checkout, webhook, refund), Resend (sending), Clerk user deletion and search from the Worker, the cron trigger on Cloudflare. Each is off or returns a clear 503 / `reminders-disabled` log until its secrets exist.
+- **Not verified against live services (needs the keys in `docs/setup.md` Parts 9 to 12):** Stripe (checkout, webhook, refund), Resend (sending), the cron trigger on Cloudflare. Supabase Auth was verified in production on the first live account. Each is off or returns a clear 503 / `reminders-disabled` log until its secrets exist.
 - **Deliberate deviations from the PRD:** the journal editor is a plain-text editor with Markdown-lite (bold, italic, headings, lists, quotes, links) and a preview, not a rich-text editor; share cards are composed as SVG in the Worker and rasterised to PNG in the browser (fonts embedded), not rendered to PNG server-side; `habits` has no schedule columns (schedules live only in `habit_schedule_versions`).
-- **Before launch (people, not code):** a lawyer's review of `legal.*` (marked DRAFT in the app), a real Stripe account with a $49 price and a $5-off promotion code, a verified Resend sending domain, a production Supabase/Clerk/Hyperdrive and the domain decision (`docs/launch-checklist.md`).
+- **Before launch (people, not code):** a lawyer's review of `legal.*` (marked DRAFT in the app), a real Stripe account with a $49 price and a $5-off promotion code, a verified Resend sending domain, a production Supabase/Hyperdrive and the domain decision (`docs/launch-checklist.md`).

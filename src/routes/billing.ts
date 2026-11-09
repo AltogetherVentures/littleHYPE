@@ -1,5 +1,4 @@
 import type { Env } from "../index";
-import { getClerkEmail } from "../auth/clerk-admin";
 import { requireAuth } from "../auth/context";
 import { verifyStripeSignature } from "../billing/signature";
 import { createCheckoutSession, stripeConfigured } from "../billing/stripe";
@@ -57,7 +56,7 @@ async function createCheckout(request: Request, env: Env): Promise<Response> {
 
   const session = await createCheckoutSession(env, {
     userId: claims.userId,
-    email: await getClerkEmail(env, claims.userId),
+    email: claims.email,
     promotionCodeId: referred ? (env.STRIPE_REFERRAL_PROMOTION_ID ?? null) : null,
   });
   return session ? json(session) : errorResponse(502, "checkout_failed");

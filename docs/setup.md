@@ -1,8 +1,8 @@
 # Setup: staging first, then production
 
-littleHYPE runs on its own Cloudflare Worker, Supabase project and Clerk application. Nothing here touches reNudge; do not reuse any reNudge project, key, database or Hyperdrive config.
+littleHYPE runs on its own Cloudflare Worker and Supabase project (database and sign-in). Nothing here touches reNudge; do not reuse any reNudge project, key, database or Hyperdrive config.
 
-You need four accounts you probably already have: **Cloudflare**, **Supabase**, **Clerk**, **GitHub**. Do staging end to end first (Parts 1 to 7). Production is Part 8, the same steps with the production instance/project.
+You need three accounts you probably already have: **Cloudflare**, **Supabase**, **GitHub** (plus Google Cloud if you want "Continue with Google"). Do staging end to end first (Parts 1 to 7). Production is Part 8, the same steps with the production instance/project.
 
 Things marked **[secret]** are never pasted into chat, committed to git, or put in `wrangler.toml`.
 
@@ -32,29 +32,30 @@ Things marked **[secret]** are never pasted into chat, committed to git, or put 
 
 > Passwords with special characters must be URL-encoded in the connection string. Easiest is a long alphanumeric password.
 
-## 3. Clerk (sign-in)
+## 3. Supabase Auth (sign-in)
 
-1. Clerk dashboard, **Create application**, name it `littleHYPE`. Enable **Email** (with password) and **Google**. This creates a *development instance*, which is what staging uses.
-2. **Configure, Email, Phone, Username**: make sure email **verification at sign-up is required** (the PRD requires verified email addresses before payment).
-3. **API keys**:
-   - Copy the **Publishable key** (`pk_test_...`). It is not secret. Put it in `wrangler.toml` as `CLERK_PUBLISHABLE_KEY` under `[env.staging.vars]`.
-   - Copy the **Secret key** (`sk_test_...`) **[secret]**.
-   - Copy the **JWKS Public Key** (the PEM block). It is a public key, not sensitive: it goes in `wrangler.toml` as `CLERK_JWT_KEY` under `[env.staging.vars]`.
-4. **Sessions, Customize session token**: set the claims to
-   ```json
-   { "metadata": "{{user.public_metadata}}" }
+Sign-in lives in the same Supabase project as the data. Everything here is in the Supabase dashboard for the project, under **Authentication**.
+
+1. **Sign In / Providers, Email**: leave Email enabled and make sure **Confirm email** is **on** (the PRD requires a verified address before payment; with it on, a new account has no session until the link is clicked). Minimum password length 8.
+2. **Sign In / Providers, Google**: enable it and paste a Google OAuth client ID and secret **[secret]**. The client is made in Google Cloud (APIs & Services, Credentials, Web application) with the **Authorized redirect URI** shown on this Supabase page (`https://<project-ref>.supabase.co/auth/v1/callback`) and `https://littlehype.com` (or the staging URL) as an authorised JavaScript origin. One Google client can list both projects' callback URIs.
+3. **URL Configuration**: **Site URL** is the app's address (`PUBLIC_BASE_URL`); add the same address with `/**` to **Redirect URLs** (and `http://localhost:5173/**` for local development). Confirmation and password-reset links return people here.
+4. **Project Settings, JWT Keys** (sometimes "JWT Signing Keys"): if the project still uses the legacy shared secret (HS256), either click **Migrate to asymmetric keys** (recommended; the Worker then verifies tokens against the project's public JWKS with no secret at all) or copy the JWT secret **[secret]** and set it as `SUPABASE_JWT_SECRET` in Part 4.
+5. **Project Settings, API keys**: the **publishable** key (`sb_publishable_...`) and the **project URL** are not secrets and are already in `wrangler.toml` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`). Copy the **service role** key **[secret]** for Part 4; it is only ever a Worker secret.
+6. **Emails**: Supabase's built-in sender is limited to a handful of messages an hour, which is fine for staging. For production, **Authentication, Emails, SMTP Settings**: turn on custom SMTP with Resend (`smtp.resend.com`, port 465, username `resend`, password = a Resend API key **[secret]**, sender on your verified domain). The templates can stay as they are.
+7. Make yourself an admin (needed for the admin tools) once you have signed up: in the SQL editor,
+   ```sql
+   update auth.users set raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}' where email = 'you@example.com';
    ```
-   This is what lets the Worker recognise an admin without another lookup.
-5. Make yourself an admin (needed later for the admin theme-change action): **Users**, open your user, **Public metadata**, set `{ "role": "admin" }`.
+   Sign out and in again so the session carries the role. The app reads `app_metadata.role`, which only the server can set; never `user_metadata`.
 
 ## 4. Cloudflare Worker (secrets and config)
 
 1. Decide the staging URL. Cloudflare gives you `https://littlehype-staging.<your-workers-subdomain>.workers.dev` (your subdomain is under Cloudflare, Workers & Pages). Put it in `wrangler.toml` as `PUBLIC_BASE_URL` under `[env.staging.vars]`. It must match the address you open in the browser exactly, with no trailing slash.
 2. Set the one secret. The command prompts for the value; paste it once at that prompt, never into the shell itself:
    ```bash
-   npx wrangler secret put CLERK_SECRET_KEY --env staging
+   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --env staging
    ```
-   If wrangler offers to create the Worker, answer `y`.
+   If wrangler offers to create the Worker, answer `y`. Only if the project still signs tokens with the legacy shared secret (Part 3, step 4), also `npx wrangler secret put SUPABASE_JWT_SECRET --env staging`.
 
 ## 5. First deploy of staging
 
@@ -70,11 +71,11 @@ If the deploy guard complains, it lists exactly which placeholders remain.
 There is no checkout yet, so you mark yourself as having paid by hand. This is for **staging only**.
 
 1. Open the staging URL, **Get started**, sign up with your email and verify it. You should land on a "Complete your purchase" page. That is the paywall working.
-2. In Clerk, **Users**, open your user, copy the **User ID** (`user_...`).
+2. In Supabase, **Authentication, Users**, open your user, copy the **UID** (a UUID).
 3. In the Supabase SQL editor for the **staging** project:
    ```sql
    insert into purchases (user_id, stripe_session_id, amount, currency, status)
-   values ('user_XXXXXXXX', 'manual_test_1', 4900, 'usd', 'paid');
+   values ('00000000-0000-0000-0000-000000000000', 'manual_test_1', 4900, 'usd', 'paid');
    ```
 4. Reload the app. You should now see the theme picker with four previewed themes.
 5. Pick one and confirm. You should land on `/<theme>/today` in that theme's look and wording.
@@ -101,7 +102,7 @@ Migrations are **never** deployed automatically. When a new file appears in `sup
 Repeat Parts 1 to 5 with:
 - a Supabase project `littlehype-production` (its own `app_user` password),
 - `wrangler hyperdrive create littlehype-production ...` (a **different** id from staging; the deploy guard refuses identical ids),
-- Clerk's **production instance** (Clerk dashboard, instance switcher, "Create production instance"; it has its own `pk_live_`, secret key, JWT key, and needs your domain and DNS records; repeat the session-token customisation and admin metadata there),
+- Part 3 again on the production project (Confirm email, Google, Site URL `https://littlehype.com`, asymmetric JWT keys, custom SMTP, your admin row),
 - `wrangler secret put ... --env production`,
 - filling the `[env.production]` placeholders,
 - `npm run deploy:production` (always manual).
@@ -149,9 +150,9 @@ The cron trigger runs every 15 minutes and logs `reminders-disabled` until all t
 
 ## 12. Admin tools
 
-Sign in with the account whose Clerk public metadata is `{ "role": "admin" }` (Part 3, step 5) and open `/admin` (or Settings, Admin tools). You can find an account, change its theme (audited) and refund-and-delete (the purchase is refunded in Stripe first; nothing is deleted if that fails). Admins see accounts and purchases only, never journals, habits or check-ins (PV-3). Turn Clerk's own "delete account" off (Clerk dashboard, User & authentication) so deletion always goes through the app, which also removes the data.
+Sign in with the account whose `app_metadata` has `"role": "admin"` (Part 3, step 7) and open `/admin` (or Settings, Admin tools). You can find an account, change its theme (audited) and refund-and-delete (the purchase is refunded in Stripe first; nothing is deleted if that fails). Admins see accounts and purchases only, never journals, habits or check-ins (PV-3).
 
-**Migrations:** apply every new file in `supabase/migrations/` (0002 to 0010 so far) to each Supabase project, in order, before deploying the Worker that needs it.
+**Migrations:** apply every new file in `supabase/migrations/` (0002 to 0011 so far) to each Supabase project, in order, before deploying the Worker that needs it.
 
 ---
 
@@ -170,12 +171,12 @@ npm run typecheck && npm run lint && npm test
 PG_APP_URL=postgresql://app_user:ci_only_password@localhost:5432/littlehype_dev npm run test:integration
 ```
 
-To run the whole app locally, copy `.dev.vars.example` to `.dev.vars` (staging Clerk keys), then in two terminals:
+To run the whole app locally, copy `.dev.vars.example` to `.dev.vars` (the staging project's service-role key), then in two terminals:
 
 ```bash
 # 1. the Worker, using local Postgres instead of Hyperdrive
 CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://app_user:ci_only_password@localhost:5432/littlehype_dev \
-  npm run dev -- --var PUBLIC_BASE_URL:http://localhost:5173 --var CLERK_PUBLISHABLE_KEY:pk_test_...
+  npm run dev -- --var PUBLIC_BASE_URL:http://localhost:5173
 # 2. the web app
 npm run dev:web
 ```

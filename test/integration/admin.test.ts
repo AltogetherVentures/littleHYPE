@@ -2,10 +2,10 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vites
 import worker, { type Env } from "../../src/index";
 import { appUser, deleteUsers, requireEnv, seedUser, superUser } from "./helpers";
 
-vi.mock("../../src/auth/clerk", () => ({
-  verifyClerkRequest: vi.fn(async (_env: unknown, request: Request) => {
+vi.mock("../../src/auth/supabase", () => ({
+  verifyRequest: vi.fn(async (_env: unknown, request: Request) => {
     const userId = request.headers.get("x-test-user");
-    return userId ? { userId, isAdmin: request.headers.get("x-test-admin") === "1" } : null;
+    return userId ? { userId, isAdmin: request.headers.get("x-test-admin") === "1", email: null } : null;
   }),
 }));
 
@@ -13,9 +13,9 @@ const env = (over: Partial<Env> = {}): Env => ({
   ENVIRONMENT: "test",
   HYPERDRIVE: { connectionString: requireEnv("PG_APP_URL") } as Hyperdrive,
   ASSETS: { fetch: async () => new Response("asset") } as unknown as Fetcher,
-  CLERK_PUBLISHABLE_KEY: "pk_test_abc",
-  CLERK_SECRET_KEY: "sk_test_abc",
-  CLERK_JWT_KEY: "unused",
+  SUPABASE_URL: "https://test.supabase.co",
+  SUPABASE_ANON_KEY: "anon_test",
+  SUPABASE_SERVICE_ROLE_KEY: "service_test",
   PUBLIC_BASE_URL: "https://app.example",
   STRIPE_SECRET_KEY: "sk_test_stripe",
   STRIPE_PRICE_ID: "price_49",
@@ -42,22 +42,22 @@ async function api(path: string, opts: Parameters<typeof call>[1] = {}) {
   return { status: res.status, body: (await res.json()) as Record<string, any> };
 }
 
-let clerkDirectory: { id: string; email: string; first_name?: string }[];
-let clerkSearchStatus = 200;
-let clerkDeleteStatus = 204;
+let directory: { id: string; email: string; first_name?: string }[];
+let searchStatus = 200;
+let deleteStatus = 200;
 let stripeRefund: { status: number; code?: string };
 let stripeCalls: { url: string; body: URLSearchParams }[];
 const fetchMock = vi.fn(async (url: string | URL, init?: RequestInit) => {
   const u = String(url);
-  if (u.startsWith("https://api.clerk.com/v1/users?")) {
-    if (clerkSearchStatus !== 200) return new Response("no", { status: clerkSearchStatus });
-    return Response.json(clerkDirectory.map((c) => ({ id: c.id, primary_email_address_id: "e", email_addresses: [{ id: "e", email_address: c.email }], first_name: c.first_name ?? null })));
+  if (u.startsWith("https://test.supabase.co/auth/v1/admin/users?")) {
+    if (searchStatus !== 200) return new Response("no", { status: searchStatus });
+    return Response.json({ users: directory.map((c) => ({ id: c.id, email: c.email, user_metadata: { full_name: c.first_name ?? null } })) });
   }
-  if (u.startsWith("https://api.clerk.com/v1/users/")) {
+  if (u.startsWith("https://test.supabase.co/auth/v1/admin/users/")) {
     const id = decodeURIComponent(u.split("/").pop()!);
-    if (init?.method === "DELETE") return new Response(null, { status: clerkDeleteStatus });
-    const found = clerkDirectory.find((c) => c.id === id);
-    return found ? Response.json({ id, primary_email_address_id: "e", email_addresses: [{ id: "e", email_address: found.email }], first_name: found.first_name ?? null }) : new Response("nf", { status: 404 });
+    if (init?.method === "DELETE") return new Response(deleteStatus === 200 ? "{}" : "no", { status: deleteStatus });
+    const found = directory.find((c) => c.id === id);
+    return found ? Response.json({ id, email: found.email, user_metadata: { full_name: found.first_name ?? null } }) : new Response("nf", { status: 404 });
   }
   if (u === "https://api.stripe.com/v1/refunds") {
     stripeCalls.push({ url: u, body: new URLSearchParams(String(init!.body)) });
@@ -67,9 +67,9 @@ const fetchMock = vi.fn(async (url: string | URL, init?: RequestInit) => {
 });
 
 beforeEach(() => {
-  clerkDirectory = [];
-  clerkSearchStatus = 200;
-  clerkDeleteStatus = 204;
+  directory = [];
+  searchStatus = 200;
+  deleteStatus = 200;
   stripeRefund = { status: 200 };
   stripeCalls = [];
   fetchMock.mockClear();
@@ -130,33 +130,33 @@ describe("finding and viewing accounts", () => {
   it("searches the sign-in directory and shows each account's summary, with no content", async () => {
     const a = await admin();
     const c = await customer(3);
-    clerkDirectory = [{ id: c, email: "buyer@mail.test", first_name: "Bea" }, { id: "user_only_in_clerk", email: "ghost@mail.test" }];
+    directory = [{ id: c, email: "buyer@mail.test", first_name: "Bea" }, { id: "11111111-2222-4333-8444-555555555555", email: "ghost@mail.test" }];
     const res = await api("/api/admin/users?q=buyer", { as: a, admin: true });
     expect(res.status).toBe(200);
     const [found, ghost] = res.body.users;
     expect(found).toMatchObject({ id: c, email: "buyer@mail.test", name: "Bea", summary: { userId: c, theme: "spacelog", purchase: { status: "paid", amount: 4900, currency: "usd", refundEligible: true } } });
-    expect(ghost).toMatchObject({ id: "user_only_in_clerk", summary: null });
+    expect(ghost).toMatchObject({ id: "11111111-2222-4333-8444-555555555555", summary: null });
     expect(JSON.stringify(res.body)).not.toMatch(/ADMIN-MUST-NEVER-SEE-THIS|HIDDEN-HABIT-NAME/);
   });
 
   it("looks a user up directly by id, and refuses a too-short or too-long search", async () => {
     const a = await admin();
     const c = await customer();
-    clerkDirectory = [{ id: c, email: "direct@mail.test" }];
+    directory = [{ id: c, email: "direct@mail.test" }];
     expect((await api(`/api/admin/users?q=${c}`, { as: a, admin: true })).body.users[0].email).toBe("direct@mail.test");
     expect((await api("/api/admin/users?q=a", { as: a, admin: true })).body.error).toBe("invalid_query");
     expect((await api(`/api/admin/users?q=${"x".repeat(101)}`, { as: a, admin: true })).status).toBe(400);
   });
 
   it("says so when the directory cannot be reached", async () => {
-    clerkSearchStatus = 500;
+    searchStatus = 500;
     expect((await api("/api/admin/users?q=someone", { as: await admin(), admin: true })).status).toBe(502);
   });
 
   it("marks a purchase outside the 14-day window as not refundable", async () => {
     const a = await admin();
     const c = await customer(15);
-    clerkDirectory = [{ id: c, email: "old@mail.test" }];
+    directory = [{ id: c, email: "old@mail.test" }];
     expect((await api(`/api/admin/users/${c}`, { as: a, admin: true })).body.summary.purchase.refundEligible).toBe(false);
   });
 
@@ -198,7 +198,7 @@ describe("refund and delete (PY-5)", () => {
     const [log] = await sup`select * from admin_actions where target_user_id = ${c}`;
     expect(log).toMatchObject({ admin_id: a, action: "refund_and_delete", detail: { refunded: true, hadPurchase: true, amount: 4900, currency: "usd" } });
     expect(JSON.stringify(log)).not.toContain("ADMIN-MUST-NEVER-SEE-THIS");
-    expect(fetchMock.mock.calls.some(([u, i]) => String(u).endsWith(`/v1/users/${encodeURIComponent(c)}`) && (i as RequestInit)?.method === "DELETE")).toBe(true);
+    expect(fetchMock.mock.calls.some(([u, i]) => String(u).endsWith(`/auth/v1/admin/users/${encodeURIComponent(c)}`) && (i as RequestInit)?.method === "DELETE")).toBe(true);
   });
 
   it("requires the admin to type the account's id, and does nothing otherwise", async () => {
@@ -265,7 +265,7 @@ describe("refund and delete (PY-5)", () => {
     const a = await admin();
     expect((await go(a, "user_missing")).status).toBe(404);
     const c = await customer();
-    clerkDeleteStatus = 500;
+    deleteStatus = 500;
     expect(await go(a, c)).toMatchObject({ status: 200, body: { deleted: true, signInRemoved: false } });
   });
 

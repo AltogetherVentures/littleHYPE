@@ -3,14 +3,14 @@ import worker, { type Env } from "../../src/index";
 import { THEME_SLUGS } from "../../themes/registry";
 import { deleteUsers, requireEnv, seedUser, superUser } from "./helpers";
 
-// Clerk itself is not exercised here (it needs a live instance). The stub reads
+// Supabase Auth itself is not exercised here (it needs a live project). The stub reads
 // the identity from test headers and otherwise behaves like a failed
 // verification, so everything downstream - routes, RLS, the SQL functions - is real.
-vi.mock("../../src/auth/clerk", () => ({
-  verifyClerkRequest: vi.fn(async (_env: unknown, request: Request) => {
-    if (request.headers.get("x-clerk-broken")) throw new Error("clerk unreachable");
+vi.mock("../../src/auth/supabase", () => ({
+  verifyRequest: vi.fn(async (_env: unknown, request: Request) => {
+    if (request.headers.get("x-auth-broken")) throw new Error("auth unreachable");
     const userId = request.headers.get("x-test-user");
-    return userId ? { userId, isAdmin: request.headers.get("x-test-admin") === "1" } : null;
+    return userId ? { userId, isAdmin: request.headers.get("x-test-admin") === "1", email: null } : null;
   }),
 }));
 
@@ -26,9 +26,9 @@ const env = (): Env => ({
       return url.pathname === "/" ? new Response(SHELL, { headers: { "content-type": "text/html" } }) : new Response("asset:" + url.pathname);
     },
   } as unknown as Fetcher,
-  CLERK_PUBLISHABLE_KEY: "pk_test_abc",
-  CLERK_SECRET_KEY: "sk_test_abc",
-  CLERK_JWT_KEY: "unused",
+  SUPABASE_URL: "https://test.supabase.co",
+  SUPABASE_ANON_KEY: "anon_test",
+  SUPABASE_SERVICE_ROLE_KEY: "service_test",
   PUBLIC_BASE_URL: "http://localhost",
 });
 
@@ -72,7 +72,7 @@ describe("public routes", () => {
 
   it("serves the publishable key for the SPA, and no secret", async () => {
     const body = await (await call("/api/config")).json();
-    expect(body).toEqual({ clerkPublishableKey: "pk_test_abc" });
+    expect(body).toEqual({ supabaseUrl: "https://test.supabase.co", supabaseAnonKey: "anon_test" });
   });
 
   it("returns a JSON 404 for unknown API paths rather than the SPA", async () => {
@@ -269,10 +269,10 @@ describe("page navigation: theme routing before first paint (TH-5, TH-8)", () =>
 
   it("degrades to the neutral shell, and says so in the logs, if the session check fails", async () => {
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const res = await call(`/${themeA}/today`, { as: "user_x", headers: { "x-clerk-broken": "1" } });
+    const res = await call(`/${themeA}/today`, { as: "user_x", headers: { "x-auth-broken": "1" } });
     expect(res.status).toBe(200);
     expect(await html(res)).not.toContain("data-theme");
-    expect(spy).toHaveBeenCalledWith("theme-resolve-failed", "clerk unreachable");
+    expect(spy).toHaveBeenCalledWith("theme-resolve-failed", "auth unreachable");
     spy.mockRestore();
   });
 

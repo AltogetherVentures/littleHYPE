@@ -9,7 +9,7 @@ export interface UserScope {
  * Runs `fn` inside a transaction scoped to one user via Postgres RLS. Every
  * user-owned table's policy checks current_setting('app.current_user_id'), so
  * a query that forgets this wrapper is denied every row rather than allowed
- * all of them. `app.current_role` is 'admin' only when the verified Clerk
+ * all of them. `app.current_role` is 'admin' only when the verified session
  * token said so; the admin_* SQL functions refuse to run without it.
  */
 export async function withUser<T>(
